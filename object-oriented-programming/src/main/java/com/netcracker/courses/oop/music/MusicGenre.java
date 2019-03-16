@@ -4,5 +4,6 @@ public enum MusicGenre {
     INDIE,
     METAL,
     RAP,
-    POST_PUNK
+    POST_PUNK,
+    UNKNOWN_GENRE
 }
