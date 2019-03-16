@@ -17,7 +17,7 @@ public class LossLessComposition extends AbstractDigitalComposition {
     }
 
     public LossLessComposition(String compositionName, String author, int releaseYear, int duration) {
-        this(compositionName, author, releaseYear, duration, DigitalCompositionFormat.FLACK);
+        this(compositionName, author, releaseYear, duration, DigitalCompositionFormat.FLAC);
     }
 
     @Override

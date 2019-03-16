@@ -2,7 +2,7 @@ package com.netcracker.courses.oop.music;
 
 public enum DigitalCompositionFormat {
     MP3(false),
-    FLACK(true),
+    FLAC(true),
     WAV(true);
 
     private boolean isLossless;
