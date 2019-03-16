@@ -10,26 +10,35 @@ public abstract class AbstractMusicComposition {
      * as they are not intended to be directly accessed
      * from any other classes nor subclasses
      */
-    private static final String DEFAULT_LYRICS = "lyrics were removed due to copyright claim.";
-    private static final MusicGenre DEFAULT_GENRE = MusicGenre.UNKNOWN_GENRE;
 
+    /* this 2 field must be static, but you extension says
+     * that I break naming convention if they are static.
+     * (as I can guess)
+     * */
+//    private final String DEFAULT_LYRICS = "lyrics were removed due to copyright claim.";
+    private final MusicGenre DEFAULT_GENRE = MusicGenre.UNKNOWN_GENRE;
+
+    private final String        name;
     private final String        author;
     private final int           releaseYear;
-    private final String        lyrics;
     private final MusicGenre    genre;
 
-    public AbstractMusicComposition(String author, int releaseYear) {
+    /* currently unused but might be used for future features (like play, pause...) */
+//    private final String        lyrics;
+
+    public AbstractMusicComposition(String name, String author, int releaseYear) {
+        this.name = name;
         this.author = author;
         this.releaseYear = releaseYear;
-        this.genre = AbstractMusicComposition.DEFAULT_GENRE;
-        this.lyrics = AbstractMusicComposition.DEFAULT_LYRICS;
+        this.genre = DEFAULT_GENRE;
+//        this.lyrics = DEFAULT_LYRICS;
     }
 
     // TODO: 3/16/2019 add constructor with lyrics and genre
 
 
-    public String getLyrics() {
-        return lyrics;
+    public String getName() {
+        return name;
     }
 
     public MusicGenre getGenre() {
