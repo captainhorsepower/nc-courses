@@ -43,6 +43,16 @@ public class CompressedComposition extends AbstractDigitalComposition {
                 duration, bitRate, DigitalCompositionFormat.MP3);
     }
 
+    public CompressedComposition(String compositionName, String author, int releaseYear,
+                                 int duration) {
+
+        /* impossible as I can't make MAX_BITRATE  static */
+//        this(compositionName, author, releaseYear, duration, MAX_BITRATE, DigitalCompositionFormat.MP3);
+
+        super(compositionName, author, releaseYear, duration, DigitalCompositionFormat.MP3);
+        this.bitRate = MAX_BITRATE;
+    }
+
     @Override
     public double getSize() {
         return ((double) (getDurationSeconds() * (bitRate / BITS_IN_BYTE))) / BYTES_IN_MB;
