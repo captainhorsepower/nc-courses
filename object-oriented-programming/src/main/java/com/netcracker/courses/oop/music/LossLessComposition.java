@@ -1,11 +1,10 @@
 package com.netcracker.courses.oop.music;
 
 public class LossLessComposition extends AbstractDigitalComposition {
-    private final DigitalCompositionFormat format;
 
     public LossLessComposition(String compositionName, String author, int releaseYear,
                                int duration, DigitalCompositionFormat format) {
-        super(compositionName, author, releaseYear, duration);
+        super(compositionName, author, releaseYear, duration, format);
 
         if (!format.isLossless()) {
             throw new IllegalArgumentException(
@@ -15,8 +14,6 @@ public class LossLessComposition extends AbstractDigitalComposition {
                     + compositionName + " );"
             );
         }
-
-        this.format = format;
     }
 
     public LossLessComposition(String compositionName, String author, int releaseYear, int duration) {
@@ -29,9 +26,4 @@ public class LossLessComposition extends AbstractDigitalComposition {
         return 0;
     }
 
-    @Override
-    public DigitalCompositionFormat getFormat() {
-        // TODO: 3/16/2019 remove from here along with rafactoring
-        return null;
-    }
 }

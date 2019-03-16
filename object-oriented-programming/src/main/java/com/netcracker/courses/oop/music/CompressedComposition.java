@@ -10,11 +10,11 @@ public class CompressedComposition extends AbstractDigitalComposition {
 
 
     private final int bitRate;
-    private final DigitalCompositionFormat format;
 
     public CompressedComposition(String compositionName, String author, int releaseYear,
                                  int duration, int bitRate, DigitalCompositionFormat format) {
-        super(compositionName, author, releaseYear, duration);
+
+        super(compositionName, author, releaseYear, duration, format);
 
         if (bitRate < 128 || bitRate > 320) {
             throw new IllegalArgumentException(
@@ -34,11 +34,11 @@ public class CompressedComposition extends AbstractDigitalComposition {
         }
 
         this.bitRate = bitRate;
-        this.format = format;
     }
 
     public CompressedComposition(String compositionName, String author, int releaseYear,
                                  int duration, int bitRate) {
+
         this(compositionName, author, releaseYear,
                 duration, bitRate, DigitalCompositionFormat.MP3);
     }
@@ -46,10 +46,5 @@ public class CompressedComposition extends AbstractDigitalComposition {
     @Override
     public double getSize() {
         return ((double) (getDurationSeconds() * (bitRate / BITS_IN_BYTE))) / BYTES_IN_MB;
-    }
-
-    @Override
-    public DigitalCompositionFormat getFormat() {
-        return format;
     }
 }

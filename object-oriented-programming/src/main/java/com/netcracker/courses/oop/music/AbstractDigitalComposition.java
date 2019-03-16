@@ -2,10 +2,13 @@ package com.netcracker.courses.oop.music;
 
 public abstract class AbstractDigitalComposition extends AbstractMusicComposition {
     private final int duration;
+    private final DigitalCompositionFormat format;
 
-    public AbstractDigitalComposition(String compositionName, String author, int releaseYear, int duration) {
+    public AbstractDigitalComposition(String compositionName, String author, int releaseYear,
+                                      int duration, DigitalCompositionFormat format) {
         super(compositionName, author, releaseYear);
         this.duration = duration;
+        this.format = format;
     }
 
 
@@ -29,5 +32,7 @@ public abstract class AbstractDigitalComposition extends AbstractMusicCompositio
         return duration;
     }
 
-    public abstract DigitalCompositionFormat getFormat();
+    public DigitalCompositionFormat getFormat() {
+        return format;
+    }
 }
