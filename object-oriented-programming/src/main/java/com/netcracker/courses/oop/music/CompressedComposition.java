@@ -5,9 +5,8 @@ public class CompressedComposition extends AbstractDigitalComposition {
     /* this fields should be static, but extension */
     public final int    MAX_BITRATE     = 320;
     public final int    MIN_BITRATE     = 128;
-    private final int   BITS_IN_BYTE    = 8;
-    private final int   BYTES_IN_MB     = 1024;
-
+    public final int    BITS_IN_BYTE    = 8;
+    public final int    BYTES_IN_MB     = 1024;
 
     private final int bitRate;
 
