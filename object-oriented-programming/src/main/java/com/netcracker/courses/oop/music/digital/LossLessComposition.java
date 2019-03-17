@@ -1,4 +1,4 @@
-package com.netcracker.courses.oop.music;
+package com.netcracker.courses.oop.music.digital;
 
 public class LossLessComposition extends AbstractDigitalComposition {
 

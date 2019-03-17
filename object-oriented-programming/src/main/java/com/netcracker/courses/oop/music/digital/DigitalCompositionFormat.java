@@ -1,4 +1,4 @@
-package com.netcracker.courses.oop.music;
+package com.netcracker.courses.oop.music.digital;
 
 public enum DigitalCompositionFormat {
     MP3(false),

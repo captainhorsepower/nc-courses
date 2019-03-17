@@ -1,4 +1,6 @@
-package com.netcracker.courses.oop.music;
+package com.netcracker.courses.oop.music.digital;
+
+import com.netcracker.courses.oop.music.AbstractMusicComposition;
 
 public abstract class AbstractDigitalComposition extends AbstractMusicComposition {
     private final int duration;

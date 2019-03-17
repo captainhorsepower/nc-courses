@@ -1,4 +1,4 @@
-package com.netcracker.courses.oop.music;
+package com.netcracker.courses.oop.music.digital;
 
 /**
  * General interface for stuff that can be played
