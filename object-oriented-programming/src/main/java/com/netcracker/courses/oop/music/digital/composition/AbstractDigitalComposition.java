@@ -1,4 +1,4 @@
-package com.netcracker.courses.oop.music.digital;
+package com.netcracker.courses.oop.music.digital.composition;
 
 import com.netcracker.courses.oop.music.AbstractMusicComposition;
 
