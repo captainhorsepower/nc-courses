@@ -2,6 +2,9 @@ package com.netcracker.courses.oop.music;
 
 public class LossLessComposition extends AbstractDigitalComposition {
 
+    /* should be static */
+    public final double MB_PER_SEC = 0.17;
+
     public LossLessComposition(String compositionName, String author, int releaseYear,
                                int duration, DigitalCompositionFormat format) {
         super(compositionName, author, releaseYear, duration, format);
@@ -22,8 +25,8 @@ public class LossLessComposition extends AbstractDigitalComposition {
 
     @Override
     public double getSize() {
-        // TODO: 3/16/2019 implement properly 
-        return 0;
+        double size = MB_PER_SEC * getDurationSeconds();
+        return (getFormat() == DigitalCompositionFormat.WAV) ? size : size * 2;
     }
 
 }
