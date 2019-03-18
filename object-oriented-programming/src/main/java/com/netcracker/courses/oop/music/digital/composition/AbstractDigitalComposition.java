@@ -46,4 +46,12 @@ public abstract class AbstractDigitalComposition extends AbstractMusicCompositio
     public DigitalCompositionFormat getFormat() {
         return format;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", ."
+                + format + ", "
+                + getDurationStirng() + ", "
+                + getSize() + " MB";
+    }
 }
