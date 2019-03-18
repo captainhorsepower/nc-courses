@@ -6,12 +6,12 @@ import java.util.*;
 
 public class MusicCD {
 
-    /* this fields should be named SORT_BY_STH */
-    public static final int sortByName = 10;
-    public static final int sortByDuration = 20;
-    public static final int sortBySize = 30;
-    public static final int sortByArtist = 40;
-    public static final int sortByGenre = 50;
+    /* this fields should be static */
+    public final int SORT_BY_NAME = 10;
+    public final int SORT_BY_DURATION = 20;
+    public final int SORT_BY_SIZE = 30;
+    public final int SORT_BY_ARTIST = 40;
+    public final int SORT_BY_GENRE = 50;
 
     private final String diskName;
     private final int totalFreeSpaceMB;
@@ -113,19 +113,19 @@ public class MusicCD {
         Comparator<AbstractDigitalComposition> comparator;
 
         switch (sortBy) {
-            case sortByArtist:
+            case SORT_BY_ARTIST:
                 comparator = Comparator.comparing(AbstractDigitalComposition::getArtist);
                 break;
-            case sortByDuration:
+            case SORT_BY_DURATION:
                 comparator = Comparator.comparing(AbstractDigitalComposition::getDurationSeconds);
                 break;
-            case sortByGenre:
+            case SORT_BY_GENRE:
                 comparator = Comparator.comparing(AbstractDigitalComposition::getGenre);
                 break;
-            case sortByName:
+            case SORT_BY_NAME:
                 comparator = Comparator.comparing(AbstractDigitalComposition::getCompositionName);
                 break;
-            case sortBySize:
+            case SORT_BY_SIZE:
                 comparator = Comparator.comparing(AbstractDigitalComposition::getSize);
                 break;
             default:
@@ -136,4 +136,29 @@ public class MusicCD {
 
         compilation.sort(comparator);
     }
+
+//    public AbstractDigitalComposition findSong(double minSize, double maxSize,
+//                                               int minReleaseYear, int maxReleaseYear) {
+//
+//        if ((minSize < 0. || minReleaseYear < 0)
+//                || (maxSize < minSize || maxReleaseYear < minReleaseYear)) {
+//            throw new IllegalArgumentException("invalid boundaries");
+//        }
+//
+//        AbstractDigitalComposition result = null;
+//
+//        for (AbstractDigitalComposition c : compilation) {
+//            int year = c.getReleaseYear();
+//            double size = c.getSize();
+//
+//            if ((year <= maxReleaseYear && year >= minReleaseYear)
+//                    && (size <= maxSize && size >= minSize)) {
+//                result = c;
+//                break;
+//            }
+//            System.out.println("hello there");
+//
+//        }
+//        return null;
+//    }
 }
