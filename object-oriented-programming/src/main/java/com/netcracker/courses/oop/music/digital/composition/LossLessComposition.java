@@ -7,10 +7,10 @@ public class LossLessComposition extends AbstractDigitalComposition {
     /* should be static */
     public final double MB_PER_SEC = 0.17;
 
-    public LossLessComposition(String compositionName, String author,
+    public LossLessComposition(String compositionName, String artist,
                                MusicGenre genre, int releaseYear,
                                int duration, DigitalCompositionFormat format) {
-        super(compositionName, author, genre, releaseYear, duration, format);
+        super(compositionName, artist, genre, releaseYear, duration, format);
 
         if (!format.isLossless()) {
             throw new IllegalArgumentException(

@@ -18,7 +18,7 @@ public abstract class AbstractMusicComposition {
 //    private final String DEFAULT_LYRICS = "lyrics were removed due to copyright claim.";
 
     private final String        name;
-    private final String        author;
+    private final String artist;
     private final int           releaseYear;
     private final MusicGenre    genre;
 
@@ -26,9 +26,9 @@ public abstract class AbstractMusicComposition {
 //    private final String        lyrics;
 
 
-    public AbstractMusicComposition(String compositionName, String author, MusicGenre genre, int releaseYear) {
+    public AbstractMusicComposition(String compositionName, String artist, MusicGenre genre, int releaseYear) {
         this.name = compositionName;
-        this.author = author;
+        this.artist = artist;
         this.genre = genre;
         this.releaseYear = releaseYear;
     }
@@ -42,11 +42,12 @@ public abstract class AbstractMusicComposition {
         return genre;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getArtist() {
+        return artist;
     }
 
     public int getReleaseYear() {
         return releaseYear;
     }
+
 }

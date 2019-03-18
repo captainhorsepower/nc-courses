@@ -7,10 +7,10 @@ public abstract class AbstractDigitalComposition extends AbstractMusicCompositio
     private final int duration;
     private final DigitalCompositionFormat format;
 
-    public AbstractDigitalComposition(String compositionName, String author,
+    public AbstractDigitalComposition(String compositionName, String artist,
                                       MusicGenre genre, int releaseYear,
                                       int duration, DigitalCompositionFormat format) {
-        super(compositionName, author, genre, releaseYear);
+        super(compositionName, artist, genre, releaseYear);
         this.duration = duration;
         this.format = format;
     }

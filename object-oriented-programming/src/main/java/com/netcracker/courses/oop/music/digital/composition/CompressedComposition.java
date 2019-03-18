@@ -12,11 +12,11 @@ public class CompressedComposition extends AbstractDigitalComposition {
 
     private final int bitRate;
 
-    public CompressedComposition(String compositionName, String author,
+    public CompressedComposition(String compositionName, String artist,
                                  MusicGenre genre, int releaseYear,
                                  int duration, int bitRate, DigitalCompositionFormat format) {
 
-        super(compositionName, author, genre, releaseYear, duration, format);
+        super(compositionName, artist, genre, releaseYear, duration, format);
 
         if (bitRate < MIN_BITRATE || bitRate > MAX_BITRATE) {
             throw new IllegalArgumentException(
