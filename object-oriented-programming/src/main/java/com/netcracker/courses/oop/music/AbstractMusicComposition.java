@@ -1,7 +1,6 @@
 package com.netcracker.courses.oop.music;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 /**
  * base class for all music compositions of any type

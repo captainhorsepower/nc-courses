@@ -11,6 +11,13 @@ public abstract class AbstractDigitalComposition extends AbstractMusicCompositio
                                       MusicGenre genre, int releaseYear,
                                       int duration, DigitalCompositionFormat format) {
         super(compositionName, artist, genre, releaseYear);
+
+        if (duration <= 0) {
+            throw new IllegalArgumentException("illegal duration ("
+                    + duration + ") for composition "
+                    + compositionName);
+        }
+
         this.duration = duration;
         this.format = format;
     }
