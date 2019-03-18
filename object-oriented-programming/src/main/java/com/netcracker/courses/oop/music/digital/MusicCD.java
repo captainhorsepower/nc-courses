@@ -137,28 +137,28 @@ public class MusicCD {
         compilation.sort(comparator);
     }
 
-//    public AbstractDigitalComposition findSong(double minSize, double maxSize,
-//                                               int minReleaseYear, int maxReleaseYear) {
-//
-//        if ((minSize < 0. || minReleaseYear < 0)
-//                || (maxSize < minSize || maxReleaseYear < minReleaseYear)) {
-//            throw new IllegalArgumentException("invalid boundaries");
-//        }
-//
-//        AbstractDigitalComposition result = null;
-//
-//        for (AbstractDigitalComposition c : compilation) {
-//            int year = c.getReleaseYear();
-//            double size = c.getSize();
-//
-//            if ((year <= maxReleaseYear && year >= minReleaseYear)
-//                    && (size <= maxSize && size >= minSize)) {
-//                result = c;
-//                break;
-//            }
-//            System.out.println("hello there");
-//
-//        }
-//        return null;
-//    }
+    public AbstractDigitalComposition findSong(double minSize, double maxSize,
+                                               int minReleaseYear, int maxReleaseYear) {
+
+        if ((minSize < 0. || minReleaseYear < 0)
+                || (maxSize < minSize || maxReleaseYear < minReleaseYear)) {
+            throw new IllegalArgumentException("invalid boundaries");
+        }
+
+        AbstractDigitalComposition result = null;
+
+        for (AbstractDigitalComposition c : compilation) {
+            int year = c.getReleaseYear();
+            double size = c.getSize();
+
+            if ((year <= maxReleaseYear && year >= minReleaseYear)
+                    && (size <= maxSize && size >= minSize)) {
+                result = c;
+                break;
+            }
+            System.out.println("hello there");
+
+        }
+        return result;
+    }
 }

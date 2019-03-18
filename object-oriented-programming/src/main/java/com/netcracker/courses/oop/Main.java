@@ -1,6 +1,7 @@
 package com.netcracker.courses.oop;
 
 import com.netcracker.courses.oop.music.MusicGenre;
+import com.netcracker.courses.oop.music.digital.MusicCD;
 import com.netcracker.courses.oop.music.digital.composition.AbstractDigitalComposition;
 import com.netcracker.courses.oop.music.digital.composition.CompressedComposition;
 import com.netcracker.courses.oop.music.digital.composition.DigitalCompositionFormat;
@@ -26,5 +27,9 @@ public class Main {
         for (AbstractDigitalComposition c : compilation) {
             System.out.println(c);
         }
+
+        MusicCD cd = new MusicCD(100, "metallica");
+        cd.addAllCompositions(compilation);
+        System.out.println(cd.findSong(0, 1000, 1800, 2020));
     }
 }
