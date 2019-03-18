@@ -1,5 +1,7 @@
 package com.netcracker.courses.oop.music.digital.composition;
 
+import com.netcracker.courses.oop.music.MusicGenre;
+
 public class CompressedComposition extends AbstractDigitalComposition {
 
     /* this fields should be static, but extension */
@@ -10,12 +12,13 @@ public class CompressedComposition extends AbstractDigitalComposition {
 
     private final int bitRate;
 
-    public CompressedComposition(String compositionName, String author, int releaseYear,
+    public CompressedComposition(String compositionName, String author,
+                                 MusicGenre genre, int releaseYear,
                                  int duration, int bitRate, DigitalCompositionFormat format) {
 
-        super(compositionName, author, releaseYear, duration, format);
+        super(compositionName, author, genre, releaseYear, duration, format);
 
-        if (bitRate < 128 || bitRate > 320) {
+        if (bitRate < MIN_BITRATE || bitRate > MAX_BITRATE) {
             throw new IllegalArgumentException(
                     bitRate
                     + " is invalid bit rate for compressed song("
@@ -33,23 +36,6 @@ public class CompressedComposition extends AbstractDigitalComposition {
         }
 
         this.bitRate = bitRate;
-    }
-
-    public CompressedComposition(String compositionName, String author, int releaseYear,
-                                 int duration, int bitRate) {
-
-        this(compositionName, author, releaseYear,
-                duration, bitRate, DigitalCompositionFormat.MP3);
-    }
-
-    public CompressedComposition(String compositionName, String author, int releaseYear,
-                                 int duration) {
-
-        /* impossible as I can't make MAX_BITRATE  static */
-//        this(compositionName, author, releaseYear, duration, MAX_BITRATE, DigitalCompositionFormat.MP3);
-
-        super(compositionName, author, releaseYear, duration, DigitalCompositionFormat.MP3);
-        this.bitRate = MAX_BITRATE;
     }
 
     @Override

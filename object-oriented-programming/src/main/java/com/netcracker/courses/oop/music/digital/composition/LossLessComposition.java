@@ -1,13 +1,16 @@
 package com.netcracker.courses.oop.music.digital.composition;
 
+import com.netcracker.courses.oop.music.MusicGenre;
+
 public class LossLessComposition extends AbstractDigitalComposition {
 
     /* should be static */
     public final double MB_PER_SEC = 0.17;
 
-    public LossLessComposition(String compositionName, String author, int releaseYear,
+    public LossLessComposition(String compositionName, String author,
+                               MusicGenre genre, int releaseYear,
                                int duration, DigitalCompositionFormat format) {
-        super(compositionName, author, releaseYear, duration, format);
+        super(compositionName, author, genre, releaseYear, duration, format);
 
         if (!format.isLossless()) {
             throw new IllegalArgumentException(
@@ -19,14 +22,10 @@ public class LossLessComposition extends AbstractDigitalComposition {
         }
     }
 
-    public LossLessComposition(String compositionName, String author, int releaseYear, int duration) {
-        this(compositionName, author, releaseYear, duration, DigitalCompositionFormat.FLAC);
-    }
-
     @Override
     public double getSize() {
         double size = MB_PER_SEC * getDurationSeconds();
-        return (getFormat() == DigitalCompositionFormat.WAV) ? size : size * 2;
+        return (getFormat() != DigitalCompositionFormat.WAV) ? size : size * 2;
     }
 
 }

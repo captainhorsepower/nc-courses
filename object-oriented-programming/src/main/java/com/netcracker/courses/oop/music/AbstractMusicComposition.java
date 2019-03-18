@@ -25,9 +25,6 @@ public abstract class AbstractMusicComposition {
     /* currently unused but might be used for future features (like play, pause...) */
 //    private final String        lyrics;
 
-    public AbstractMusicComposition(String compositionName, String author, int releaseYear) {
-        this(compositionName, author, MusicGenre.UNKNOWN_GENRE, releaseYear);
-    }
 
     public AbstractMusicComposition(String compositionName, String author, MusicGenre genre, int releaseYear) {
         this.name = compositionName;
