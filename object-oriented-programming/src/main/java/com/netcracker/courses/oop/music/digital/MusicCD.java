@@ -137,6 +137,14 @@ public class MusicCD {
         compilation.sort(comparator);
     }
 
+    /**
+     * finds composition that fits in given range of params in this CD
+     * @param minSize <=
+     * @param maxSize >=
+     * @param minReleaseYear <=
+     * @param maxReleaseYear >=
+     * @return composition, or null in nothing found
+     */
     public AbstractDigitalComposition findSong(double minSize, double maxSize,
                                                int minReleaseYear, int maxReleaseYear) {
 
