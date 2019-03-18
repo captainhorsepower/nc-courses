@@ -2,12 +2,16 @@ package com.netcracker.courses.oop.music.digital;
 
 import com.netcracker.courses.oop.music.digital.composition.AbstractDigitalComposition;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class MusicCD {
+
+    /* this fields should be named SORT_BY_STH */
+    public static final int sortByName = 10;
+    public static final int sortByDuration = 20;
+    public static final int sortBySize = 30;
+    public static final int sortByArtist = 40;
+    public static final int sortByGenre = 50;
 
     private final String diskName;
     private final int totalFreeSpaceMB;
@@ -99,5 +103,37 @@ public class MusicCD {
 
     public int getDurationSeconds(){
         return durationSeconds;
+    }
+
+    /**
+     * sorts collection according to identifier;
+     * @param kind identifier
+     */
+    public void sort(final int kind) {
+        Comparator<AbstractDigitalComposition> comparator;
+
+        switch (kind) {
+            case sortByArtist:
+                comparator = Comparator.comparing(AbstractDigitalComposition::getArtist);
+                break;
+            case sortByDuration:
+                comparator = Comparator.comparing(AbstractDigitalComposition::getDurationSeconds);
+                break;
+            case sortByGenre:
+                comparator = Comparator.comparing(AbstractDigitalComposition::getGenre);
+                break;
+            case sortByName:
+                comparator = Comparator.comparing(AbstractDigitalComposition::getCompositionName);
+                break;
+            case sortBySize:
+                comparator = Comparator.comparing(AbstractDigitalComposition::getSize);
+                break;
+            default:
+                comparator = Comparator.comparing(AbstractDigitalComposition::getArtist)
+                        .thenComparing(AbstractDigitalComposition::getReleaseYear);
+                break;
+        }
+
+        compilation.sort(comparator);
     }
 }
