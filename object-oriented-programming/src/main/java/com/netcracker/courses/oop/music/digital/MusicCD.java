@@ -9,6 +9,7 @@ import java.util.List;
 
 public class MusicCD {
 
+    private final String diskName;
     private final int totalFreeSpaceMB;
     private double freeSpaceMB;
     private int durationSeconds;
@@ -19,11 +20,15 @@ public class MusicCD {
     /**
      * creates new CD for music of given size
      * @param totalFreeSpaceMB CD init free space
+     * @param diskName CD name (id)
      */
-    public MusicCD(int totalFreeSpaceMB) {
+    public MusicCD(int totalFreeSpaceMB, String diskName) {
         this.totalFreeSpaceMB = totalFreeSpaceMB;
+        this.diskName = diskName;
+
         freeSpaceMB = totalFreeSpaceMB;
         durationSeconds = 0;
+
         compilation = new ArrayList<>();
     }
 
@@ -32,10 +37,14 @@ public class MusicCD {
      * and fills it with composition from given compilation sequentially
      * NOTE, that if given composition is too large, it will be skipped
      * @param totalFreeSpaceMB given composition
+     * @param diskName CD name (id)
      * @param compilation init CD free space
      */
-    public MusicCD(int totalFreeSpaceMB, Collection<AbstractDigitalComposition> compilation) {
-        this(totalFreeSpaceMB);
+    public MusicCD(int totalFreeSpaceMB, String diskName,
+                   Collection<AbstractDigitalComposition> compilation) {
+
+        this(totalFreeSpaceMB, diskName);
+
         for (AbstractDigitalComposition c : compilation) {
             if (c.getSize() > freeSpaceMB) continue;
 
