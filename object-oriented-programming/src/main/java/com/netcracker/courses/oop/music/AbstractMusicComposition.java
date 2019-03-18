@@ -11,12 +11,11 @@ public abstract class AbstractMusicComposition {
      * from any other classes nor subclasses
      */
 
-    /* this 2 field must be static, but you extension says
+    /* this field must be static, but you extension says
      * that I break naming convention if they are static.
      * (as I can guess)
      * */
 //    private final String DEFAULT_LYRICS = "lyrics were removed due to copyright claim.";
-    private final MusicGenre DEFAULT_GENRE = MusicGenre.UNKNOWN_GENRE;
 
     private final String        name;
     private final String        author;
@@ -27,14 +26,15 @@ public abstract class AbstractMusicComposition {
 //    private final String        lyrics;
 
     public AbstractMusicComposition(String compositionName, String author, int releaseYear) {
-        this.name = compositionName;
-        this.author = author;
-        this.releaseYear = releaseYear;
-        this.genre = DEFAULT_GENRE;
-//        this.lyrics = DEFAULT_LYRICS;
+        this(compositionName, author, MusicGenre.UNKNOWN_GENRE, releaseYear);
     }
 
-    // TODO: 3/16/2019 add constructor with lyrics and genre
+    public AbstractMusicComposition(String compositionName, String author, MusicGenre genre, int releaseYear) {
+        this.name = compositionName;
+        this.author = author;
+        this.genre = genre;
+        this.releaseYear = releaseYear;
+    }
 
 
     public String getName() {
