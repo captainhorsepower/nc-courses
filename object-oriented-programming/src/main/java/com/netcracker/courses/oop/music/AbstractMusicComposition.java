@@ -1,5 +1,8 @@
 package com.netcracker.courses.oop.music;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
+
 /**
  * base class for all music compositions of any type
  * contains only some general type independent information about composition
@@ -18,7 +21,7 @@ public abstract class AbstractMusicComposition {
 //    private final String DEFAULT_LYRICS = "lyrics were removed due to copyright claim.";
 
     private final String        name;
-    private final String artist;
+    private final String        artist;
     private final int           releaseYear;
     private final MusicGenre    genre;
 
@@ -26,7 +29,14 @@ public abstract class AbstractMusicComposition {
 //    private final String        lyrics;
 
 
-    public AbstractMusicComposition(String compositionName, String artist, MusicGenre genre, int releaseYear) {
+    public AbstractMusicComposition(String compositionName, String artist,
+                                    MusicGenre genre, int releaseYear) {
+
+        if (releaseYear < 0 || releaseYear > LocalDateTime.now().getYear()) {
+            throw new IllegalArgumentException("invalid release year for "
+                    + "composition " + compositionName);
+        }
+
         this.name = compositionName;
         this.artist = artist;
         this.genre = genre;
