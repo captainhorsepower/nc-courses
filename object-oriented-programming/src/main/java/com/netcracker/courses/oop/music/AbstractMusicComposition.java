@@ -19,7 +19,7 @@ public abstract class AbstractMusicComposition {
      * */
 //    private final String DEFAULT_LYRICS = "lyrics were removed due to copyright claim.";
 
-    private final String        name;
+    private final String compositionName;
     private final String        artist;
     private final int           releaseYear;
     private final MusicGenre    genre;
@@ -31,20 +31,20 @@ public abstract class AbstractMusicComposition {
     public AbstractMusicComposition(String compositionName, String artist,
                                     MusicGenre genre, int releaseYear) {
 
-        if (releaseYear < 0 || releaseYear > LocalDateTime.now().getYear()) {
+        if (releaseYear <= 0 || releaseYear > LocalDateTime.now().getYear()) {
             throw new IllegalArgumentException("invalid release year for "
                     + "composition " + compositionName);
         }
 
-        this.name = compositionName;
+        this.compositionName = compositionName;
         this.artist = artist;
         this.genre = genre;
         this.releaseYear = releaseYear;
     }
 
 
-    public String getName() {
-        return name;
+    public String getCompositionName() {
+        return compositionName;
     }
 
     public MusicGenre getGenre() {
@@ -59,4 +59,11 @@ public abstract class AbstractMusicComposition {
         return releaseYear;
     }
 
+    @Override
+    public String toString() {
+        return "'" + getCompositionName() + "', "
+                + getArtist() + " "
+                + releaseYear + ", "
+                + getGenre();
+    }
 }
