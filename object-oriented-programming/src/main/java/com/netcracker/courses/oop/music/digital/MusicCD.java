@@ -107,12 +107,12 @@ public class MusicCD {
 
     /**
      * sorts collection according to identifier;
-     * @param kind identifier
+     * @param sortBy identifier
      */
-    public void sort(final int kind) {
+    public void sort(final int sortBy) {
         Comparator<AbstractDigitalComposition> comparator;
 
-        switch (kind) {
+        switch (sortBy) {
             case sortByArtist:
                 comparator = Comparator.comparing(AbstractDigitalComposition::getArtist);
                 break;
