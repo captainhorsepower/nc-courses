@@ -49,9 +49,12 @@ public abstract class AbstractDigitalComposition extends AbstractMusicCompositio
 
     @Override
     public String toString() {
-        return super.toString() + ", ."
-                + format + ", "
-                + getDurationStirng() + ", "
-                + getSize() + " MB";
+        return String.format(
+                "%50s %7s %7s %7.1f MB",
+
+                super.toString(),
+                ("." + format),
+                getDurationStirng(),
+                getSize());
     }
 }
