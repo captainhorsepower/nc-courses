@@ -1,5 +1,6 @@
 package com.netcracker.courses.oop.console;
 
+import com.netcracker.courses.oop.console.utils.NeverClosingInputStreamReader;
 import com.netcracker.courses.oop.music.MusicGenre;
 import com.netcracker.courses.oop.music.digital.MusicCD;
 import com.netcracker.courses.oop.music.digital.composition.AbstractDigitalComposition;
@@ -13,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -23,9 +25,6 @@ public class ConsoleController {
 
     /* messages */
     public final static String GREETINGS_MESSAGE = "Welcome to the Ultimate CD Burner!";
-    public final static String INIT_LOADING_MESSAGE = "loading songs data...";
-    public final static String INIT_LOADING_FINISHED_MESSAGE = "finished!";
-
     public static final String BYE_MESSAGE = "Good bye!";
 
     public final static String HELP_MESSAGE;
@@ -58,63 +57,28 @@ public class ConsoleController {
     }
 
 
-//    /* keywords */
-//    public final static String SELECTOR = "selector";
-//
-//
    /* commands */
+    public static final String SELECT_COMMAND = "select";
+
 
     /* quit the app */
     public static final String EXIT = "exit";
     /* get help */
     public static final String HELP = "help";
 
-//
-//   /* creating compilation and saving it to CD */
-//
-//   /**
-//    * console command to create a new CD.
-//    * can be followed with 2 params: CD name, totalFreeSpaceMB
-//    * if no params provided, program will ask for them;
-//    */
-//   public final static String CREATE_CD = "create-cd";
-
-
-//    /**
-//     * lists all songs with numbers at the left side for selecting range for compilation
-//     * then compilation is written to new CD
-//     */
-//    public final static String LIST_ALL_SONGS      = "ls-songs";
-//    public final static String LIST_ALL_DISKS = "ls-disks";
-//    /* print */
-//    public final static String PRINT_ITEM  = "print";
-//    public final static String PRINT_ALL   = "print-all";
-   
-   
-//    /* select */
-//    public final static String SELECT_DISK = "select-cd";
-//    public final static String SELECT_SONG = "select-song";
-
-
-//    public static MusicCD createCD() {
-//        return null;
-//    }
+    /* options */
+    public static final String SONG_OPTION = "song";
+    public static final String CD_OPTION = "cd";
 
     private static final int                        INIT_CAPACITY = 10;
     private ArrayList<AbstractDigitalComposition>   allSongs;
     private ArrayList<MusicCD>                      allCD;
 
-    private int                                     selectedSongInd;
-    private int                                     selectedCDInd;
+    private int                                     selectedSongInd = -1;
+    private int                                     selectedCDInd = -1;
 
     public ConsoleController() {
         System.out.println(GREETINGS_MESSAGE);
-
-        /*
-         * all available songs are loaded fast enough,
-         * so may skip this message for now
-         */
-//        System.out.println(INIT_LOADING_MESSAGE);
 
         allCD = new ArrayList<>(INIT_CAPACITY);
 
@@ -220,45 +184,133 @@ public class ConsoleController {
         };
 
         allSongs = new ArrayList<>(Arrays.asList(temp));
-
-//        System.out.println(INIT_LOADING_FINISHED_MESSAGE);
     }
 
     /**
      * handles provided user command
-     * @param input command
+     * @param userInput command
      * @return false only in case input == "exit"
      */
-    public boolean handleUserInput(String input) {
+    public boolean handleUserInput(String userInput) {
 
-        if (input == null) {
+        if (userInput == null) {
             System.out.println("weird, but input == null");
             return true;
         }
 
-        input = input.toLowerCase();
+        String input = userInput.toLowerCase();
 
-        /* get keyword or command */
         StringTokenizer st = new StringTokenizer(input);
+
         input = st.nextToken();
 
-        switch (input) {
-            case HELP: {
-                System.out.println(HELP_MESSAGE);
-                break;
+        if (st.hasMoreTokens()) {
+            switch (input) {
+                case SELECT_COMMAND: {
+                    select(st);
+                    break;
+                }
+                default: {
+                    System.out.println("\"" + userInput + "\" is unsupported command/keyword. "
+                            + "use help to see the list of available commands");
+                    break;
+                }
             }
-            case EXIT: {
-                System.out.println(BYE_MESSAGE);
-                return false;
-            }
-            default: {
-                System.out.println("\"" + input + "\" is unsupported command/keyword. "
-                        + "use help to see the list of available commands");
-                break;
+        } else {
+            switch (input) {
+                case HELP: {
+                    System.out.println(HELP_MESSAGE);
+                    break;
+                }
+                case EXIT: {
+                    System.out.println(BYE_MESSAGE);
+                    return false;
+                }
+                default: {
+                    System.out.println("\"" + userInput + "\" is unsupported command/keyword. "
+                            + "use help to see the list of available commands");
+                    break;
+                }
             }
         }
         return true;
     }
 
+    private void select(StringTokenizer st) {
+
+        String option = st.nextToken();
+
+        switch (option) {
+            case SONG_OPTION: {
+                selectedSongInd = selectIndFromList(allSongs);
+                break;
+            }
+            case CD_OPTION: {
+                selectedCDInd = selectIndFromList(allCD);
+                break;
+            }
+            default: {
+                System.out.println("\"" + option + "\" is unsupported option for select. "
+                        + "use help to see the list of available commands");
+                break;
+            }
+        }
+    }
+
+    private <T> int selectIndFromList(List<T> allSth) {
+
+        if (allSth.isEmpty()) {
+            System.out.println("there are no items to select from!");
+            return -1;
+        }
+
+
+
+        System.out.println("select one of the following:");
+
+        for (int i = 0; i < allSth.size(); i++) {
+            System.out.println(
+                    "\t"
+                    + String.format("%2d) ", i)
+                    + allSth.get(i)
+            );
+        }
+
+
+
+        int selectedInd;
+
+        try(BufferedReader reader = new BufferedReader(
+                new NeverClosingInputStreamReader(System.in))) {
+
+            while (true) {
+
+                try {
+                    selectedInd = Integer.parseInt(reader.readLine());
+
+                    if (selectedInd < 0 || selectedInd >= allSth.size()) {
+                        throw new NumberFormatException();
+                    }
+
+                    break;
+
+                } catch (NumberFormatException e) {
+                    System.out.println("please, re-enter valid index");
+                }
+
+            }
+
+        } catch (IOException e) {
+            System.out.println(
+                    "console input failed, aborting select request\n"
+                    + "selection is cleared."
+            );
+            selectedInd = -1;
+        }
+
+
+
+        return selectedInd;
+    }
 
 }
