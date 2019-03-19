@@ -1,9 +1,18 @@
 package com.netcracker.courses.oop.console;
 
+import com.netcracker.courses.oop.music.MusicGenre;
+import com.netcracker.courses.oop.music.digital.MusicCD;
+import com.netcracker.courses.oop.music.digital.composition.AbstractDigitalComposition;
+import com.netcracker.courses.oop.music.digital.composition.CompressedComposition;
+import com.netcracker.courses.oop.music.digital.composition.DigitalCompositionFormat;
+import com.netcracker.courses.oop.music.digital.composition.LossLessComposition;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -15,20 +24,14 @@ public class ConsoleController {
     /* messages */
     public final static String GREETINGS_MESSAGE = "Welcome to the Ultimate CD Burner!";
     public final static String INIT_LOADING_MESSAGE = "loading songs data...";
-
+    public final static String INIT_LOADING_FINISHED_MESSAGE = "finished!";
 
     public static final String BYE_MESSAGE = "Good bye!";
 
-    // TODO: 3/19/2019 add descriptive HELP_MESSAGE
     public final static String HELP_MESSAGE;
+
+    /* initializes HELP_MESSAGE */
     static {
-//        System.out.println(ConsoleController.class.getResource("help.help"));
-//        InputStream input = ConsoleController.class.getResourceAsStream("help.help");
-//        System.out.println(input);
-//        input = ConsoleController.class.getClassLoader().getResourceAsStream("/help.help");
-//        System.out.println(input);
-//        input = ConsoleController.class.getClassLoader().getResourceAsStream("help.help");
-//        System.out.println(input);
 
         InputStream inputStream = ConsoleController.class.getResourceAsStream("/help.help");
 
@@ -36,6 +39,7 @@ public class ConsoleController {
             HELP_MESSAGE = "help will be added with future releases";
         } else {
             StringBuilder sb = new StringBuilder();
+
             try (BufferedReader r = new BufferedReader(new InputStreamReader(inputStream))) {
                 String line = r.readLine();
 
@@ -96,10 +100,128 @@ public class ConsoleController {
 //        return null;
 //    }
 
+    private static final int                        INIT_CAPACITY = 10;
+    private ArrayList<AbstractDigitalComposition>   allSongs;
+    private ArrayList<MusicCD>                      allCD;
+
+    private int                                     selectedSongInd;
+    private int                                     selectedCDInd;
 
     public ConsoleController() {
         System.out.println(GREETINGS_MESSAGE);
-        System.out.println(INIT_LOADING_MESSAGE);
+
+        /*
+         * all available songs are loaded fast enough,
+         * so may skip this message for now
+         */
+//        System.out.println(INIT_LOADING_MESSAGE);
+
+        allCD = new ArrayList<>(INIT_CAPACITY);
+
+        /* i might replace it with reading from file */
+        AbstractDigitalComposition[] temp = new AbstractDigitalComposition[] {
+                new CompressedComposition(
+                        "Sad but True",
+                        "Metallica",
+                        MusicGenre.METAL,
+                        1993,
+                        324,
+                        CompressedComposition.MAX_BITRATE,
+                        DigitalCompositionFormat.MP3),
+                new CompressedComposition(
+                        "Enter Sandman",
+                        "Metallica",
+                        MusicGenre.METAL,
+                        1991,
+                        352,
+                        CompressedComposition.MAX_BITRATE,
+                        DigitalCompositionFormat.MP3),
+                new LossLessComposition(
+                        "My World",
+                        "Metallica",
+                        MusicGenre.METAL,
+                        2003,
+                        346,
+                        DigitalCompositionFormat.FLAC
+                ),
+                new LossLessComposition(
+                        "St. Anger",
+                        "Metallica",
+                        MusicGenre.METAL,
+                        2003,
+                        441,
+                        DigitalCompositionFormat.FLAC
+                ),
+                new LossLessComposition(
+                        "Sweet Amber",
+                        "Metallica",
+                        MusicGenre.METAL,
+                        2003,
+                        428,
+                        DigitalCompositionFormat.FLAC
+                ),
+                new CompressedComposition(
+                        "The Emperor",
+                        "Paint The Future Black",
+                        MusicGenre.ALTERANTIVE,
+                        2017,
+                        200,
+                        320,
+                        DigitalCompositionFormat.MP3),
+                new CompressedComposition(
+                        "Scars on the Face",
+                        "Paint The Future Black",
+                        MusicGenre.ALTERANTIVE,
+                        2017,
+                        205,
+                        320,
+                        DigitalCompositionFormat.MP3),
+                new CompressedComposition(
+                        "Less Than Three",
+                        "Paint The Future Black",
+                        MusicGenre.ALTERANTIVE,
+                        2017,
+                        242,
+                        320,
+                        DigitalCompositionFormat.MP3),
+                new LossLessComposition(
+                        "Let's Go",
+                        "Stuck in the Sound",
+                        MusicGenre.INDIE,
+                        2012,
+                        271,
+                        DigitalCompositionFormat.FLAC
+                ),
+                new CompressedComposition(
+                        "Move",
+                        "Saint Motel",
+                        MusicGenre.INDIE,
+                        2016,
+                        307,
+                        240,
+                        DigitalCompositionFormat.MP3),
+                new CompressedComposition(
+                        "Slow Motion",
+                        "Saint Motel",
+                        MusicGenre.INDIE,
+                        2016,
+                        236,
+                        240,
+                        DigitalCompositionFormat.MP3),
+                new CompressedComposition(
+                        "You Can Be You",
+                        "Saint Motel",
+                        MusicGenre.INDIE,
+                        2016,
+                        237,
+                        240,
+                        DigitalCompositionFormat.MP3),
+
+        };
+
+        allSongs = new ArrayList<>(Arrays.asList(temp));
+
+//        System.out.println(INIT_LOADING_FINISHED_MESSAGE);
     }
 
     /**
