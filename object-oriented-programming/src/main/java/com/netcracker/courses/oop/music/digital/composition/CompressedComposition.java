@@ -4,11 +4,10 @@ import com.netcracker.courses.oop.music.MusicGenre;
 
 public class CompressedComposition extends AbstractDigitalComposition {
 
-    /* this fields should be static, but extension */
-    public final int    MAX_BITRATE     = 320;
-    public final int    MIN_BITRATE     = 128;
-    public final int    BITS_IN_BYTE    = 8;
-    public final int    BYTES_IN_MB     = 1024;
+    public static final int    MAX_BITRATE     = 320;
+    public static final int    MIN_BITRATE     = 128;
+    public static final int    BITS_IN_BYTE    = 8;
+    public static final int    BYTES_IN_MB     = 1024;
 
     private final int bitRate;
 

@@ -13,10 +13,6 @@ public abstract class AbstractMusicComposition {
      * from any other classes nor subclasses
      */
 
-    /* this field must be static, but you extension says
-     * that I break naming convention if they are static.
-     * (as I can guess)
-     * */
 //    private final String DEFAULT_LYRICS = "lyrics were removed due to copyright claim.";
 
     private final String compositionName;

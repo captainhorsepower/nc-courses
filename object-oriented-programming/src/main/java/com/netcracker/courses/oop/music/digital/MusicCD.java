@@ -6,12 +6,11 @@ import java.util.*;
 
 public class MusicCD {
 
-    /* this fields should be static */
-    public final int SORT_BY_NAME = 10;
-    public final int SORT_BY_DURATION = 20;
-    public final int SORT_BY_SIZE = 30;
-    public final int SORT_BY_ARTIST = 40;
-    public final int SORT_BY_GENRE = 50;
+    public static final int SORT_BY_NAME = 10;
+    public static final int SORT_BY_DURATION = 20;
+    public static final int SORT_BY_SIZE = 30;
+    public static final int SORT_BY_ARTIST = 40;
+    public static final int SORT_BY_GENRE = 50;
 
     private final String diskName;
     private final int totalFreeSpaceMB;
@@ -164,8 +163,6 @@ public class MusicCD {
                 result = c;
                 break;
             }
-            System.out.println("hello there");
-
         }
         return result;
     }

@@ -4,8 +4,7 @@ import com.netcracker.courses.oop.music.MusicGenre;
 
 public class LossLessComposition extends AbstractDigitalComposition {
 
-    /* should be static */
-    public final double MB_PER_SEC = 0.17;
+    private static final double MB_PER_SEC = 0.17;
 
     public LossLessComposition(String compositionName, String artist,
                                MusicGenre genre, int releaseYear,
