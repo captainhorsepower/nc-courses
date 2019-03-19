@@ -1,14 +1,28 @@
-usage:  <keyword> <command> [<args>]
-        or
-        <command>
+usage:  <command> [<args>]
 
-flow control commands:
-    exit         exit program
+some commonly used commands:
 
-print all available smth:
-    print <command>     general structure
-    print ....
-    
+flow control:
+    exit                exit program
 
-get help commands:
-    help         print this info
+get help:
+    help                print this info
+
+print stuff:
+    print-song          print selected song info
+    print-cd            print selected cd info
+
+    print-song --all    print all songs in memory
+    print-cds  --all    print all created CDs
+
+    print-compilation   print current compilation
+
+create CD:
+    create-compilation  creates temporary compilation that can be burned to CD
+
+    create-cd <totalFreeSpace> <CD name>
+                        create CD with given name of given space
+                        if no compilation is selected, will ask for it first.
+                        if some tracks from compilation do not fit on CD,
+                        they will be printed to console
+                        and selected as next compilation
