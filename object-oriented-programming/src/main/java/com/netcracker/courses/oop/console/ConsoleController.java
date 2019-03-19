@@ -1,6 +1,6 @@
 package com.netcracker.courses.oop.console;
 
-import com.netcracker.courses.oop.music.digital.MusicCD;
+import java.util.StringTokenizer;
 
 /**
  * Console controller class.
@@ -8,18 +8,26 @@ import com.netcracker.courses.oop.music.digital.MusicCD;
  */
 public class ConsoleController {
 
-    // TODO: 3/19/2019 add descriptive HELP
-    public final static String HELP = "";
-    
-    /* start-up messages */
-    public final static String GREETINGS    = "Welcome to the Ultimate CD Burner!\n";
-    public final static String INIT_LOADING = "loading songs data...\n";
-    
+    /* messages */
+    public final static String GREETINGS_MESSAGE = "Welcome to the Ultimate CD Burner!";
+    public final static String INIT_LOADING_MESSAGE = "loading songs data...";
+
+    // TODO: 3/19/2019 add descriptive HELP_MESSAGE
+    public final static String HELP_MESSAGE = "help will be added with future releases";
+
+
+
 //    /* keywords */
 //    public final static String SELECTOR = "selector";
 //
 //
-//   /* commands */
+   /* commands */
+
+    /* quit the app */
+    public static final String EXIT = "exit";
+    /* get help */
+    public static final String HELP = "help";
+
 //
 //   /* creating compilation and saving it to CD */
 //
@@ -53,8 +61,44 @@ public class ConsoleController {
 
 
     public ConsoleController() {
-        System.out.println(GREETINGS);
-        System.out.println(INIT_LOADING);
+        System.out.println(GREETINGS_MESSAGE);
+        System.out.println(INIT_LOADING_MESSAGE);
     }
+
+    /**
+     * handles provided user command
+     * @param input command
+     * @return false only in case input == "exit"
+     */
+    public boolean handleUserInput(String input) {
+
+        if (input == null) {
+            System.out.println("weird, but input == null");
+            return true;
+        }
+
+        input = input.toLowerCase();
+
+        /* get keyword or command */
+        StringTokenizer st = new StringTokenizer(input);
+        input = st.nextToken();
+
+        switch (input) {
+            case HELP: {
+                System.out.println(HELP_MESSAGE);
+                break;
+            }
+            case EXIT: {
+                return false;
+            }
+            default: {
+                System.out.println("\"" + input + "\" is unsupported command/keyword. "
+                        + "use help to see the list of available commands");
+                break;
+            }
+        }
+        return true;
+    }
+
 
 }
