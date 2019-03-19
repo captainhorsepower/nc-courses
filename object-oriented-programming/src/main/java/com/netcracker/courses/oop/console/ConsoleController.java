@@ -59,20 +59,26 @@ public class ConsoleController {
 
    /* commands */
     public static final String SELECT_COMMAND = "select";
+    public static final String PRINT_COMMAND = "print";
+
+    public static final String EXIT_COMMAND = "exit";
+    public static final String HELP_COMMAND = "help";
 
 
-    /* quit the app */
-    public static final String EXIT = "exit";
-    /* get help */
-    public static final String HELP = "help";
 
     /* options */
     public static final String SONG_OPTION = "song";
     public static final String CD_OPTION = "cd";
+    public static final String COMPILATION_OPTION = "compilation";
+
+
+    /* arguments */
+    public static final String ALL_ARG = "--all";
 
     private static final int                        INIT_CAPACITY = 10;
     private ArrayList<AbstractDigitalComposition>   allSongs;
     private ArrayList<MusicCD>                      allCD;
+    private List<AbstractDigitalComposition>        compilation;
 
     private int                                     selectedSongInd = -1;
     private int                                     selectedCDInd = -1;
@@ -210,6 +216,10 @@ public class ConsoleController {
                     select(st);
                     break;
                 }
+                case PRINT_COMMAND: {
+                    print(st);
+                    break;
+                }
                 default: {
                     System.out.println("\"" + userInput + "\" is unsupported command/keyword. "
                             + "use help to see the list of available commands");
@@ -218,11 +228,11 @@ public class ConsoleController {
             }
         } else {
             switch (input) {
-                case HELP: {
+                case HELP_COMMAND: {
                     System.out.println(HELP_MESSAGE);
                     break;
                 }
-                case EXIT: {
+                case EXIT_COMMAND: {
                     System.out.println(BYE_MESSAGE);
                     return false;
                 }
@@ -235,6 +245,8 @@ public class ConsoleController {
         }
         return true;
     }
+
+
 
     private void select(StringTokenizer st) {
 
@@ -313,4 +325,53 @@ public class ConsoleController {
         return selectedInd;
     }
 
+
+
+    private void print(StringTokenizer st) {
+
+        String option = st.nextToken();
+
+        String arg = "";
+        if (st.hasMoreTokens()) {
+            arg = st.nextToken();
+        }
+
+        switch (option) {
+            case SONG_OPTION: {
+                if (ALL_ARG.equals(arg)) printAll(allSongs);
+                else {
+                    if (selectedSongInd == -1) System.out.println("no song is selected");
+                    else print(allSongs.get(selectedSongInd));
+                }
+                break;
+            }
+            case CD_OPTION: {
+                if (ALL_ARG.equals(arg)) printAll(allCD);
+                else {
+                    if (selectedCDInd == -1) System.out.println("no CD is selected");
+                    else print(allCD.get(selectedCDInd));
+                }
+                break;
+            }
+            case COMPILATION_OPTION: {
+                printAll(compilation);
+                break;
+            }
+            default: {
+                System.out.println("\"" + option + "\" is unsupported option for print. "
+                        + "use help to see the list of available commands");
+                break;
+            }
+        }
+    }
+
+    private <T> void printAll(List<T> allSth) {
+        for (T t : allSth) {
+            System.out.println("\t" + t);
+        }
+    }
+
+    private <T> void print(T sth) {
+        System.out.println("\t" + sth);
+    }
 }
