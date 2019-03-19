@@ -1,4 +1,4 @@
-usage:  <command> [<args>]
+usage:  <command> <option> [<args>]
 
 some commonly used commands:
 
@@ -7,6 +7,10 @@ flow control:
 
 get help:
     help                print this info
+
+select stuff:
+    select song         select song from list of all songs
+    select cd           select CD from list of CDs
 
 print stuff:
     print-song          print selected song info
