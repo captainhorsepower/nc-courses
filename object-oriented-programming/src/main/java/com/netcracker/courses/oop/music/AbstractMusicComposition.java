@@ -57,9 +57,12 @@ public abstract class AbstractMusicComposition {
 
     @Override
     public String toString() {
-        return "'" + getCompositionName() + "', "
-                + getArtist() + " "
-                + releaseYear + ", "
-                + getGenre();
+        return String.format(
+                "%-20s %-25s %-7s %-10s"
+                , getCompositionName()
+                , getArtist()
+                , releaseYear
+                , getGenre()
+        );
     }
 }

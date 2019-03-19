@@ -33,7 +33,7 @@ public abstract class AbstractDigitalComposition extends AbstractMusicCompositio
      * @return composition duration as String "min:sec"
      */
     public  String getDurationStirng() {
-        return (duration/60) + ":" + (duration%60);
+        return String.format("%2d:%02d", (duration / 60), (duration % 60));
     }
 
     /**
@@ -50,7 +50,7 @@ public abstract class AbstractDigitalComposition extends AbstractMusicCompositio
     @Override
     public String toString() {
         return String.format(
-                "%50s %7s %7s %7.1f MB",
+                "%-70s %-7s %5s %7.1f MB",
 
                 super.toString(),
                 ("." + format),
