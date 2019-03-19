@@ -18,7 +18,7 @@ public class MusicCD {
     private int durationSeconds;
 
     /* use ArrayList for faster sorts */
-    private ArrayList<AbstractDigitalComposition> compilation;
+    private ArrayList<AbstractDigitalComposition> songs;
 
     /**
      * creates new CD for music of given size
@@ -32,30 +32,7 @@ public class MusicCD {
         freeSpaceMB = totalFreeSpaceMB;
         durationSeconds = 0;
 
-        compilation = new ArrayList<>();
-    }
-
-    /**
-     * creates new CD for music of given size
-     * and fills it with composition from given compilation sequentially
-     * NOTE, that if given composition is too large, it will be skipped
-     * @param totalFreeSpaceMB given composition
-     * @param diskName CD name (id)
-     * @param compilation init CD free space
-     */
-    public MusicCD(int totalFreeSpaceMB, String diskName,
-                   Collection<AbstractDigitalComposition> compilation) {
-
-        this(totalFreeSpaceMB, diskName);
-
-        for (AbstractDigitalComposition c : compilation) {
-            if (c.getSize() > freeSpaceMB) continue;
-
-            this.durationSeconds += c.getDurationSeconds();
-            this.freeSpaceMB -= c.getSize();
-
-            this.compilation.add(c);
-        }
+        songs = new ArrayList<>();
     }
 
     /**
@@ -67,7 +44,7 @@ public class MusicCD {
 
         if (composition.getSize() > freeSpaceMB) return false;
 
-        compilation.add(composition);
+        songs.add(composition);
         freeSpaceMB -= composition.getSize();
         durationSeconds += composition.getDurationSeconds();
 
@@ -75,9 +52,9 @@ public class MusicCD {
     }
 
     /**
-     * attempt to write given compilation to CD
-     * @param compilation given compilation
-     * @return List of compositions, that did not fit on CD. null if compilation fits
+     * attempt to write given songs to CD
+     * @param compilation given songs
+     * @return List of compositions, that did not fit on CD. null if songs fits
      */
     public List<AbstractDigitalComposition> addAllCompositions(Collection<AbstractDigitalComposition> compilation) {
         List<AbstractDigitalComposition> skippedCompositions = null;
@@ -98,6 +75,18 @@ public class MusicCD {
 
     public double getFreeSpaceMB() {
         return freeSpaceMB;
+    }
+
+    public int getTotalFreeSpaceMB() {
+        return totalFreeSpaceMB;
+    }
+
+    public String getCDName() {
+        return diskName;
+    }
+
+    public List<AbstractDigitalComposition> getSongs() {
+        return Collections.unmodifiableList(songs);
     }
 
     public int getDurationSeconds(){
@@ -133,7 +122,7 @@ public class MusicCD {
                 break;
         }
 
-        compilation.sort(comparator);
+        songs.sort(comparator);
     }
 
     /**
@@ -154,7 +143,7 @@ public class MusicCD {
 
         AbstractDigitalComposition result = null;
 
-        for (AbstractDigitalComposition c : compilation) {
+        for (AbstractDigitalComposition c : songs) {
             int year = c.getReleaseYear();
             double size = c.getSize();
 
