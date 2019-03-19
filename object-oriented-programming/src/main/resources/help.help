@@ -21,10 +21,10 @@ print stuff:
 
     print compilation   print current compilation
 
-create CD:
-    create-compilation  creates temporary compilation that can be burned to CD
+create stuff:
+    create compilation  creates temporary compilation that can be burned to CD
 
-    create-cd <totalFreeSpace> <CD name>
+    create cd <totalFreeSpace> <CD name>
                         create CD with given name of given space
                         if no compilation is selected, will ask for it first.
                         if some tracks from compilation do not fit on CD,
