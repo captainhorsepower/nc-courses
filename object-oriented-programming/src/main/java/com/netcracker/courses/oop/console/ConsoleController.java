@@ -1,5 +1,9 @@
 package com.netcracker.courses.oop.console;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 /**
@@ -12,9 +16,42 @@ public class ConsoleController {
     public final static String GREETINGS_MESSAGE = "Welcome to the Ultimate CD Burner!";
     public final static String INIT_LOADING_MESSAGE = "loading songs data...";
 
-    // TODO: 3/19/2019 add descriptive HELP_MESSAGE
-    public final static String HELP_MESSAGE = "help will be added with future releases";
 
+    public static final String BYE_MESSAGE = "Good bye!";
+
+    // TODO: 3/19/2019 add descriptive HELP_MESSAGE
+    public final static String HELP_MESSAGE;
+    static {
+//        System.out.println(ConsoleController.class.getResource("help.help"));
+//        InputStream input = ConsoleController.class.getResourceAsStream("help.help");
+//        System.out.println(input);
+//        input = ConsoleController.class.getClassLoader().getResourceAsStream("/help.help");
+//        System.out.println(input);
+//        input = ConsoleController.class.getClassLoader().getResourceAsStream("help.help");
+//        System.out.println(input);
+
+        InputStream inputStream = ConsoleController.class.getResourceAsStream("/help.help");
+
+        if (inputStream == null) {
+            HELP_MESSAGE = "help will be added with future releases";
+        } else {
+            StringBuilder sb = new StringBuilder();
+            try (BufferedReader r = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line = r.readLine();
+
+                while (line != null) {
+                    sb.append(line).append("\n");
+                    line = r.readLine();
+                }
+
+                sb.setLength(sb.length() - 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            HELP_MESSAGE = sb.toString();
+        }
+    }
 
 
 //    /* keywords */
@@ -89,6 +126,7 @@ public class ConsoleController {
                 break;
             }
             case EXIT: {
+                System.out.println(BYE_MESSAGE);
                 return false;
             }
             default: {

@@ -1,0 +1,14 @@
+usage:  <keyword> <command> [<args>]
+        or
+        <command>
+
+flow control commands:
+    exit         exit program
+
+print all available smth:
+    print <command>     general structure
+    print ....
+    
+
+get help commands:
+    help         print this info

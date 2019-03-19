@@ -15,7 +15,7 @@ public abstract class AbstractMusicComposition {
 
 //    private final String DEFAULT_LYRICS = "lyrics were removed due to copyright claim.";
 
-    private final String compositionName;
+    private final String        compositionName;
     private final String        artist;
     private final int           releaseYear;
     private final MusicGenre    genre;
