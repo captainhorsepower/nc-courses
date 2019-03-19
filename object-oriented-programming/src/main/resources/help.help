@@ -13,13 +13,13 @@ select stuff:
     select cd           select CD from list of CDs
 
 print stuff:
-    print-song          print selected song info
-    print-cd            print selected cd info
+    print song          print selected song info
+    print cd            print selected cd info
 
-    print-song --all    print all songs in memory
-    print-cds  --all    print all created CDs
+    print song --all    print all songs in memory
+    print cds  --all    print all created CDs
 
-    print-compilation   print current compilation
+    print compilation   print current compilation
 
 create CD:
     create-compilation  creates temporary compilation that can be burned to CD
