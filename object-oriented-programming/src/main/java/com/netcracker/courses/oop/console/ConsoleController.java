@@ -12,10 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Console controller class.
@@ -202,6 +199,10 @@ public class ConsoleController {
 
         if (userInput == null) {
             System.out.println("weird, but input == null");
+            return true;
+        }
+
+        if (userInput.isEmpty()) {
             return true;
         }
 
@@ -393,6 +394,15 @@ public class ConsoleController {
                 createCompilation();
                 break;
             }
+            case CD_OPTION: {
+                createCD(st);
+                break;
+            }
+            default: {
+                System.out.println("\"" + option + "\" is unsupported option for create. "
+                        + "use help to see the list of available commands");
+                break;
+            }
         }
     }
 
@@ -446,13 +456,52 @@ public class ConsoleController {
 
         } catch (IOException e) {
             System.out.println(
-                    "console input failed, aborting create compilation request\n"
-                            + "selection is cleared."
+                    "console input failed, aborting create request\n"
             );
             compilation = null;
             return;
         }
 
         compilation = allSongs.subList(l, r + 1);
+    }
+
+    private void createCD(StringTokenizer st) {
+        if (compilation == null) {
+            System.out.println("create compilation before creating disk");
+            return;
+        }
+
+        int sizeArg;
+        String nameArg;
+
+        try {
+            sizeArg = Integer.parseInt(st.nextToken());
+            nameArg = st.nextToken();
+        } catch (Exception e) {
+            System.out.println("invalid arguments for create cd. Use help to learn how to crate CD");
+            return;
+        }
+
+        MusicCD cd = new MusicCD(sizeArg, nameArg);
+
+        List<AbstractDigitalComposition> temp = cd.addAllCompositions(compilation);
+
+        if (!temp.isEmpty()) {
+            System.out.println("some compositions from compilation didn't fit on cd."
+                    + "select them as compilation? y / n"
+            );
+        }
+
+        try {
+            int ans = System.in.read();
+            System.out.println(ans);
+            System.out.println((int) 'y');
+            printAll(temp);
+            if (ans == (int) 'y') compilation = temp;
+        } catch (IOException e) {
+            System.out.println("sth wrong with your answer");
+        }
+
+        allCD.add(cd);
     }
 }
