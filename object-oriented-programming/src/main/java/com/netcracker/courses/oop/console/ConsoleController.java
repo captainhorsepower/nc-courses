@@ -67,7 +67,7 @@ public class ConsoleController {
     /* options */
     public static final String SONG_OPTION = "song";
     public static final String CD_OPTION = "cd";
-    public static final String COMPILATION_OPTION = "compilation";
+    public static final String COMPILATION_OPTION = "cmpl";
 
 
     /* arguments */
@@ -385,6 +385,7 @@ public class ConsoleController {
     }
 
 
+
     private void create(StringTokenizer st) {
 
         String option = st.nextToken();
@@ -439,7 +440,7 @@ public class ConsoleController {
             while (true) {
 
                 try {
-                    System.out.println("choose r: ");
+                    System.out.print("choose r: ");
                     r = Integer.parseInt(reader.readLine());
 
                     if (r < l || r >= allSongs.size()) {
@@ -494,9 +495,6 @@ public class ConsoleController {
 
         try {
             int ans = System.in.read();
-            System.out.println(ans);
-            System.out.println((int) 'y');
-            printAll(temp);
             if (ans == (int) 'y') compilation = temp;
         } catch (IOException e) {
             System.out.println("sth wrong with your answer");

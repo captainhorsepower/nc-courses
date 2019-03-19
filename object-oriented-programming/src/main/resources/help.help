@@ -19,7 +19,7 @@ print stuff:
     print song --all    print all songs in memory
     print cds  --all    print all created CDs
 
-    print compilation   print current compilation
+    print cmpl   print current compilation
 
 create stuff:
     create compilation  creates temporary compilation that can be burned to CD
