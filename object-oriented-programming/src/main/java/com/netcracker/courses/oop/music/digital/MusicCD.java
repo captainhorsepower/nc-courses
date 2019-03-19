@@ -71,7 +71,7 @@ public class MusicCD {
         freeSpaceMB -= composition.getSize();
         durationSeconds += composition.getDurationSeconds();
 
-        return false;
+        return true;
     }
 
     /**
