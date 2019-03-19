@@ -60,6 +60,7 @@ public class ConsoleController {
    /* commands */
     public static final String SELECT_COMMAND = "select";
     public static final String PRINT_COMMAND = "print";
+    public static final String CREATE_COMMAND = "create";
 
     public static final String EXIT_COMMAND = "exit";
     public static final String HELP_COMMAND = "help";
@@ -220,6 +221,10 @@ public class ConsoleController {
                     print(st);
                     break;
                 }
+                case CREATE_COMMAND: {
+                    create(st);
+                    break;
+                }
                 default: {
                     System.out.println("\"" + userInput + "\" is unsupported command/keyword. "
                             + "use help to see the list of available commands");
@@ -269,6 +274,16 @@ public class ConsoleController {
         }
     }
 
+    private <T> void printSelectionList(List<T> allSth) {
+        for (int i = 0; i < allSth.size(); i++) {
+            System.out.println(
+                    "\t"
+                            + String.format("%2d) ", i)
+                            + allSth.get(i)
+            );
+        }
+    }
+
     private <T> int selectIndFromList(List<T> allSth) {
 
         if (allSth.isEmpty()) {
@@ -279,14 +294,7 @@ public class ConsoleController {
 
 
         System.out.println("select one of the following:");
-
-        for (int i = 0; i < allSth.size(); i++) {
-            System.out.println(
-                    "\t"
-                    + String.format("%2d) ", i)
-                    + allSth.get(i)
-            );
-        }
+        printSelectionList(allSth);
 
 
 
@@ -373,5 +381,78 @@ public class ConsoleController {
 
     private <T> void print(T sth) {
         System.out.println("\t" + sth);
+    }
+
+
+    private void create(StringTokenizer st) {
+
+        String option = st.nextToken();
+
+        switch (option) {
+            case COMPILATION_OPTION: {
+                createCompilation();
+                break;
+            }
+        }
+    }
+
+    private void createCompilation() {
+
+        System.out.println("choose [l, r] boundaries for compilation:");
+        printSelectionList(allSongs);
+
+        int l;
+        int r;
+
+        try(BufferedReader reader = new BufferedReader(
+                new NeverClosingInputStreamReader(System.in))) {
+
+
+            while (true) {
+
+                try {
+                    System.out.print("choose l: ");
+                    l = Integer.parseInt(reader.readLine());
+
+                    if (l < 0 || l >= allSongs.size()) {
+                        throw new NumberFormatException();
+                    }
+
+                    break;
+
+                } catch (NumberFormatException e) {
+                    System.out.println("no, enter valid l");
+                }
+
+            }
+
+            while (true) {
+
+                try {
+                    System.out.println("choose r: ");
+                    r = Integer.parseInt(reader.readLine());
+
+                    if (r < l || r >= allSongs.size()) {
+                        throw new NumberFormatException();
+                    }
+
+                    break;
+
+                } catch (NumberFormatException e) {
+                    System.out.println("no, enter valid r");
+                }
+
+            }
+
+        } catch (IOException e) {
+            System.out.println(
+                    "console input failed, aborting create compilation request\n"
+                            + "selection is cleared."
+            );
+            compilation = null;
+            return;
+        }
+
+        compilation = allSongs.subList(l, r + 1);
     }
 }
