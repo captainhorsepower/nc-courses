@@ -14,7 +14,7 @@ public interface AdvancedConsolePrinter extends ConsolePrinter {
     }
 
     default void printInputOneItemMessage(String itemName) {
-        System.out.print(DEFAULT_CHOOSE_ITEM_MESSAGE + itemName);
+        System.out.print(DEFAULT_CHOOSE_ITEM_MESSAGE + itemName + ": ");
     }
 
     default void printInvalidInputItemMessage(String itemName) {
