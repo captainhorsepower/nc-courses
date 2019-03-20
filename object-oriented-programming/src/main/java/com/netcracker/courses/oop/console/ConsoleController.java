@@ -58,6 +58,7 @@ public class ConsoleController {
     public static final String SELECT_COMMAND = "select";
     public static final String PRINT_COMMAND = "print";
     public static final String CREATE_COMMAND = "create";
+    public static final String SORT_COMMAND = "sort";
 
     public static final String EXIT_COMMAND = "exit";
     public static final String HELP_COMMAND = "help";
@@ -72,6 +73,11 @@ public class ConsoleController {
 
     /* arguments */
     public static final String ALL_ARG = "--all";
+    public static final String BY_NAME_ARG = "byname";
+    public static final String BY_ARTIST_ARG = "byartist";
+    public static final String BY_SIZE_ARG = "bysize";
+    public static final String BY_DURATION_ARG = "bydur";
+    public static final String BY_GENRE_ARG = "bygenre";
 
     private static final int                        INIT_CAPACITY = 10;
     private ArrayList<AbstractDigitalComposition>   allSongs;
@@ -158,7 +164,7 @@ public class ConsoleController {
                         MusicGenre.INDIE,
                         2012,
                         271,
-                        DigitalCompositionFormat.FLAC
+                        DigitalCompositionFormat.WAV
                 ),
                 new CompressedComposition(
                         "Move",
@@ -189,10 +195,14 @@ public class ConsoleController {
 
         allSongs = new ArrayList<>(Arrays.asList(temp));
 
-        // TODO: 3/20/2019  remove it
-        MusicCD cd = new MusicCD(150, "test");
+        MusicCD cd;
+
+        cd = new MusicCD(70, "small disk");
         cd.addAllCompositions(allSongs);
         allCD.add(cd);
+
+        cd = new MusicCD(300, "large disk");
+        cd.addAllCompositions(allSongs);
         allCD.add(cd);
     }
 
@@ -230,6 +240,10 @@ public class ConsoleController {
                 }
                 case CREATE_COMMAND: {
                     create(st);
+                    break;
+                }
+                case SORT_COMMAND: {
+                    sort(st);
                     break;
                 }
                 default: {
@@ -533,5 +547,47 @@ public class ConsoleController {
         }
 
         allCD.add(cd);
+    }
+
+
+
+    private void sort(StringTokenizer st) {
+
+        if (selectedCDInd == -1) {
+            System.out.println("select CD before sorting it, please");
+            return;
+        }
+
+        MusicCD selectedCD = allCD.get(selectedCDInd);
+
+        String arg = st.nextToken();
+
+        switch (arg) {
+            case BY_NAME_ARG: {
+                selectedCD.sort(MusicCD.SORT_BY_NAME);
+                break;
+            }
+            case BY_ARTIST_ARG: {
+                selectedCD.sort(MusicCD.SORT_BY_ARTIST);
+                break;
+            }
+            case BY_DURATION_ARG: {
+                selectedCD.sort(MusicCD.SORT_BY_DURATION);
+                break;
+            }
+            case BY_GENRE_ARG: {
+                selectedCD.sort(MusicCD.SORT_BY_GENRE);
+                break;
+            }
+            case BY_SIZE_ARG: {
+                selectedCD.sort(MusicCD.SORT_BY_SIZE);
+                break;
+            }
+            default: {
+                /* why not */
+                selectedCD.sort(arg.hashCode());
+                break;
+            }
+        }
     }
 }
