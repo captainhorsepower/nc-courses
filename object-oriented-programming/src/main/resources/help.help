@@ -38,3 +38,7 @@ sort songs on CD:
                         bySize
                         byDur
                         byGenre
+
+find a song:
+    find                find the song in given size and
+                        release year ranges on selected cd.
