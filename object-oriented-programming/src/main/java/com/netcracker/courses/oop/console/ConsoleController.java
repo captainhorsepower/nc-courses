@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * Console controller class.
+ * Console class which is both model and controller.
  * Enables user to interact with console using keyword + (appropriate) command
  */
 public class ConsoleController {
