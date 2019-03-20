@@ -40,5 +40,5 @@ sort songs on CD:
                         byGenre
 
 find a song:
-    find                find the song in given size and
+    find  song          find the song in given size and
                         release year ranges on selected cd.
