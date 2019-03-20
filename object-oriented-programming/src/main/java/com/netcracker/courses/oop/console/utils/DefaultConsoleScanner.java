@@ -6,7 +6,8 @@ import java.util.List;
 
 public class DefaultConsoleScanner implements ConsoleScanner {
     @Override
-    public int readIntFromConsole(String varName, IntegerBoundaryPredicate predicate) {
+    public int readIntFromConsole(String varName, ConsolePrinter printer,
+                                  IntegerBoundaryPredicate predicate) {
         int item;
 
         try(BufferedReader reader = new BufferedReader(
@@ -15,7 +16,7 @@ public class DefaultConsoleScanner implements ConsoleScanner {
             while (true) {
 
                 try {
-                    System.out.print("choose " + varName + " = ");
+                    printer.printInputOneItemMessage(varName);
                     item = Integer.parseInt(reader.readLine());
 
                     if (!predicate.fitsIntBoundaries(item)) {
@@ -25,7 +26,7 @@ public class DefaultConsoleScanner implements ConsoleScanner {
                     break;
 
                 } catch (NumberFormatException e) {
-                    System.out.println("\tplease, re-enter valid " + varName);
+                    printer.printInvalidInputItemMessage(varName);
                 }
 
             }
@@ -41,7 +42,7 @@ public class DefaultConsoleScanner implements ConsoleScanner {
     }
 
     @Override
-    public <T> int selectIndFromList(List<T> allSth, ConsolePrinter consolePrinter) {
+    public <T> int selectIndFromList(List<T> allSth, ConsolePrinter printer) {
 
         if (allSth.isEmpty()) {
             System.out.println("there are no items to select from!");
@@ -50,9 +51,9 @@ public class DefaultConsoleScanner implements ConsoleScanner {
 
 
         System.out.println("select one of the following:");
-        consolePrinter.printSelectionList(allSth);
+        printer.printSelectionList(allSth);
 
 
-        return readIntFromConsole("index", (i) -> i > 0 && i <= allSth.size());
+        return readIntFromConsole("index", printer, (i) -> i < allSth.size() && i >= 0);
     }
 }

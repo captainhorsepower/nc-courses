@@ -10,6 +10,7 @@ public interface ConsoleScanner {
 
     <T> int selectIndFromList(List<T> allSth, ConsolePrinter consolePrinter);
 
-    int readIntFromConsole(String varName, IntegerBoundaryPredicate predicate);
+    int readIntFromConsole(String varName, ConsolePrinter printer,
+                           IntegerBoundaryPredicate predicate);
 
 }

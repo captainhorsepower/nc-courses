@@ -306,7 +306,6 @@ public class ConsoleController {
         }
     }
 
-
     private void print(StringTokenizer st) {
 
         String option = st.nextToken();
@@ -351,8 +350,6 @@ public class ConsoleController {
         }
     }
 
-
-
     private void create(StringTokenizer st) {
 
         String option = st.nextToken();
@@ -379,56 +376,8 @@ public class ConsoleController {
         System.out.println("choose [l, r] boundaries for compilation:");
         printer.printSelectionList(allSongs);
 
-        int l;
-        int r;
-
-        try(BufferedReader reader = new BufferedReader(
-                new NeverClosingInputStreamReader(System.in))) {
-
-
-            while (true) {
-
-                try {
-                    System.out.print("choose l: ");
-                    l = Integer.parseInt(reader.readLine());
-
-                    if (l < 0 || l >= allSongs.size()) {
-                        throw new NumberFormatException();
-                    }
-
-                    break;
-
-                } catch (NumberFormatException e) {
-                    System.out.println("no, enter valid l");
-                }
-
-            }
-
-            while (true) {
-
-                try {
-                    System.out.print("choose r: ");
-                    r = Integer.parseInt(reader.readLine());
-
-                    if (r < l || r >= allSongs.size()) {
-                        throw new NumberFormatException();
-                    }
-
-                    break;
-
-                } catch (NumberFormatException e) {
-                    System.out.println("no, enter valid r");
-                }
-
-            }
-
-        } catch (IOException e) {
-            System.out.println(
-                    "console input failed, aborting create request\n"
-            );
-            compilation = null;
-            return;
-        }
+        int l = scanner.readIntFromConsole("l", printer, (i) -> i < allSongs.size() && i >= 0);
+        int r = scanner.readIntFromConsole("r", printer, (i) -> i < allSongs.size() && i >= l);
 
         compilation = allSongs.subList(l, r + 1);
     }

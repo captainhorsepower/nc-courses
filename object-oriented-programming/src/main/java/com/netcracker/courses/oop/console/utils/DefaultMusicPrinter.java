@@ -7,9 +7,6 @@ import java.util.List;
 
 public class DefaultMusicPrinter implements ConsolePrinter {
 
-    private static final String DEFAULT_CHOOSE_ITEM_MESSAGE = "choose ";
-    private static final String DEFAULT_INVALID_ITEM_MESSAGE = "\tplease, enter valid ";
-
     @Override
     public <T> void print(T sth) {
         if (sth instanceof MusicCD) {
@@ -57,12 +54,12 @@ public class DefaultMusicPrinter implements ConsolePrinter {
     }
 
     @Override
-    public String getInputOneItemMessage(String itemName) {
-        return DEFAULT_CHOOSE_ITEM_MESSAGE + itemName;
+    public void printInputOneItemMessage(String itemName) {
+        System.out.print(DEFAULT_CHOOSE_ITEM_MESSAGE + itemName);
     }
 
     @Override
-    public String getInvalidInputItemMessage(String itemName) {
-        return DEFAULT_INVALID_ITEM_MESSAGE + itemName;
+    public void printInvalidInputItemMessage(String itemName) {
+        System.out.println(DEFAULT_INVALID_ITEM_MESSAGE + itemName);
     }
 }
