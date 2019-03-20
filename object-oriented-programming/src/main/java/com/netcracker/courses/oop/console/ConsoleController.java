@@ -188,6 +188,12 @@ public class ConsoleController {
         };
 
         allSongs = new ArrayList<>(Arrays.asList(temp));
+
+        // TODO: 3/20/2019  remove it
+        MusicCD cd = new MusicCD(150, "test");
+        cd.addAllCompositions(allSongs);
+        allCD.add(cd);
+        allCD.add(cd);
     }
 
     /**
@@ -277,11 +283,8 @@ public class ConsoleController {
 
     private <T> void printSelectionList(List<T> allSth) {
         for (int i = 0; i < allSth.size(); i++) {
-            System.out.println(
-                    "\t"
-                            + String.format("%2d) ", i)
-                            + allSth.get(i)
-            );
+            System.out.print("\t" + String.format("%2d) ", i));
+            print(allSth.get(i));
         }
     }
 
@@ -350,7 +353,10 @@ public class ConsoleController {
                 if (ALL_ARG.equals(arg)) printAll(allSongs);
                 else {
                     if (selectedSongInd == -1) System.out.println("no song is selected");
-                    else print(allSongs.get(selectedSongInd));
+                    else {
+                        System.out.print("\t");
+                        print(allSongs.get(selectedSongInd));
+                    }
                 }
                 break;
             }
@@ -358,7 +364,10 @@ public class ConsoleController {
                 if (ALL_ARG.equals(arg)) printAll(allCD);
                 else {
                     if (selectedCDInd == -1) System.out.println("no CD is selected");
-                    else print(allCD.get(selectedCDInd));
+                    else {
+                        System.out.print("\t");
+                        print(allCD.get(selectedCDInd));
+                    }
                 }
                 break;
             }
@@ -376,12 +385,35 @@ public class ConsoleController {
 
     private <T> void printAll(List<T> allSth) {
         for (T t : allSth) {
-            System.out.println("\t" + t);
+            System.out.print("\t");
+            print(t);
         }
     }
 
     private <T> void print(T sth) {
-        System.out.println("\t" + sth);
+        if (sth instanceof MusicCD) {
+            MusicCD cd = (MusicCD) sth;
+            String output = String.format(
+                   "CD: %-10s %5d MB total %6.1f MB free %20s %2d:%02d"
+                    , cd.getCDName()
+                    , cd.getTotalFreeSpaceMB()
+                    , cd.getFreeSpaceMB()
+                    , "total duration"
+                    , (cd.getDurationSeconds() / 60)
+                    , (cd.getDurationSeconds() % 60)
+            );
+
+            System.out.println(output);
+
+            System.out.println("\tsongs on cd:");
+            for (AbstractDigitalComposition song : cd.getSongs()) {
+                System.out.print("\t\t");
+                print(song);
+            }
+
+        } else {
+            System.out.println(sth);
+        }
     }
 
 
