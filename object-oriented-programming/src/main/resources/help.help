@@ -17,7 +17,7 @@ print stuff:
     print cd            print selected cd info
 
     print song --all    print all songs in memory
-    print cds  --all    print all created CDs
+    print cd   --all    print all created CDs
 
     print cmpl   print current compilation
 
@@ -27,6 +27,13 @@ create stuff:
     create cd <totalFreeSpace> <CD name>
                         create CD with given name of given space
                         if no compilation is selected, will ask for it first.
-                        if some tracks from compilation do not fit on CD,
-                        they will be printed to console
-                        and selected as next compilation
+
+sort songs on CD:
+    sort <arg>          sort according to an (optional) argument
+                        default sort is by artist, then by year
+                        possible ars :
+                        byName
+                        byArtist
+                        byYear
+                        byDuration
+                        byGenre
