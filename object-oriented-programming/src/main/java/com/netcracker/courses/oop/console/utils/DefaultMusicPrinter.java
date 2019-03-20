@@ -53,13 +53,4 @@ public class DefaultMusicPrinter implements AdvancedConsolePrinter {
         }
     }
 
-    @Override
-    public void printInputOneItemMessage(String itemName) {
-        System.out.print(DEFAULT_CHOOSE_ITEM_MESSAGE + itemName);
-    }
-
-    @Override
-    public void printInvalidInputItemMessage(String itemName) {
-        System.out.println(DEFAULT_INVALID_ITEM_MESSAGE + itemName);
-    }
 }

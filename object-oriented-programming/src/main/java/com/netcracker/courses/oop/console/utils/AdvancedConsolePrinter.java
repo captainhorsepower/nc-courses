@@ -13,8 +13,13 @@ public interface AdvancedConsolePrinter extends ConsolePrinter {
         System.out.println(message);
     }
 
-    void printInputOneItemMessage(String itemName);
-    void printInvalidInputItemMessage(String itemName);
+    default void printInputOneItemMessage(String itemName) {
+        System.out.print(DEFAULT_CHOOSE_ITEM_MESSAGE + itemName);
+    }
+
+    default void printInvalidInputItemMessage(String itemName) {
+        System.out.println(DEFAULT_INVALID_ITEM_MESSAGE + itemName);
+    }
 
     default void printConsoleFailedMessage() {
         System.out.println(DEFAULT_CONSOLE_FAILED_MESSAGE);
