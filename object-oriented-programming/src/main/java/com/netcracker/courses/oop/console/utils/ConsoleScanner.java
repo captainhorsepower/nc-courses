@@ -2,6 +2,10 @@ package com.netcracker.courses.oop.console.utils;
 
 import java.util.List;
 
+/**
+ * utility for easy reads from console in this app.
+ * separates data from reading user responses.
+ */
 public interface ConsoleScanner {
 
     interface IntegerBoundaryPredicate {
