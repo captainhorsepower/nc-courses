@@ -5,7 +5,7 @@ import com.netcracker.courses.oop.music.digital.composition.AbstractDigitalCompo
 
 import java.util.List;
 
-public class DefaultMusicPrinter implements Printer {
+public class DefaultMusicPrinter implements ConsolePrinter {
     @Override
     public <T> void print(T sth) {
         if (sth instanceof MusicCD) {

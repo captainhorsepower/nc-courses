@@ -85,8 +85,8 @@ public class ConsoleController {
 
     private static final int                        INIT_CAPACITY = 10;
     private ArrayList<AbstractDigitalComposition>   allSongs;
-    private ArrayList<MusicCD> allCD;
-    private List<AbstractDigitalComposition> compilation;
+    private ArrayList<MusicCD>                      allCD;
+    private List<AbstractDigitalComposition>        compilation;
 
     private int                                     selectedSongInd = -1;
     private int                                     selectedCDInd = -1;
@@ -295,7 +295,7 @@ public class ConsoleController {
                 break;
             }
             case CD_OPTION: {
-                selectedCDInd = scanner.selectIndFromList(allCD);
+                selectedCDInd = scanner.selectIndFromList(allCD, printer);
                 break;
             }
             default: {
