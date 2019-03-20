@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DefaultConsoleScanner implements ConsoleScanner {
     @Override
-    public int readIntFromConsole(String varName, ConsolePrinter printer,
+    public int readIntFromConsole(String varName, AdvancedConsolePrinter printer,
                                   IntegerBoundaryPredicate predicate) {
         int item;
 
@@ -40,7 +40,7 @@ public class DefaultConsoleScanner implements ConsoleScanner {
     }
 
     @Override
-    public <T> int selectIndFromList(List<T> allSth, ConsolePrinter printer) {
+    public <T> int selectIndFromList(List<T> allSth, AdvancedConsolePrinter printer) {
 
         if (allSth.isEmpty()) {
             printer.printSelectFromEmptyListMessage();

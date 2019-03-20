@@ -1,6 +1,6 @@
 package com.netcracker.courses.oop.console;
 
-import com.netcracker.courses.oop.console.utils.ConsolePrinter;
+import com.netcracker.courses.oop.console.utils.AdvancedConsolePrinter;
 import com.netcracker.courses.oop.console.utils.ConsoleScanner;
 import com.netcracker.courses.oop.console.utils.DefaultConsoleScanner;
 import com.netcracker.courses.oop.console.utils.DefaultMusicPrinter;
@@ -94,7 +94,7 @@ public class ConsoleController {
     private int                                     selectedSongInd = -1;
     private int                                     selectedCDInd = -1;
 
-    private ConsolePrinter printer = new DefaultMusicPrinter();
+    private AdvancedConsolePrinter printer = new DefaultMusicPrinter();
     private ConsoleScanner scanner = new DefaultConsoleScanner();
 
     public ConsoleController() {

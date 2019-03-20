@@ -5,7 +5,7 @@ import com.netcracker.courses.oop.music.digital.composition.AbstractDigitalCompo
 
 import java.util.List;
 
-public class DefaultMusicPrinter implements ConsolePrinter {
+public class DefaultMusicPrinter implements AdvancedConsolePrinter {
 
     @Override
     public <T> void print(T sth) {

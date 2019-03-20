@@ -8,9 +8,9 @@ public interface ConsoleScanner {
         boolean fitsIntBoundaries(int item);
     }
 
-    <T> int selectIndFromList(List<T> allSth, ConsolePrinter consolePrinter);
+    <T> int selectIndFromList(List<T> allSth, AdvancedConsolePrinter consolePrinter);
 
-    int readIntFromConsole(String varName, ConsolePrinter printer,
+    int readIntFromConsole(String varName, AdvancedConsolePrinter printer,
                            IntegerBoundaryPredicate predicate);
 
 }
