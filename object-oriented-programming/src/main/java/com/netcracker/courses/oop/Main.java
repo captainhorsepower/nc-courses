@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         ConsoleController cc = new ConsoleController();
 
@@ -20,6 +20,7 @@ public class Main {
         } catch (IOException e) {
             System.out.println(e.getMessage() + ". Aborting...");
         }
+
 
     }
 }
