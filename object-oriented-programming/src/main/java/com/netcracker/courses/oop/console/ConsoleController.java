@@ -8,6 +8,7 @@ import com.netcracker.courses.oop.music.digital.composition.CompressedCompositio
 import com.netcracker.courses.oop.music.digital.composition.DigitalCompositionFormat;
 import com.netcracker.courses.oop.music.digital.composition.LossLessComposition;
 
+import javax.sound.midi.Soundbank;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,6 +60,7 @@ public class ConsoleController {
     public static final String PRINT_COMMAND        = "print";
     public static final String CREATE_COMMAND       = "create";
     public static final String SORT_COMMAND         = "sort";
+    public static final String FIND_COMMAND         = "find";
 
     public static final String EXIT_COMMAND         = "exit";
     public static final String HELP_COMMAND         = "help";
@@ -244,6 +246,10 @@ public class ConsoleController {
                 }
                 case SORT_COMMAND: {
                     sort(st);
+                    break;
+                }
+                case FIND_COMMAND: {
+                    find(st);
                     break;
                 }
                 default: {
@@ -588,6 +594,111 @@ public class ConsoleController {
                 selectedCD.sort(arg.hashCode());
                 break;
             }
+        }
+    }
+
+
+
+    private void find(StringTokenizer st) {
+
+        if (!st.hasMoreTokens() || !st.nextToken().equals(SONG_OPTION)) {
+            System.out.println("You have to specify \"song\" option for find command!");
+            return;
+        }
+
+        if (selectedCDInd == -1) {
+            System.out.println("first, select cd");
+            return;
+        }
+
+        int minYear;
+        int maxYear;
+        int minSize;
+        int maxSize;
+        try(BufferedReader reader = new BufferedReader(
+                new NeverClosingInputStreamReader(System.in))) {
+            System.out.println("specify ranges [minSize, maxSize] and [minYear, maxYear]");
+
+            while (true) {
+
+                try {
+                    System.out.print("minSize =  ");
+                    minSize = Integer.parseInt(reader.readLine());
+
+                    if (minSize < 0) throw new NumberFormatException();
+
+                    break;
+
+                } catch (NumberFormatException e) {
+                    System.out.println("no, enter valid minSize");
+                }
+
+            }
+
+            while (true) {
+
+                try {
+                    System.out.print("maxSize = ");
+                    maxSize = Integer.parseInt(reader.readLine());
+
+                    if (maxSize < minSize) throw new NumberFormatException();
+
+                    break;
+
+                } catch (NumberFormatException e) {
+                    System.out.println("no, enter valid maxSize");
+                }
+
+            }
+
+            while (true) {
+
+                try {
+                    System.out.print("minYear = ");
+                    minYear = Integer.parseInt(reader.readLine());
+
+                    if (minYear < 0) throw new NumberFormatException();
+
+                    break;
+
+                } catch (NumberFormatException e) {
+                    System.out.println("no, enter valid minYear");
+                }
+
+            }
+
+            while (true) {
+
+                try {
+                    System.out.print("maxYear = ");
+                    maxYear = Integer.parseInt(reader.readLine());
+
+                    if (maxYear < minYear) throw new NumberFormatException();
+
+                    break;
+
+                } catch (NumberFormatException e) {
+                    System.out.println("no, enter valid maxYear");
+                }
+
+            }
+
+        } catch (IOException e) {
+            System.out.println(
+                    "console input failed, aborting find request\n"
+            );
+            return;
+        }
+
+        AbstractDigitalComposition result =
+                allCD.get(selectedCDInd).findSong(minSize, maxSize, minYear, maxYear);
+
+        if (result == null) {
+            System.out.println("nothing found.");
+        } else {
+            System.out.println("found song :");
+            System.out.print("\t");
+            print(result);
         }
     }
 }
