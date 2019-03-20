@@ -1,8 +1,6 @@
 package com.netcracker.courses.oop.console;
 
-import com.netcracker.courses.oop.console.utils.DefaultMusicPrinter;
-import com.netcracker.courses.oop.console.utils.NeverClosingInputStreamReader;
-import com.netcracker.courses.oop.console.utils.Printer;
+import com.netcracker.courses.oop.console.utils.*;
 import com.netcracker.courses.oop.music.MusicGenre;
 import com.netcracker.courses.oop.music.digital.MusicCD;
 import com.netcracker.courses.oop.music.digital.composition.AbstractDigitalComposition;
@@ -14,7 +12,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Console controller class.
@@ -84,13 +85,14 @@ public class ConsoleController {
 
     private static final int                        INIT_CAPACITY = 10;
     private ArrayList<AbstractDigitalComposition>   allSongs;
-    private ArrayList<MusicCD>                      allCD;
-    private List<AbstractDigitalComposition>        compilation;
+    private ArrayList<MusicCD> allCD;
+    private List<AbstractDigitalComposition> compilation;
 
     private int                                     selectedSongInd = -1;
     private int                                     selectedCDInd = -1;
 
-    private Printer printer = new DefaultMusicPrinter();
+    private ConsolePrinter printer = new DefaultMusicPrinter();
+    private ConsoleScanner scanner = new DefaultConsoleScanner();
 
     public ConsoleController() {
         System.out.println(GREETINGS_MESSAGE);
@@ -289,11 +291,11 @@ public class ConsoleController {
 
         switch (option) {
             case SONG_OPTION: {
-                selectedSongInd = selectIndFromList(allSongs);
+                selectedSongInd = scanner.selectIndFromList(allSongs, printer);
                 break;
             }
             case CD_OPTION: {
-                selectedCDInd = selectIndFromList(allCD);
+                selectedCDInd = scanner.selectIndFromList(allCD);
                 break;
             }
             default: {
@@ -303,54 +305,6 @@ public class ConsoleController {
             }
         }
     }
-
-    private <T> int selectIndFromList(List<T> allSth) {
-
-        if (allSth.isEmpty()) {
-            System.out.println("there are no items to select from!");
-            return -1;
-        }
-
-
-
-        System.out.println("select one of the following:");
-        printer.printSelectionList(allSth);
-
-
-
-        int selectedInd;
-
-        try(BufferedReader reader = new BufferedReader(
-                new NeverClosingInputStreamReader(System.in))) {
-
-            while (true) {
-
-                try {
-                    selectedInd = Integer.parseInt(reader.readLine());
-
-                    if (selectedInd < 0 || selectedInd >= allSth.size()) throw new NumberFormatException();
-
-                    break;
-
-                } catch (NumberFormatException e) {
-                    System.out.println("please, re-enter valid index");
-                }
-
-            }
-
-        } catch (IOException e) {
-            System.out.println(
-                    "console input failed, aborting select request\n"
-                    + "selection is cleared."
-            );
-            selectedInd = -1;
-        }
-
-
-
-        return selectedInd;
-    }
-
 
 
     private void print(StringTokenizer st) {
