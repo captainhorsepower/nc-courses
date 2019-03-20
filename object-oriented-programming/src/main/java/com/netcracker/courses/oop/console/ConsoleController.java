@@ -604,7 +604,7 @@ public class ConsoleController {
         }
 
         if (selectedCDInd == -1) {
-            System.out.println("first, select cd");
+            System.out.println("first, select CD");
             return;
         }
 
@@ -619,7 +619,7 @@ public class ConsoleController {
             while (true) {
 
                 try {
-                    System.out.print("minSize =  ");
+                    System.out.print("\tminSize =  ");
                     minSize = Integer.parseInt(reader.readLine());
 
                     if (minSize < 0) throw new NumberFormatException();
@@ -627,7 +627,7 @@ public class ConsoleController {
                     break;
 
                 } catch (NumberFormatException e) {
-                    System.out.println("no, enter valid minSize");
+                    System.out.println("\tno, enter valid minSize");
                 }
 
             }
@@ -635,7 +635,7 @@ public class ConsoleController {
             while (true) {
 
                 try {
-                    System.out.print("maxSize = ");
+                    System.out.print("\tmaxSize = ");
                     maxSize = Integer.parseInt(reader.readLine());
 
                     if (maxSize < minSize) throw new NumberFormatException();
@@ -643,7 +643,7 @@ public class ConsoleController {
                     break;
 
                 } catch (NumberFormatException e) {
-                    System.out.println("no, enter valid maxSize");
+                    System.out.println("\tno, enter valid maxSize");
                 }
 
             }
@@ -651,7 +651,7 @@ public class ConsoleController {
             while (true) {
 
                 try {
-                    System.out.print("minYear = ");
+                    System.out.print("\tminYear = ");
                     minYear = Integer.parseInt(reader.readLine());
 
                     if (minYear < 0) throw new NumberFormatException();
@@ -659,7 +659,7 @@ public class ConsoleController {
                     break;
 
                 } catch (NumberFormatException e) {
-                    System.out.println("no, enter valid minYear");
+                    System.out.println("\tno, enter valid minYear");
                 }
 
             }
@@ -667,7 +667,7 @@ public class ConsoleController {
             while (true) {
 
                 try {
-                    System.out.print("maxYear = ");
+                    System.out.print("\tmaxYear = ");
                     maxYear = Integer.parseInt(reader.readLine());
 
                     if (maxYear < minYear) throw new NumberFormatException();
@@ -675,7 +675,7 @@ public class ConsoleController {
                     break;
 
                 } catch (NumberFormatException e) {
-                    System.out.println("no, enter valid maxYear");
+                    System.out.println("\tno, enter valid maxYear");
                 }
 
             }

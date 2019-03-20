@@ -12,7 +12,6 @@ public class Main {
 
         ConsoleController cc = new ConsoleController();
 
-
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
 
             while(cc.handleUserInput(reader.readLine()));
