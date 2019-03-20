@@ -1,6 +1,8 @@
 package com.netcracker.courses.oop.console;
 
+import com.netcracker.courses.oop.console.utils.DefaultMusicPrinter;
 import com.netcracker.courses.oop.console.utils.NeverClosingInputStreamReader;
+import com.netcracker.courses.oop.console.utils.Printer;
 import com.netcracker.courses.oop.music.MusicGenre;
 import com.netcracker.courses.oop.music.digital.MusicCD;
 import com.netcracker.courses.oop.music.digital.composition.AbstractDigitalComposition;
@@ -87,6 +89,8 @@ public class ConsoleController {
 
     private int                                     selectedSongInd = -1;
     private int                                     selectedCDInd = -1;
+
+    private Printer printer = new DefaultMusicPrinter();
 
     public ConsoleController() {
         System.out.println(GREETINGS_MESSAGE);
@@ -300,13 +304,6 @@ public class ConsoleController {
         }
     }
 
-    private <T> void printSelectionList(List<T> allSth) {
-        for (int i = 0; i < allSth.size(); i++) {
-            System.out.print("\t" + String.format("%2d) ", i));
-            print(allSth.get(i));
-        }
-    }
-
     private <T> int selectIndFromList(List<T> allSth) {
 
         if (allSth.isEmpty()) {
@@ -317,7 +314,7 @@ public class ConsoleController {
 
 
         System.out.println("select one of the following:");
-        printSelectionList(allSth);
+        printer.printSelectionList(allSth);
 
 
 
@@ -367,29 +364,29 @@ public class ConsoleController {
 
         switch (option) {
             case SONG_OPTION: {
-                if (ALL_ARG.equals(arg)) printAll(allSongs);
+                if (ALL_ARG.equals(arg)) printer.printAll(allSongs);
                 else {
                     if (selectedSongInd == -1) System.out.println("no song is selected");
                     else {
                         System.out.print("\t");
-                        print(allSongs.get(selectedSongInd));
+                        printer.print(allSongs.get(selectedSongInd));
                     }
                 }
                 break;
             }
             case CD_OPTION: {
-                if (ALL_ARG.equals(arg)) printAll(allCD);
+                if (ALL_ARG.equals(arg)) printer.printAll(allCD);
                 else {
                     if (selectedCDInd == -1) System.out.println("no CD is selected");
                     else {
                         System.out.print("\t");
-                        print(allCD.get(selectedCDInd));
+                        printer.print(allCD.get(selectedCDInd));
                     }
                 }
                 break;
             }
             case COMPILATION_OPTION: {
-                printAll(compilation);
+                printer.printAll(compilation);
                 break;
             }
             default: {
@@ -397,39 +394,6 @@ public class ConsoleController {
                         + "use help to see the list of available commands");
                 break;
             }
-        }
-    }
-
-    private <T> void printAll(List<T> allSth) {
-        for (T t : allSth) {
-            System.out.print("\t");
-            print(t);
-        }
-    }
-
-    private <T> void print(T sth) {
-        if (sth instanceof MusicCD) {
-            MusicCD cd = (MusicCD) sth;
-            String output = String.format(
-                   "CD: %-10s %5d MB total %6.1f MB free %20s %2d:%02d"
-                    , cd.getCDName()
-                    , cd.getTotalFreeSpaceMB()
-                    , cd.getFreeSpaceMB()
-                    , "total duration"
-                    , (cd.getDurationSeconds() / 60)
-                    , (cd.getDurationSeconds() % 60)
-            );
-
-            System.out.println(output);
-
-            System.out.println("\tsongs on cd:");
-            for (AbstractDigitalComposition song : cd.getSongs()) {
-                System.out.print("\t\t");
-                print(song);
-            }
-
-        } else {
-            System.out.println(sth);
         }
     }
 
@@ -459,7 +423,7 @@ public class ConsoleController {
     private void createCompilation() {
 
         System.out.println("choose [l, r] boundaries for compilation:");
-        printSelectionList(allSongs);
+        printer.printSelectionList(allSongs);
 
         int l;
         int r;
@@ -695,7 +659,7 @@ public class ConsoleController {
         } else {
             System.out.println("found song :");
             System.out.print("\t");
-            print(result);
+            printer.print(result);
         }
     }
 }
