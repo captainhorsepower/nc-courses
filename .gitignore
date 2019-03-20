@@ -1,7 +1,9 @@
+### maven ### 
 target/
 spooned/
 .mvn/wrapper/maven-wrapper.jar
 .m
+
 ### STS ###
 .apt_generated
 .classpath
@@ -24,3 +26,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### vscode ###
+*vscode*
