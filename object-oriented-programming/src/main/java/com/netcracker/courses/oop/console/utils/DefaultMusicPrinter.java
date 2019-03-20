@@ -6,6 +6,10 @@ import com.netcracker.courses.oop.music.digital.composition.AbstractDigitalCompo
 import java.util.List;
 
 public class DefaultMusicPrinter implements ConsolePrinter {
+
+    private static final String DEFAULT_CHOOSE_ITEM_MESSAGE = "choose ";
+    private static final String DEFAULT_INVALID_ITEM_MESSAGE = "\tplease, enter valid ";
+
     @Override
     public <T> void print(T sth) {
         if (sth instanceof MusicCD) {
@@ -50,5 +54,15 @@ public class DefaultMusicPrinter implements ConsolePrinter {
             System.out.print("\t" + String.format("%2d) ", i));
             print(allSth.get(i));
         }
+    }
+
+    @Override
+    public String getInputOneItemMessage(String itemName) {
+        return DEFAULT_CHOOSE_ITEM_MESSAGE + itemName;
+    }
+
+    @Override
+    public String getInvalidInputItemMessage(String itemName) {
+        return DEFAULT_INVALID_ITEM_MESSAGE + itemName;
     }
 }

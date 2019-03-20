@@ -6,4 +6,6 @@ public interface ConsolePrinter {
     <T> void print(T sth);
     <T> void printAll(List<T> allSth);
     <T> void printSelectionList(List<T> allSth);
+    String getInputOneItemMessage(String itemName);
+    String getInvalidInputItemMessage(String itemName);
 }
