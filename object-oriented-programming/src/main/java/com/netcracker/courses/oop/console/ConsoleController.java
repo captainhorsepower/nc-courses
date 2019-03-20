@@ -1,6 +1,9 @@
 package com.netcracker.courses.oop.console;
 
-import com.netcracker.courses.oop.console.utils.*;
+import com.netcracker.courses.oop.console.utils.ConsolePrinter;
+import com.netcracker.courses.oop.console.utils.ConsoleScanner;
+import com.netcracker.courses.oop.console.utils.DefaultConsoleScanner;
+import com.netcracker.courses.oop.console.utils.DefaultMusicPrinter;
 import com.netcracker.courses.oop.music.MusicGenre;
 import com.netcracker.courses.oop.music.digital.MusicCD;
 import com.netcracker.courses.oop.music.digital.composition.AbstractDigitalComposition;
@@ -284,7 +287,6 @@ public class ConsoleController {
     }
 
 
-
     private void select(StringTokenizer st) {
 
         String option = st.nextToken();
@@ -461,8 +463,6 @@ public class ConsoleController {
         }
     }
 
-
-
     private void find(StringTokenizer st) {
 
         if (!st.hasMoreTokens() || !st.nextToken().equals(SONG_OPTION)) {
@@ -475,84 +475,13 @@ public class ConsoleController {
             return;
         }
 
-        int minYear;
-        int maxYear;
-        int minSize;
-        int maxSize;
-        try(BufferedReader reader = new BufferedReader(
-                new NeverClosingInputStreamReader(System.in))) {
-            System.out.println("specify ranges [minSize, maxSize] and [minYear, maxYear]");
+        System.out.println("specify ranges [minSize, maxSize] and [minYear, maxYear]");
 
-            while (true) {
+        int minSize = scanner.readIntFromConsole("maxYear", printer, (i) -> i >= 0);
+        int maxSize = scanner.readIntFromConsole("maxYear", printer, (i) -> i >= minSize);
+        int minYear = scanner.readIntFromConsole("minYear", printer, (i) -> i >= 0);
+        int maxYear = scanner.readIntFromConsole("maxYear", printer, (i) -> i >= minYear);
 
-                try {
-                    System.out.print("\tminSize =  ");
-                    minSize = Integer.parseInt(reader.readLine());
-
-                    if (minSize < 0) throw new NumberFormatException();
-
-                    break;
-
-                } catch (NumberFormatException e) {
-                    System.out.println("\tno, enter valid minSize");
-                }
-
-            }
-
-            while (true) {
-
-                try {
-                    System.out.print("\tmaxSize = ");
-                    maxSize = Integer.parseInt(reader.readLine());
-
-                    if (maxSize < minSize) throw new NumberFormatException();
-
-                    break;
-
-                } catch (NumberFormatException e) {
-                    System.out.println("\tno, enter valid maxSize");
-                }
-
-            }
-
-            while (true) {
-
-                try {
-                    System.out.print("\tminYear = ");
-                    minYear = Integer.parseInt(reader.readLine());
-
-                    if (minYear < 0) throw new NumberFormatException();
-
-                    break;
-
-                } catch (NumberFormatException e) {
-                    System.out.println("\tno, enter valid minYear");
-                }
-
-            }
-
-            while (true) {
-
-                try {
-                    System.out.print("\tmaxYear = ");
-                    maxYear = Integer.parseInt(reader.readLine());
-
-                    if (maxYear < minYear) throw new NumberFormatException();
-
-                    break;
-
-                } catch (NumberFormatException e) {
-                    System.out.println("\tno, enter valid maxYear");
-                }
-
-            }
-
-        } catch (IOException e) {
-            System.out.println(
-                    "console input failed, aborting find request\n"
-            );
-            return;
-        }
 
         AbstractDigitalComposition result =
                 allCD.get(selectedCDInd).findSong(minSize, maxSize, minYear, maxYear);

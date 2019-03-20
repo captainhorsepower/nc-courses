@@ -32,9 +32,7 @@ public class DefaultConsoleScanner implements ConsoleScanner {
             }
 
         } catch (IOException e) {
-            System.out.println(
-                    "console input failed, aborting request\n"
-            );
+            printer.printConsoleFailedMessage();
             item = -1;
         }
 
@@ -45,12 +43,12 @@ public class DefaultConsoleScanner implements ConsoleScanner {
     public <T> int selectIndFromList(List<T> allSth, ConsolePrinter printer) {
 
         if (allSth.isEmpty()) {
-            System.out.println("there are no items to select from!");
+            printer.printSelectFromEmptyListMessage();
             return -1;
         }
 
 
-        System.out.println("select one of the following:");
+        printer.printSelectFromListMessage();
         printer.printSelectionList(allSth);
 
 
