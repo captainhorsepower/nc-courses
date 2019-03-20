@@ -98,7 +98,7 @@ public class ConsoleController {
     private ConsoleScanner scanner = new DefaultConsoleScanner();
 
     public ConsoleController() {
-        System.out.println(GREETINGS_MESSAGE);
+        printer.printMessage(GREETINGS_MESSAGE);
 
         allCD = new ArrayList<>(INIT_CAPACITY);
 
@@ -224,7 +224,7 @@ public class ConsoleController {
     public boolean handleUserInput(String userInput) {
 
         if (userInput == null) {
-            System.out.println("weird, but input == null");
+            printer.printMessage("weird, but input == null");
             return true;
         }
 
@@ -261,7 +261,7 @@ public class ConsoleController {
                     break;
                 }
                 default: {
-                    System.out.println("\"" + userInput + "\" is unsupported command/keyword. "
+                    printer.printMessage("\"" + userInput + "\" is unsupported command/keyword. "
                             + "use help to see the list of available commands");
                     break;
                 }
@@ -269,15 +269,15 @@ public class ConsoleController {
         } else {
             switch (input) {
                 case HELP_COMMAND: {
-                    System.out.println(HELP_MESSAGE);
+                    printer.printMessage(HELP_MESSAGE);
                     break;
                 }
                 case EXIT_COMMAND: {
-                    System.out.println(BYE_MESSAGE);
+                    printer.printMessage(BYE_MESSAGE);
                     return false;
                 }
                 default: {
-                    System.out.println("\"" + userInput + "\" is unsupported command/keyword. "
+                    printer.printMessage("\"" + userInput + "\" is unsupported command/keyword. "
                             + "use help to see the list of available commands");
                     break;
                 }
@@ -301,7 +301,7 @@ public class ConsoleController {
                 break;
             }
             default: {
-                System.out.println("\"" + option + "\" is unsupported option for select. "
+                printer.printMessage("\"" + option + "\" is unsupported option for select. "
                         + "use help to see the list of available commands");
                 break;
             }
@@ -321,7 +321,7 @@ public class ConsoleController {
             case SONG_OPTION: {
                 if (ALL_ARG.equals(arg)) printer.printAll(allSongs);
                 else {
-                    if (selectedSongInd == -1) System.out.println("no song is selected");
+                    if (selectedSongInd == -1) printer.printMessage("no song is selected");
                     else {
                         System.out.print("\t");
                         printer.print(allSongs.get(selectedSongInd));
@@ -332,7 +332,7 @@ public class ConsoleController {
             case CD_OPTION: {
                 if (ALL_ARG.equals(arg)) printer.printAll(allCD);
                 else {
-                    if (selectedCDInd == -1) System.out.println("no CD is selected");
+                    if (selectedCDInd == -1) printer.printMessage("no CD is selected");
                     else {
                         System.out.print("\t");
                         printer.print(allCD.get(selectedCDInd));
@@ -345,7 +345,7 @@ public class ConsoleController {
                 break;
             }
             default: {
-                System.out.println("\"" + option + "\" is unsupported option for print. "
+                printer.printMessage("\"" + option + "\" is unsupported option for print. "
                         + "use help to see the list of available commands");
                 break;
             }
@@ -366,7 +366,7 @@ public class ConsoleController {
                 break;
             }
             default: {
-                System.out.println("\"" + option + "\" is unsupported option for create. "
+                printer.printMessage("\"" + option + "\" is unsupported option for create. "
                         + "use help to see the list of available commands");
                 break;
             }
@@ -375,7 +375,7 @@ public class ConsoleController {
 
     private void createCompilation() {
 
-        System.out.println("choose [l, r] boundaries for compilation:");
+        printer.printMessage("choose [l, r] boundaries for compilation:");
         printer.printSelectionList(allSongs);
 
         int l = scanner.readIntFromConsole("l", printer, (i) -> i < allSongs.size() && i >= 0);
@@ -386,7 +386,7 @@ public class ConsoleController {
 
     private void createCD(StringTokenizer st) {
         if (compilation == null) {
-            System.out.println("create compilation before creating disk");
+            printer.printMessage("create compilation before creating disk");
             return;
         }
 
@@ -397,7 +397,7 @@ public class ConsoleController {
             sizeArg = Integer.parseInt(st.nextToken());
             nameArg = st.nextToken();
         } catch (Exception e) {
-            System.out.println("invalid arguments for create cd. Use help to learn how to crate CD");
+            printer.printMessage("invalid arguments for create cd. Use help to learn how to crate CD");
             return;
         }
 
@@ -406,7 +406,7 @@ public class ConsoleController {
         List<AbstractDigitalComposition> temp = cd.addAllCompositions(compilation);
 
         if (!temp.isEmpty()) {
-            System.out.println("some compositions from compilation didn't fit on cd."
+            printer.printMessage("some compositions from compilation didn't fit on cd."
                     + "select them as compilation? y / n"
             );
         }
@@ -415,7 +415,7 @@ public class ConsoleController {
             int ans = System.in.read();
             if (ans == (int) 'y') compilation = temp;
         } catch (IOException e) {
-            System.out.println("sth wrong with your answer");
+            printer.printMessage("sth wrong with your answer");
         }
 
         allCD.add(cd);
@@ -426,7 +426,7 @@ public class ConsoleController {
     private void sort(StringTokenizer st) {
 
         if (selectedCDInd == -1) {
-            System.out.println("select CD before sorting it, please");
+            printer.printMessage("select CD before sorting it, please");
             return;
         }
 
@@ -466,16 +466,16 @@ public class ConsoleController {
     private void find(StringTokenizer st) {
 
         if (!st.hasMoreTokens() || !st.nextToken().equals(SONG_OPTION)) {
-            System.out.println("You have to specify \"song\" option for find command!");
+            printer.printMessage("You have to specify \"song\" option for find command!");
             return;
         }
 
         if (selectedCDInd == -1) {
-            System.out.println("first, select CD");
+            printer.printMessage("first, select CD");
             return;
         }
 
-        System.out.println("specify ranges [minSize, maxSize] and [minYear, maxYear]");
+        printer.printMessage("specify ranges [minSize, maxSize] and [minYear, maxYear]");
 
         int minSize = scanner.readIntFromConsole("maxYear", printer, (i) -> i >= 0);
         int maxSize = scanner.readIntFromConsole("maxYear", printer, (i) -> i >= minSize);
@@ -487,9 +487,9 @@ public class ConsoleController {
                 allCD.get(selectedCDInd).findSong(minSize, maxSize, minYear, maxYear);
 
         if (result == null) {
-            System.out.println("nothing found.");
+            printer.printMessage("nothing found.");
         } else {
-            System.out.println("found song :");
+            printer.printMessage("found song :");
             System.out.print("\t");
             printer.print(result);
         }
