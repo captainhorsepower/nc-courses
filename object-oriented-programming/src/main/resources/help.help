@@ -32,8 +32,9 @@ sort songs on CD:
     sort <arg>          sort according to an (optional) argument
                         default sort is by artist, then by year
                         possible ars :
+                        default
                         byName
                         byArtist
-                        byYear
-                        byDuration
+                        bySize
+                        byDur
                         byGenre
