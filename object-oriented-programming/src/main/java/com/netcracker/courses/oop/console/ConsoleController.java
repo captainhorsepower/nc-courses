@@ -21,8 +21,8 @@ import java.util.*;
 public class ConsoleController {
 
     /* messages */
-    public final static String GREETINGS_MESSAGE = "Welcome to the Ultimate CD Burner!";
-    public static final String BYE_MESSAGE = "Good bye!";
+    public final static String GREETINGS_MESSAGE    = "Welcome to the Ultimate CD Burner!";
+    public static final String BYE_MESSAGE          = "Good bye!";
 
     public final static String HELP_MESSAGE;
 
@@ -55,29 +55,29 @@ public class ConsoleController {
 
 
    /* commands */
-    public static final String SELECT_COMMAND = "select";
-    public static final String PRINT_COMMAND = "print";
-    public static final String CREATE_COMMAND = "create";
-    public static final String SORT_COMMAND = "sort";
+    public static final String SELECT_COMMAND       = "select";
+    public static final String PRINT_COMMAND        = "print";
+    public static final String CREATE_COMMAND       = "create";
+    public static final String SORT_COMMAND         = "sort";
 
-    public static final String EXIT_COMMAND = "exit";
-    public static final String HELP_COMMAND = "help";
+    public static final String EXIT_COMMAND         = "exit";
+    public static final String HELP_COMMAND         = "help";
 
 
 
     /* options */
-    public static final String SONG_OPTION = "song";
-    public static final String CD_OPTION = "cd";
-    public static final String COMPILATION_OPTION = "cmpl";
+    public static final String SONG_OPTION          = "song";
+    public static final String CD_OPTION            = "cd";
+    public static final String COMPILATION_OPTION   = "cmpl";
 
 
     /* arguments */
-    public static final String ALL_ARG = "--all";
-    public static final String BY_NAME_ARG = "byname";
-    public static final String BY_ARTIST_ARG = "byartist";
-    public static final String BY_SIZE_ARG = "bysize";
-    public static final String BY_DURATION_ARG = "bydur";
-    public static final String BY_GENRE_ARG = "bygenre";
+    public static final String ALL_ARG              = "--all";
+    public static final String BY_NAME_ARG          = "byname";
+    public static final String BY_ARTIST_ARG        = "byartist";
+    public static final String BY_SIZE_ARG          = "bysize";
+    public static final String BY_DURATION_ARG      = "bydur";
+    public static final String BY_GENRE_ARG         = "bygenre";
 
     private static final int                        INIT_CAPACITY = 10;
     private ArrayList<AbstractDigitalComposition>   allSongs;
