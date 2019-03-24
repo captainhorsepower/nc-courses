@@ -2,6 +2,7 @@ package by.courses.java.streamapi.operation;
 
 import by.courses.java.streamapi.entity.UserBase;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -15,7 +16,9 @@ public class DefaultStream implements Operation<UserBase> {
 
     @Override
     public Collection<UserBase> removeAllOlder(Collection<UserBase> entities, int age) {
-        return null;
+        return entities.stream()
+                .filter(u -> u.getAge() > age)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
