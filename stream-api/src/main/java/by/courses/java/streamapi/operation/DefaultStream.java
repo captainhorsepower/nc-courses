@@ -4,6 +4,7 @@ import by.courses.java.streamapi.entity.UserBase;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
@@ -11,7 +12,13 @@ public class DefaultStream implements Operation<UserBase> {
 
     @Override
     public Collection<UserBase> removeWithMaxAge(Collection<UserBase> entities) {
-        return null;
+        double maxAge = entities.stream()
+                            .mapToDouble(UserBase::getAge)
+                            .max()
+                            .getAsDouble();
+        return entities.stream()
+                .filter(u -> u.getAge() < maxAge)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -51,11 +58,17 @@ public class DefaultStream implements Operation<UserBase> {
 
     @Override
     public Collection<UserBase> addValueToAllNames(Collection<UserBase> entities, String value) {
-        return null;
+        return entities.stream()
+                .peek(u -> u.setName( u.getName() + value ))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Collection<UserBase> sortByNameThanByAge(Collection<UserBase> entities) {
-        return null;
+        return entities.stream()
+                .sorted(Comparator
+                        .comparing(UserBase::getName)
+                        .thenComparing(UserBase::getAge))
+                .collect(Collectors.toList());
     }
 }
