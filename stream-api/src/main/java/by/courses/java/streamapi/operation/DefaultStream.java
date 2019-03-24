@@ -18,7 +18,7 @@ public class DefaultStream implements Operation<UserBase> {
     public Collection<UserBase> removeAllOlder(Collection<UserBase> entities, int age) {
         return entities.stream()
                 .filter(u -> u.getAge() > age)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -37,7 +37,10 @@ public class DefaultStream implements Operation<UserBase> {
 
     @Override
     public Collection<UserBase> getTwoUsersStartingFromSecond(Collection<UserBase> entities) {
-        return null;
+        return entities.stream()
+                .skip(2)
+                .limit(2)
+                .collect(Collectors.toList());
     }
 
     @Override
