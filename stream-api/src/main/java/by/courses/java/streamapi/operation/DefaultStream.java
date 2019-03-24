@@ -23,7 +23,8 @@ public class DefaultStream implements Operation<UserBase> {
 
     @Override
     public double getAverageAge(Collection<UserBase> entities) {
-        return 0;
+        return entities.stream()
+                .collect(Collectors.averagingDouble(UserBase::getAge));
     }
 
     @Override
