@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 public class PostgreSQLDatabaseManager implements DatabaseManager {
 
+    // I will change it to some kind of loaded properties one day
     private static final String DATABASE_URL = "jdbc:postgresql://localhost:5432/";
     private static final String DATABASE_NAME = "somejdbc";
     private static final String LOGIN = "postgres";
@@ -52,7 +53,7 @@ public class PostgreSQLDatabaseManager implements DatabaseManager {
         return connection;
     }
 
-    public Statement getStatement() {
+    public Statement createStatement() {
         try {
             return connection.createStatement();
         } catch (SQLException e) {

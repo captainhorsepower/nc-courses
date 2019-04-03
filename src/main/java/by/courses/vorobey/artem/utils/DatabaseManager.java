@@ -6,6 +6,6 @@ import java.sql.Statement;
 public interface DatabaseManager {
 
     Connection getConnection();
-    Statement getStatement();
+    Statement createStatement();
 
 }
