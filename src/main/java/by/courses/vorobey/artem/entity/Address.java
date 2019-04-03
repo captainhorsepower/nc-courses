@@ -39,4 +39,14 @@ public class Address {
     @Setter
     @NonNull
     private int buildNumber;
+
+    @Override
+    public String toString() {
+        return "Address : "
+                + "city=\'" + city + "\'"
+                + ", street=\'" + street + "\'"
+                + ", build_number=" + buildNumber
+                + ", addr_id=" + addressId
+                + ", cust_id=" + customer.getCustomerId();
+    }
 }

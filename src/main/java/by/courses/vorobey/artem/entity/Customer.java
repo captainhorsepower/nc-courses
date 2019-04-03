@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.sql.Date;
 
+@AllArgsConstructor(staticName = "of")
 @RequiredArgsConstructor(staticName = "of")
 public class Customer {
 
@@ -36,4 +37,13 @@ public class Customer {
     @NonNull
     private final Address address;
 
+    @Override
+    public String toString() {
+        return "Customer : "
+                + "nick=\'" + nickname + "\'"
+                + ", birthday=\'" + birthday + "\'"
+                + ", cust_id=" + customerId
+                + ", addr_id=" + address.getAddressId()
+                + ",\n\t" + address;
+    }
 }
