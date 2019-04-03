@@ -1,14 +1,28 @@
 package by.courses.vorobey.artem.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@AllArgsConstructor(staticName = "of")
+import java.sql.Date;
+
+@RequiredArgsConstructor(staticName = "of")
 public class Customer {
+
     @Getter
     @Setter
-    private String name;
+    private int customerId;
+
     @Getter
-    private final int customerId;
+    @Setter
+    @NonNull
+    private String nickname;
+
+    @Getter
+    @Setter
+    @NonNull
+    private Date birthday;
+
+    @Getter
+    @NonNull
+    private final Address address;
+
 }

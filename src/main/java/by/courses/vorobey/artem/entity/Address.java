@@ -8,12 +8,22 @@ import lombok.Setter;
 public class Address {
 
     @Getter
-    private final int addressId;
-
-    @Getter
-    private final int customerId;
+    @Setter
+    private int addressId;
 
     @Getter
     @Setter
-    private String address;
+    private Customer customer;
+
+    @Getter
+    @Setter
+    private String city;
+
+    @Getter
+    @Setter
+    private String street;
+
+    @Getter
+    @Setter
+    private int buildNumber;
 }
