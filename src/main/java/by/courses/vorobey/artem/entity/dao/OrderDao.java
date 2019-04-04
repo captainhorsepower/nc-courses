@@ -2,8 +2,8 @@ package by.courses.vorobey.artem.entity.dao;
 
 import by.courses.vorobey.artem.entity.Item;
 import by.courses.vorobey.artem.entity.Order;
-import by.courses.vorobey.artem.utils.DatabaseManager;
-import by.courses.vorobey.artem.utils.PostgreSQLDatabaseManager;
+import by.courses.vorobey.artem.utils.DatabaseConnectionManager;
+import by.courses.vorobey.artem.utils.PostgreSQLDatabaseConnectionManager;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,8 +19,8 @@ public class OrderDao implements DAO<Order> {
     private static final String ORDER_ITEMS_TABLE_NAME = "order_items_pending";
     private static final String ORDER_ITEMS_INSERT_PARAM_LIST = "(order_id, item_id)";
 
-    private DatabaseManager manager =
-            PostgreSQLDatabaseManager.getManager();
+    private DatabaseConnectionManager manager =
+            PostgreSQLDatabaseConnectionManager.getManager();
 
     /** create single order-item record in db */
     private void createOrderItemRecord(Long orderId, Long itemId) throws SQLException {

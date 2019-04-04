@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class PostgreSQLDatabaseManager implements DatabaseManager {
+public class PostgreSQLDatabaseConnectionManager implements DatabaseConnectionManager {
 
     // I will change it to some kind of loaded properties one day
     private static final String DATABASE_URL = "jdbc:postgresql://localhost:5432/";
@@ -12,7 +12,7 @@ public class PostgreSQLDatabaseManager implements DatabaseManager {
     private static final String LOGIN = "postgres";
     private static final String PASSWORD = "artem";
 
-    private static final PostgreSQLDatabaseManager singletonInstance;
+    private static final PostgreSQLDatabaseConnectionManager singletonInstance;
 
     static {
 
@@ -23,14 +23,14 @@ public class PostgreSQLDatabaseManager implements DatabaseManager {
             exc.printStackTrace();
             System.exit(1);
         }
-        singletonInstance = new PostgreSQLDatabaseManager();
+        singletonInstance = new PostgreSQLDatabaseConnectionManager();
     }
 
-    private PostgreSQLDatabaseManager() { }
+    private PostgreSQLDatabaseConnectionManager() { }
 
 
 
-    public static PostgreSQLDatabaseManager getManager() {
+    public static PostgreSQLDatabaseConnectionManager getManager() {
         return singletonInstance;
     }
 
@@ -47,14 +47,5 @@ public class PostgreSQLDatabaseManager implements DatabaseManager {
         }
 
         return connection;
-    }
-
-    @Override
-    public void closeConnection(Connection connection) {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }

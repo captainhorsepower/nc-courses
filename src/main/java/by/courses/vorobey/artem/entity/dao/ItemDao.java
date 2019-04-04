@@ -2,8 +2,8 @@ package by.courses.vorobey.artem.entity.dao;
 
 import by.courses.vorobey.artem.entity.Item;
 import by.courses.vorobey.artem.entity.Order;
-import by.courses.vorobey.artem.utils.DatabaseManager;
-import by.courses.vorobey.artem.utils.PostgreSQLDatabaseManager;
+import by.courses.vorobey.artem.utils.DatabaseConnectionManager;
+import by.courses.vorobey.artem.utils.PostgreSQLDatabaseConnectionManager;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
@@ -17,8 +17,8 @@ public class ItemDao implements DAO<Item> {
 
     private static final String ORDER_ITEMS_TABLE_NAME = "order_items_pending";
 
-    private DatabaseManager manager =
-            PostgreSQLDatabaseManager.getManager();
+    private DatabaseConnectionManager manager =
+            PostgreSQLDatabaseConnectionManager.getManager();
 
     /**
      * creates item in db
