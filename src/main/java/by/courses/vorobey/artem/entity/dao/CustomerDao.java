@@ -337,11 +337,16 @@ public class CustomerDao implements DAO<Customer> {
                 /* read customer ot lazily access his address */
                 Customer customer = read(id);
 
-                int deletedRowCount = st.executeUpdate();
+                if (customer != null) {
 
-                deleteAddress(customer.getAddress().getAddressId());
+                    int deletedRowCount = st.executeUpdate();
 
-                System.out.println("deleted " + deletedRowCount + " customer(s)");
+                    deleteAddress(customer.getAddress().getAddressId());
+
+                    System.out.println("deleted " + deletedRowCount + " customer(s)");
+                } else {
+                    System.out.println("there is no customer with id=" + id + "; nothing deleted.");
+                }
 
             } catch (PSQLException deleteException) {
                 System.out.println("unable to delete customer with id = " + id
