@@ -32,7 +32,6 @@ public class CustomerDao implements DAO<Customer> {
     private DatabaseManager manager =
             PostgreSQLDatabaseManager.getManager();
 
-
     /*
      * return is kind of redundant in my situation, as customer.address is final field
      * but I will keep it, because create usually create returns what it has just created;
@@ -198,6 +197,11 @@ public class CustomerDao implements DAO<Customer> {
         return customer;
     }
 
+    /**
+     * retrieve customer by id
+     * @param id target id
+     * @return customer with target id
+     */
     public Customer read(Long id) {
 
         if (id == null) {
@@ -258,6 +262,12 @@ public class CustomerDao implements DAO<Customer> {
         return customer;
     }
 
+    /**
+     * allows to update customers name, birthday,
+     * address details (city, street, build number)
+     * @param customer updated
+     * @return updated customer
+     */
     public Customer update(Customer customer) {
 
         if (customer == null) {
@@ -299,6 +309,10 @@ public class CustomerDao implements DAO<Customer> {
         return customer;
     }
 
+    /**
+     * removes customer from db, if he/she is not referenced in order;
+     * @param id target customer_id
+     */
     public void delete(Long id) {
 
         if (id == null) {
@@ -343,8 +357,11 @@ public class CustomerDao implements DAO<Customer> {
         }
     }
 
+    /**
+     * @return list of all existing users
+     */
     public List<Customer> readAll() {
-        List<Customer> customers = new ArrayList<Customer>();
+        List<Customer> customers = new ArrayList<>();
 
         try {
 
