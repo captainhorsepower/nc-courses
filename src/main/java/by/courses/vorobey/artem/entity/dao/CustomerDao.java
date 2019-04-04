@@ -43,8 +43,8 @@ public class CustomerDao implements DAO<Customer> {
                 "INSERT INTO " + ADDRESS_TABLE_NAME + ADDRESS_INSERT_PARAM_LIST
                         + " VALUES(?, ?, ?)";
 
-        PreparedStatement st = manager.getConnection()
-                .prepareStatement(insertAddressSQL, Statement.RETURN_GENERATED_KEYS);
+        Connection c = manager.getConnection();
+        PreparedStatement st = c.prepareStatement(insertAddressSQL, Statement.RETURN_GENERATED_KEYS);
 
         st.setString(1, addr.getCity());
         st.setString(2, addr.getStreet());
@@ -65,6 +65,8 @@ public class CustomerDao implements DAO<Customer> {
             System.out.println("address wasn't added");
         }
 
+        manager.closeConnection(c);
+
         return addr;
     }
 
@@ -79,7 +81,8 @@ public class CustomerDao implements DAO<Customer> {
                         + " WHERE address_id = " + addr.getAddressId();
 
 
-        PreparedStatement st = manager.getConnection().prepareStatement(updateAddressSQL);
+        Connection c = manager.getConnection();
+        PreparedStatement st = c.prepareStatement(updateAddressSQL);
 
         st.setInt(1, addr.getCustomer().getCustomerId());
         st.setString(2, addr.getCity());
@@ -92,6 +95,8 @@ public class CustomerDao implements DAO<Customer> {
 
         st.close();
 
+        manager.closeConnection(c);
+
         return addr;
     }
 
@@ -103,7 +108,8 @@ public class CustomerDao implements DAO<Customer> {
                     "DELETE FROM " + ADDRESS_TABLE_NAME
                             + " WHERE address_id = ?";
 
-            PreparedStatement st = manager.getConnection().prepareStatement(deleteAddressSQL);
+            Connection c = manager.getConnection();
+            PreparedStatement st = c.prepareStatement(deleteAddressSQL);
 
             st.setLong(1, id);
 
@@ -111,7 +117,7 @@ public class CustomerDao implements DAO<Customer> {
 
             System.out.println("deleted " + deletedRowCount + " address(es)");
 
-            st.close();
+            manager.closeConnection(c);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -148,8 +154,8 @@ public class CustomerDao implements DAO<Customer> {
                     "INSERT INTO " + CUSTOMERS_TABLE_NAME + CUSTOMER_INSERT_PARAM_LIST
                             + "VALUES(?, ?, ?)";
 
-            PreparedStatement st = manager.getConnection()
-                    .prepareStatement(insertCustomerSQL, Statement.RETURN_GENERATED_KEYS);
+            Connection c = manager.getConnection();
+            PreparedStatement st = c.prepareStatement(insertCustomerSQL, Statement.RETURN_GENERATED_KEYS);
 
             st.setString(1, customer.getNickname().trim());
             st.setDate(2, customer.getBirthday());
@@ -181,6 +187,8 @@ public class CustomerDao implements DAO<Customer> {
 
             st.close();
 
+            manager.closeConnection(c);
+
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -207,7 +215,8 @@ public class CustomerDao implements DAO<Customer> {
                             + " ON customers.address_id = addresses.address_id"
                     + " WHERE addresses.customer_id = ?";
 
-            PreparedStatement st = manager.getConnection().prepareStatement(findCustomerSQL);
+            Connection c = manager.getConnection();
+            PreparedStatement st = c.prepareStatement(findCustomerSQL);
 
             st.setLong(1, id);
 
@@ -238,6 +247,8 @@ public class CustomerDao implements DAO<Customer> {
 
             st.close();
 
+            manager.closeConnection(c);
+
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -265,7 +276,8 @@ public class CustomerDao implements DAO<Customer> {
                             + " birthday_date = ?"
                         + " WHERE customer_id = " + customer.getCustomerId();
 
-            PreparedStatement st = manager.getConnection().prepareStatement(updateCustomerSQL);
+            Connection c = manager.getConnection();
+            PreparedStatement st = c.prepareStatement(updateCustomerSQL);
 
             st.setString(1, customer.getNickname());
             st.setDate(2, customer.getBirthday());
@@ -275,6 +287,8 @@ public class CustomerDao implements DAO<Customer> {
             System.out.println("updated " + updatedRowCount + " customer(s)");
 
             st.close();
+
+            manager.closeConnection(c);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -299,7 +313,8 @@ public class CustomerDao implements DAO<Customer> {
                     "DELETE FROM " + CUSTOMERS_TABLE_NAME
                             + " WHERE customer_id = ?";
 
-            PreparedStatement st = manager.getConnection().prepareStatement(deleteCustomerSQL);
+            Connection c = manager.getConnection();
+            PreparedStatement st = c.prepareStatement(deleteCustomerSQL);
 
             st.setLong(1, id);
 
@@ -310,6 +325,8 @@ public class CustomerDao implements DAO<Customer> {
             deleteAddress((long) customer.getAddress().getAddressId());
 
             st.close();
+
+            manager.closeConnection(c);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -327,7 +344,8 @@ public class CustomerDao implements DAO<Customer> {
                             + " INNER JOIN " +  ADDRESS_TABLE_NAME
                             + " ON customers.address_id = addresses.address_id";
 
-            PreparedStatement st = manager.getConnection().prepareStatement(findCustomerSQL);
+            Connection c = manager.getConnection();
+            PreparedStatement st = c.prepareStatement(findCustomerSQL);
 
             ResultSet rs = st.executeQuery();
 
@@ -357,6 +375,8 @@ public class CustomerDao implements DAO<Customer> {
             }
 
             st.close();
+
+            manager.closeConnection(c);
 
             System.out.println("read " + readCount + " customers");
         } catch (SQLException e) {
