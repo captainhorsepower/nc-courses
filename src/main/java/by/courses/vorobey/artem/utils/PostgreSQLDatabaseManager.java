@@ -3,7 +3,6 @@ package by.courses.vorobey.artem.utils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class PostgreSQLDatabaseManager implements DatabaseManager {
 
@@ -15,50 +14,47 @@ public class PostgreSQLDatabaseManager implements DatabaseManager {
 
     private static final PostgreSQLDatabaseManager singletonInstance;
 
-    private Connection connection;
-
     static {
-        PostgreSQLDatabaseManager instance = null;
+
         try {
-
             Class.forName("org.postgresql.Driver");
-
-            instance = new PostgreSQLDatabaseManager();
-
         } catch (ClassNotFoundException exc) {
+            System.out.println("failed to load Driver, aborting...");
             exc.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (instance != null) {
-                singletonInstance = instance;
-            } else {
-                singletonInstance = null;
-                System.exit(1);
-            }
+            System.exit(1);
         }
-
+        singletonInstance = new PostgreSQLDatabaseManager();
     }
 
-    private PostgreSQLDatabaseManager() throws SQLException {
-        connection = DriverManager.getConnection(
-                DATABASE_URL + DATABASE_NAME, LOGIN, PASSWORD);
-    }
+    private PostgreSQLDatabaseManager() { }
+
+
 
     public static PostgreSQLDatabaseManager getManager() {
         return singletonInstance;
     }
 
+    @Override
     public Connection getConnection() {
+        Connection connection = null;
+
+        try {
+            connection = DriverManager.getConnection(
+                    DATABASE_URL + DATABASE_NAME, LOGIN, PASSWORD);
+        } catch (SQLException e) {
+            System.out.println("failed to connect");
+            e.printStackTrace();
+        }
+
         return connection;
     }
 
-    public Statement createStatement() {
+    @Override
+    public void closeConnection(Connection connection) {
         try {
-            return connection.createStatement();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
     }
 }
