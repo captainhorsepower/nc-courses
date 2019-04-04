@@ -4,6 +4,7 @@ import by.courses.vorobey.artem.entity.Address;
 import by.courses.vorobey.artem.entity.Customer;
 import by.courses.vorobey.artem.utils.DatabaseManager;
 import by.courses.vorobey.artem.utils.PostgreSQLDatabaseManager;
+import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -307,7 +308,6 @@ public class CustomerDao implements DAO<Customer> {
 
         try {
 
-            Customer customer = read(id);
 
             String deleteCustomerSQL =
                     "DELETE FROM " + CUSTOMERS_TABLE_NAME
@@ -318,11 +318,21 @@ public class CustomerDao implements DAO<Customer> {
 
             st.setLong(1, id);
 
-            int deletedRowCount = st.executeUpdate();
 
-            System.out.println("deleted " + deletedRowCount + " customer(s)");
+            try {
+                /* read customer ot lazily access his address */
+                Customer customer = read(id);
 
-            deleteAddress((long) customer.getAddress().getAddressId());
+                int deletedRowCount = st.executeUpdate();
+
+                deleteAddress((long) customer.getAddress().getAddressId());
+
+                System.out.println("deleted " + deletedRowCount + " customer(s)");
+
+            } catch (PSQLException deleteException) {
+                System.out.println("unable to delete customer with id = " + id
+                        + ", as he/she is referenced from table orders");
+            }
 
             st.close();
 
