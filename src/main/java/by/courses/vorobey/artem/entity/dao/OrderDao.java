@@ -197,7 +197,7 @@ public class OrderDao implements DAO<Order> {
 
                 order.setOrderId(generatedOrderID);
 
-                System.out.println("added " + order + " to " + ORDERS_TABLE_NAME + " table");
+                System.out.println("added order (id=" + order.getOrderId() + ") to " + ORDERS_TABLE_NAME + " table");
 
                 /*
                  * wanted to use stream, but there is a problem with catching exception
@@ -274,7 +274,7 @@ public class OrderDao implements DAO<Order> {
 
                 order.setItems(items);
 
-                System.out.println("read : " + order);
+                System.out.println("read : order (id=" + order.getOrderId() + ")");
                 System.out.println("items delta = " + expectedItemCount);
             }
 

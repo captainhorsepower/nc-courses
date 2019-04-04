@@ -113,7 +113,7 @@ public class ItemDao implements DAO<Item> {
                         rs.getFloat("item_price")
                 );
 
-                System.out.println("read : " + item);
+                System.out.println("read : item (id=" + item.getItemId() + ")");
             }
 
             st.close();

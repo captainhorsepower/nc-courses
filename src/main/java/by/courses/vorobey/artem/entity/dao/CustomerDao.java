@@ -246,7 +246,7 @@ public class CustomerDao implements DAO<Customer> {
 
                 addr.setCustomer(customer);
 
-                System.out.println("read : " + customer);
+                System.out.println("read : customer (id=" + customer.getCustomerId() + ")");
 
             }
 
