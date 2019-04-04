@@ -357,17 +357,18 @@ public class OrderDao implements DAO<Order> {
         try {
 
             String deleteOrderSQL =
-                    "DELETE FROM " + ORDERS_TABLE_NAME
-                            + " WHERE order_id = " + id + ";\n"
-                    + "DELETE FROM " + ORDER_ITEMS_TABLE_NAME
-                            + " WHERE order_id = " + id;
+                    "DELETE FROM " + ORDER_ITEMS_TABLE_NAME
+                        + " WHERE order_id = " + id  + ";\n"
+                    + "DELETE FROM " + ORDERS_TABLE_NAME
+                        + " WHERE order_id = " + id;
+
 
             Connection c = manager.getConnection();
             PreparedStatement st = c.prepareStatement(deleteOrderSQL);
 
             int deletedRowCount = st.executeUpdate();
 
-            System.out.println("deleted " + deletedRowCount + " order(s)");
+            System.out.println("deleted " + deletedRowCount + " row(s)");
 
             st.close();
 
