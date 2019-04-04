@@ -59,7 +59,7 @@ public class CustomerDao implements DAO<Customer> {
          * I update address_id inside in addr object
          */
         if (rs.next()) {
-            int generatedAddrID = rs.getInt("address_id");
+            long generatedAddrID = rs.getInt("address_id");
             addr.setAddressId(generatedAddrID);
         } else {
             System.out.println("address wasn't added");
@@ -84,7 +84,7 @@ public class CustomerDao implements DAO<Customer> {
         Connection c = manager.getConnection();
         PreparedStatement st = c.prepareStatement(updateAddressSQL);
 
-        st.setInt(1, addr.getCustomer().getCustomerId());
+        st.setLong(1, addr.getCustomer().getCustomerId());
         st.setString(2, addr.getCity());
         st.setString(3, addr.getStreet());
         st.setInt(4, addr.getBuildNumber());
@@ -159,7 +159,7 @@ public class CustomerDao implements DAO<Customer> {
 
             st.setString(1, customer.getNickname().trim());
             st.setDate(2, customer.getBirthday());
-            st.setInt(3, customer.getAddress().getAddressId());
+            st.setLong(3, customer.getAddress().getAddressId());
 
             st.executeUpdate();
 
@@ -171,7 +171,7 @@ public class CustomerDao implements DAO<Customer> {
              * and customer inside address object
              */
             if (rs.next()) {
-                int generatedCustomerID = rs.getInt("customer_id");
+                long generatedCustomerID = rs.getInt("customer_id");
 
                 customer.setCustomerId(generatedCustomerID);
                 customer.getAddress().setCustomer(customer);
@@ -235,10 +235,10 @@ public class CustomerDao implements DAO<Customer> {
                         rs.getInt("build_number")
                 );
 
-                addr.setAddressId(rs.getInt("address_id"));
+                addr.setAddressId(rs.getLong("address_id"));
 
                 customer = Customer.of(
-                        rs.getInt("customer_id"),
+                        rs.getLong("customer_id"),
                         rs.getString("customer_nickname"),
                         rs.getDate("birthday_date"),
                         addr
@@ -339,7 +339,7 @@ public class CustomerDao implements DAO<Customer> {
 
                 int deletedRowCount = st.executeUpdate();
 
-                deleteAddress((long) customer.getAddress().getAddressId());
+                deleteAddress(customer.getAddress().getAddressId());
 
                 System.out.println("deleted " + deletedRowCount + " customer(s)");
 
@@ -385,10 +385,10 @@ public class CustomerDao implements DAO<Customer> {
                         rs.getInt("build_number")
                 );
 
-                addr.setAddressId(rs.getInt("address_id"));
+                addr.setAddressId(rs.getLong("address_id"));
 
                 Customer customer = Customer.of(
-                        rs.getInt("customer_id"),
+                        rs.getLong("customer_id"),
                         rs.getString("customer_nickname"),
                         rs.getDate("birthday_date"),
                         addr

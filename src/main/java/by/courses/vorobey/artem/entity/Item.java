@@ -9,7 +9,7 @@ public class Item {
     /** item id (primary key int items table) */
     @Getter
     @Setter
-    private int itemId;
+    private Long itemId;
 
     /** item name */
     @Getter

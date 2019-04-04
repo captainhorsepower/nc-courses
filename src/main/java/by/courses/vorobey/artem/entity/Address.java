@@ -12,7 +12,7 @@ public class Address {
      */
     @Getter
     @Setter
-    private int addressId;
+    private Long addressId;
 
     /**
      * customer, which uses this address.

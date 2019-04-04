@@ -12,7 +12,7 @@ public class Order {
     /** unique id of this order */
     @Getter
     @Setter
-    private int orderId;
+    private Long orderId;
 
     /**
      * customer, who ordered it;
@@ -28,7 +28,7 @@ public class Order {
      * because order and customer can exist separately
      * (still order requires customer to exist)
      */
-    private int customerId;
+    private Long customerId;
 
 
     /**
