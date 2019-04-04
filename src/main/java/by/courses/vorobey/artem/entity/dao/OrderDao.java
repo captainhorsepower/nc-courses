@@ -106,11 +106,11 @@ public class OrderDao implements DAO<Order> {
          * this list contains record_ids of order-item records,
          * that should no longer be included in given order.
          */
-        List<Integer> oldExtraItemsRecordIDs = new ArrayList<>(rs.getFetchSize());
+        List<Long> oldExtraItemsRecordIDs = new ArrayList<>(rs.getFetchSize());
         /*
          * this is list of item_ids in updated order items
          */
-        List<Integer> newItemIDs = order.getItems().stream()
+        List<Long> newItemIDs = order.getItems().stream()
                 .map(Item::getItemId)
                 .collect(Collectors.toList());
 
@@ -123,7 +123,7 @@ public class OrderDao implements DAO<Order> {
          */
         while (rs.next()) {
 
-            Integer oldItemID = rs.getInt("item_id");
+            Long oldItemID = rs.getLong("item_id");
 
             /*
              * if new items contain item already stored item ->
@@ -131,7 +131,7 @@ public class OrderDao implements DAO<Order> {
              * otherwise, this is extra item
              */
             if (!newItemIDs.remove(oldItemID)) {
-                Integer extraRecordId = rs.getInt("record_id");
+                Long extraRecordId = rs.getLong("record_id");
                 oldExtraItemsRecordIDs.add( extraRecordId );
             }
         }
@@ -139,16 +139,16 @@ public class OrderDao implements DAO<Order> {
         while (!newItemIDs.isEmpty()) {
             if (oldExtraItemsRecordIDs.isEmpty()) {
                 createOrderItemRecord(
-                        (long) order.getOrderId(), (long) newItemIDs.remove(0)
+                        order.getOrderId(), newItemIDs.remove(0)
                 );
             } else {
                 updateOrderItemRecord(
-                        (long) oldExtraItemsRecordIDs.remove(0), (long) newItemIDs.remove(0));
+                        oldExtraItemsRecordIDs.remove(0), newItemIDs.remove(0));
             }
         }
 
         while (!oldExtraItemsRecordIDs.isEmpty()) {
-            deleteOrderItemRecord( (long) oldExtraItemsRecordIDs.remove(0) );
+            deleteOrderItemRecord(oldExtraItemsRecordIDs.remove(0));
         }
 
         st.close();
@@ -178,7 +178,7 @@ public class OrderDao implements DAO<Order> {
             Connection c = manager.getConnection();
             PreparedStatement st = c.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS);
 
-            st.setInt(1, order.getCustomerId());
+            st.setLong(1, order.getCustomerId());
             st.setInt(2, order.getItemCount());
             st.setFloat(3, order.getPrice());
             st.setDate(4, order.getOrderDate());
@@ -193,7 +193,7 @@ public class OrderDao implements DAO<Order> {
              * and customer inside address object
              */
             if (rs.next()) {
-                int generatedOrderID = rs.getInt("order_id");
+                long generatedOrderID = rs.getInt("order_id");
 
                 order.setOrderId(generatedOrderID);
 
@@ -204,7 +204,7 @@ public class OrderDao implements DAO<Order> {
                  * in future releases this might be updated.
                  */
                 for (Item i : order.getItems()) {
-                    createOrderItemRecord((long) order.getOrderId(),(long) i.getItemId());
+                    createOrderItemRecord(order.getOrderId(), i.getItemId());
                 }
 
             } else {
@@ -256,8 +256,8 @@ public class OrderDao implements DAO<Order> {
 
                 order = Order.of();
                 order.setOrderDate(rs.getDate("order_date"));
-                order.setCustomerId(rs.getInt("customer_id"));
-                order.setOrderId(rs.getInt("order_id"));
+                order.setCustomerId(rs.getLong("customer_id"));
+                order.setOrderId(rs.getLong("order_id"));
 
                 int expectedItemCount = rs.getInt("item_count");
 

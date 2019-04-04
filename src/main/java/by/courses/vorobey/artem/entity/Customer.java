@@ -15,7 +15,7 @@ public class Customer {
      */
     @Getter
     @Setter
-    private int customerId;
+    private Long customerId;
 
     /** unique username in db */
     @Getter

@@ -56,7 +56,7 @@ public class ItemDao implements DAO<Item> {
              * and customer inside address object
              */
             if (rs.next()) {
-                int generatedCustomerID = rs.getInt("item_id");
+                long generatedCustomerID = rs.getLong("item_id");
 
                 item.setItemId(generatedCustomerID);
 
@@ -108,7 +108,7 @@ public class ItemDao implements DAO<Item> {
             if (rs.next()) {
 
                 item = Item.of(
-                        rs.getInt("item_id"),
+                        rs.getLong("item_id"),
                         rs.getString("item_name"),
                         rs.getFloat("item_price")
                 );
@@ -142,7 +142,7 @@ public class ItemDao implements DAO<Item> {
         /* update orders lazily, not the most efficient way */
         OrderDao orderDao = new OrderDao();
         while (rs.next()) {
-            Order referencingOrder = orderDao.read( (long) rs.getInt("order_id") );
+            Order referencingOrder = orderDao.read(rs.getLong("order_id"));
             orderDao.update(referencingOrder);
 
             System.out.println("item (id=" + itemId + ") " +
@@ -178,7 +178,7 @@ public class ItemDao implements DAO<Item> {
 
             System.out.println("updated " + updatedRowCount + " item(s)");
 
-            updateReferencingOrders( (long) item.getItemId() );
+            updateReferencingOrders(item.getItemId());
 
             st.close();
 
@@ -251,7 +251,7 @@ public class ItemDao implements DAO<Item> {
             while (rs.next()) {
 
                 Item item = Item.of(
-                        rs.getInt("item_id"),
+                        rs.getLong("item_id"),
                         rs.getString("item_name"),
                         rs.getFloat("item_price")
                 );
