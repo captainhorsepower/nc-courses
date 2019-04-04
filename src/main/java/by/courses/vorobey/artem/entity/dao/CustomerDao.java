@@ -2,8 +2,8 @@ package by.courses.vorobey.artem.entity.dao;
 
 import by.courses.vorobey.artem.entity.Address;
 import by.courses.vorobey.artem.entity.Customer;
-import by.courses.vorobey.artem.utils.DatabaseManager;
-import by.courses.vorobey.artem.utils.PostgreSQLDatabaseManager;
+import by.courses.vorobey.artem.utils.DatabaseConnectionManager;
+import by.courses.vorobey.artem.utils.PostgreSQLDatabaseConnectionManager;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
@@ -29,8 +29,8 @@ public class CustomerDao implements DAO<Customer> {
             + ADDRESS_TABLE_NAME + ".build_number";
 
 
-    private DatabaseManager manager =
-            PostgreSQLDatabaseManager.getManager();
+    private DatabaseConnectionManager manager =
+            PostgreSQLDatabaseConnectionManager.getManager();
 
     /*
      * return is kind of redundant in my situation, as customer.address is final field
