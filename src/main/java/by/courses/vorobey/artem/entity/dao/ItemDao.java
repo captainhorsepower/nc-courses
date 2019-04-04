@@ -1,8 +1,11 @@
 package by.courses.vorobey.artem.entity.dao;
 
 import by.courses.vorobey.artem.entity.Item;
+import by.courses.vorobey.artem.entity.Order;
 import by.courses.vorobey.artem.utils.DatabaseManager;
 import by.courses.vorobey.artem.utils.PostgreSQLDatabaseManager;
+import org.omg.CORBA.PRIVATE_MEMBER;
+import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +15,8 @@ public class ItemDao implements DAO<Item> {
 
     private static final String ITEMS_TABLE_NAME = "items";
     private static final String ITEM_INSERT_PARAM_LIST = "(item_name, item_price)";
+
+    private static final String ORDER_ITEMS_TABLE_NAME = "order_items_pending";
 
     private DatabaseManager manager =
             PostgreSQLDatabaseManager.getManager();
@@ -169,7 +174,6 @@ public class ItemDao implements DAO<Item> {
             return;
         }
 
-        // TODO: 4/4/2019 deal with foreign keys when I add them
         try {
 
             String deleteItemSQL =
@@ -179,9 +183,15 @@ public class ItemDao implements DAO<Item> {
             Connection c = manager.getConnection();
             PreparedStatement st = c.prepareStatement(deleteItemSQL);
 
-            int deletedRowCount = st.executeUpdate();
+            try {
 
-            System.out.println("deleted " + deletedRowCount + " item(s)");
+                int deletedRowCount = st.executeUpdate();
+                System.out.println("deleted " + deletedRowCount + " item(s)");
+
+            } catch (PSQLException deleteException) {
+                System.out.println("item with id=" + id + " cannot be deleted, " +
+                        "as it is contained in some existing order(s)");
+            }
 
             st.close();
 
