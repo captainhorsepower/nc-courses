@@ -4,7 +4,6 @@ import by.courses.vorobey.artem.entity.Item;
 import by.courses.vorobey.artem.entity.Order;
 import by.courses.vorobey.artem.utils.DatabaseManager;
 import by.courses.vorobey.artem.utils.PostgreSQLDatabaseManager;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
@@ -20,9 +19,6 @@ public class ItemDao implements DAO<Item> {
 
     private DatabaseManager manager =
             PostgreSQLDatabaseManager.getManager();
-
-
-
 
     /**
      * creates item in db
@@ -82,6 +78,11 @@ public class ItemDao implements DAO<Item> {
         return item;
     }
 
+    /**
+     * retrieve item from db by id
+     * @param id target item id
+     * @return item, or null, if it's absent
+     */
     @Override
     public Item read(Long id) {
 
@@ -121,12 +122,14 @@ public class ItemDao implements DAO<Item> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
 
         return item;
     }
 
+    /**
+     * updates all orders (their total prices) that contain updated item
+     */
     private void updateReferencingOrders(Long itemId) throws SQLException {
         String findReferencingOrderIDsSQL = "SELECT DISTINCT order_id FROM "
                 + ORDER_ITEMS_TABLE_NAME + " WHERE item_id = " + itemId;
@@ -147,6 +150,7 @@ public class ItemDao implements DAO<Item> {
         }
     }
 
+    /** allows to update price and name of target item */
     @Override
     public Item update(Item item) {
 
@@ -182,12 +186,12 @@ public class ItemDao implements DAO<Item> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
 
         return item;
     }
 
+    /** removes item from db, if it's not used in any orders */
     @Override
     public void delete(Long id) {
 
@@ -225,6 +229,9 @@ public class ItemDao implements DAO<Item> {
 
     }
 
+    /**
+     * @return list of all available items in db
+     */
     @Override
     public List<Item> readAll() {
         List<Item> items = new ArrayList<>();
@@ -262,7 +269,6 @@ public class ItemDao implements DAO<Item> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
 
         return items;
