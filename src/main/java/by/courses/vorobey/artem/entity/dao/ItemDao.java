@@ -127,6 +127,26 @@ public class ItemDao implements DAO<Item> {
         return item;
     }
 
+    private void updateReferencingOrders(Long itemId) throws SQLException {
+        String findReferencingOrderIDsSQL = "SELECT DISTINCT order_id FROM "
+                + ORDER_ITEMS_TABLE_NAME + " WHERE item_id = " + itemId;
+
+        Connection c = manager.getConnection();
+        PreparedStatement st = c.prepareStatement(findReferencingOrderIDsSQL);
+
+        ResultSet rs = st.executeQuery();
+
+        /* update orders lazily, not the most efficient way */
+        OrderDao orderDao = new OrderDao();
+        while (rs.next()) {
+            Order referencingOrder = orderDao.read( (long) rs.getInt("order_id") );
+            orderDao.update(referencingOrder);
+
+            System.out.println("item (id=" + itemId + ") " +
+                    "updated order (id=" + referencingOrder.getOrderId() + ")");
+        }
+    }
+
     @Override
     public Item update(Item item) {
 
@@ -153,6 +173,8 @@ public class ItemDao implements DAO<Item> {
             int updatedRowCount = st.executeUpdate();
 
             System.out.println("updated " + updatedRowCount + " item(s)");
+
+            updateReferencingOrders( (long) item.getItemId() );
 
             st.close();
 
