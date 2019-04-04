@@ -22,6 +22,7 @@ public class OrderDao implements DAO<Order> {
     private DatabaseManager manager =
             PostgreSQLDatabaseManager.getManager();
 
+    /** create single order-item record in db */
     private void createOrderItemRecord(Long orderId, Long itemId) throws SQLException {
 
         if (orderId == null || itemId == null) {
@@ -52,6 +53,7 @@ public class OrderDao implements DAO<Order> {
 
     }
 
+    /** update single order-item record in db */
     private void updateOrderItemRecord(Long recordId, Long itemId) throws SQLException {
         String updateRecordSQL =
                 "UPDATE " + ORDER_ITEMS_TABLE_NAME
@@ -71,6 +73,7 @@ public class OrderDao implements DAO<Order> {
         manager.closeConnection(c);
     }
 
+    /** delete single order-item record in db */
     private void deleteOrderItemRecord(Long recordId) throws SQLException {
         String deleteRecordSQL = "DELETE FROM " + ORDER_ITEMS_TABLE_NAME
                 + " WHERE record_id = " + recordId;
@@ -87,6 +90,7 @@ public class OrderDao implements DAO<Order> {
         manager.closeConnection(c);
     }
 
+    /** update all order-item records, that correspond to given order */
     private void updateOrderItemsRecords(Order order) throws SQLException {
 
         String findOldItemsSQL = "SELECT record_id, item_id FROM " + ORDER_ITEMS_TABLE_NAME
@@ -152,6 +156,12 @@ public class OrderDao implements DAO<Order> {
         manager.closeConnection(c);
     }
 
+
+    /**
+     * creates order in db
+     * @param order to be created
+     * @return created order
+     */
     @Override
     public Order create(Order order) {
 
@@ -189,17 +199,10 @@ public class OrderDao implements DAO<Order> {
 
                 System.out.println("added " + order + " to " + ORDERS_TABLE_NAME + " table");
 
-//                order.getItems().stream()
-//                        .map( i -> (long) i.getItemId() )
-//                        .forEach( itemId -> {
-//                            try {
-//                                createOrderItemRecord((long) order.getOrderId(), itemId);
-//                            } catch (SQLException e) {
-//                                e.printStackTrace();
-//                            }
-//                        });
-
-                /* wanted to use stream, but there is a problem with catching exception */
+                /*
+                 * wanted to use stream, but there is a problem with catching exception
+                 * in future releases this might be updated.
+                 */
                 for (Item i : order.getItems()) {
                     createOrderItemRecord((long) order.getOrderId(),(long) i.getItemId());
                 }
@@ -220,6 +223,11 @@ public class OrderDao implements DAO<Order> {
         return order;
     }
 
+    /**
+     * retrieve order with target id from db
+     * @param id target id
+     * @return read order
+     */
     @Override
     public Order read(Long id) {
 
@@ -283,7 +291,7 @@ public class OrderDao implements DAO<Order> {
     }
 
     /**
-     * updated allowed order properties and corresponding db records.
+     * updates allowed order properties and corresponding db records.
      * You are allowed to update
      *  'order date'
      *   items in list (remove are add new from available items)
@@ -334,6 +342,10 @@ public class OrderDao implements DAO<Order> {
         return order;
     }
 
+    /**
+     * removes target order and corresponding order-item records from db
+     * @param id of target order
+     */
     @Override
     public void delete(Long id) {
 
@@ -366,6 +378,9 @@ public class OrderDao implements DAO<Order> {
         }
     }
 
+    /**
+     * @return list of all present in db orders
+     */
     @Override
     public List<Order> readAll() {
         List<Order> orders = new ArrayList<>();
