@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.StringJoiner;
 
 @Entity
 @NoArgsConstructor
@@ -15,7 +16,7 @@ public class Customer {
     @Getter
     @Setter
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "customer_id")
     private Long id;
 
@@ -30,4 +31,13 @@ public class Customer {
     @Setter
     @Column(name = "customer_age")
     private int age;
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Customer.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("fio='" + fio + "'")
+                .add("age=" + age)
+                .toString();
+    }
 }
