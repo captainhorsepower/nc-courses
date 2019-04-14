@@ -24,29 +24,16 @@ public class Category {
     @Column(name = "category_id")
     private Long id;
 
-    /**
-     * unique category name
-     */
     @Getter
     @Setter
     @NonNull
     @Column(nullable = false, unique = true, name = "name")
     private String name;
 
-    /**
-     * all offers, that are are inside this category;
-     */
-    /*
-     * delete all offers of this category on delete
-     * therefore, update them before delete,
-     * to avoid detached state issues
-     *
-     * Set, because offer can be included in category only once
-     */
     @Getter
     @Setter
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER,
-            cascade = {CascadeType.REMOVE, CascadeType.DETACH})
+            cascade = {CascadeType.REMOVE})
     private Set<Offer> offers = new HashSet<>();
 
     @Override
