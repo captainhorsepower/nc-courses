@@ -11,12 +11,12 @@
     -->
 
 
-    <persistence-unit name="orderEntryPersistenceUnit">
+    <persistence-unit name="order_entry.customer_management">
 
         <properties>
 
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/order_entry"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/order_entry.customer_management"/>
             <property name="javax.persistence.jdbc.user" value="postgres"/>
             <property name="javax.persistence.jdbc.password" value="artem"/>
 
