@@ -7,6 +7,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringJoiner;
 
+/**
+ * Tag, that can be attached to offers.
+ * To create a fully functional tag, initialize new tag with
+ * a unique name, create it in database via service, use.
+ *
+ * You cat trust the Id, name, and ids and names of offers
+ * that you can get via getters. But to get all tags of any offer,
+ * read thad offer from database via corresponding service first.
+ */
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Entity
@@ -23,15 +32,12 @@ public class Tag {
     @Getter
     @Setter
     @NonNull
-    @Column(nullable = false, name = "tag")
+    @Column(nullable = false, name = "tag", unique = true)
     private String name;
 
     @Getter
     @Setter
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "offer_tag",
-            inverseJoinColumns = @JoinColumn(name = "offer_id"),
-            joinColumns = @JoinColumn(name = "tag_id"))
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tags")
     private Set<Offer> offers = new HashSet<>();
 
     @Override
