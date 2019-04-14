@@ -28,7 +28,7 @@ public class Tag {
 
     @Getter
     @Setter
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "offer_tag",
             inverseJoinColumns = @JoinColumn(name = "offer_id"),
             joinColumns = @JoinColumn(name = "tag_id"))

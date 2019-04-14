@@ -45,7 +45,7 @@ public class Category {
      */
     @Getter
     @Setter
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER,
             cascade = {CascadeType.REMOVE, CascadeType.DETACH})
     private Set<Offer> offers = new HashSet<>();
 
