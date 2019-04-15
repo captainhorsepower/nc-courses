@@ -1,0 +1,128 @@
+package com.netcracker.edu.varabey.entity;
+
+import com.netcracker.edu.varabey.entity.utils.OrderStatus;
+import lombok.*;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+/**
+ * Order entity. Stores information about the order.
+ * The most important entity in inventory module.
+ */
+@NoArgsConstructor
+@Entity
+@Table(name = "orders")
+public class Order {
+
+    @Getter
+    @Id
+    @GeneratedValue
+    @Column(name = "order_id")
+    private Long id;
+
+    /* OrderItem shouldn't exist without order */
+    @OneToMany(mappedBy = "owningOrder", orphanRemoval = true,
+            cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    private List<OrderItem> items = new ArrayList<>();
+
+    @Getter
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    @Getter
+    @Column(nullable = false, name = "created_on")
+    private LocalDate createdOnDate;
+
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "order_status")
+    private OrderStatus status = OrderStatus.APPROVED;
+
+    @Getter
+    @Setter
+    @Column(nullable = false, name = "is_paid")
+    private Boolean isPaid = false;
+
+    public Order(Customer c, LocalDate d) {
+        this.customer = c;
+        this.createdOnDate = d;
+    }
+
+    /**
+     * получить неизменяемый лист айтемов, который использовать ознакомления с
+     * содержимым ордера.
+     * Можно добавить айтем, с помощью addItem()
+     * Можно получить из листа айтем и его удалить с помощью removeItem()
+     * Для изменения ордер айтема, нужно получить ссылку на него из этого листа,
+     * внести изменения и обновить order с помощью OrderService
+     */
+    public List<OrderItem> getItems() {
+        return Collections.unmodifiableList(items);
+    }
+
+    /** add item to the order */
+    public void addItem(OrderItem item) {
+        item = OrderItem.getDuplicate(item);
+        item.setOwningOrder(this);
+        this.items.add(item);
+    }
+
+    /** removeItem one item from the order, if it's present */
+    public void removeItem(OrderItem item) {
+        this.items.remove(item);
+    }
+
+    /** removeItem all instances of item from order, if any */
+    public void removeAllItems(OrderItem item) {
+        while (this.items.remove(item));
+    }
+
+    /** removeItem all items that satisfy given predicate, e.g. p.getPrice().getValue() > 100.55 */
+    public void removeAllItems(Predicate<OrderItem> p) {
+        this.items = this.items.stream()
+                .filter( i -> !p.test(i))
+                .collect(Collectors.toList());
+    }
+
+    /** accumulated order price */
+    public Double getTotalPrice() {
+        return this.items.stream()
+                .mapToDouble(i -> i.getPrice().getValue())
+                .reduce( 0., (sum, price) -> sum += price);
+    }
+
+    /** number of items in order */
+    public Integer getItemCount() {
+        return this.items.size();
+    }
+
+    /* не очень нужные equals & hashCode */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(getId(), order.getId()) &&
+                Objects.equals(getCreatedOnDate(), order.getCreatedOnDate());
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCreatedOnDate());
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Order.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("createdOnDate=" + createdOnDate)
+                .add("customer=" + customer)
+                .add("orderItemList=" + items)
+                .toString();
+    }
+}
