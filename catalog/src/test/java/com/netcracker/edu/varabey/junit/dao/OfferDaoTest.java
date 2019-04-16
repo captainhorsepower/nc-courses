@@ -52,6 +52,43 @@ public class OfferDaoTest {
     }
 
     @Test
+    public void findAllWithPriceInRangeTest() {
+        Offer offer1 = new Offer();
+        Offer offer2 = new Offer();
+        Offer offer3 = new Offer();
+
+        Category cat = new Category("findOffersByCategoryTest category1");
+
+        offer1.setName("offer1");
+        offer1.setPrice(new Price(55D));
+        offer1.setCategory(cat);
+        offer1 = offerDao.create(offer1);
+
+        cat = offer1.getCategory();
+
+        offer2.setName("offer2");
+        offer2.setPrice(new Price(100D));
+        offer2.setCategory(cat);
+        offer2 = offerDao.create(offer2);
+
+        offer3.setName("offer2");
+        offer3.setPrice(new Price(120D));
+        offer3.setCategory(new Category("findOffersByCategoryTest category2"));
+        offer3 = offerDao.create(offer3);
+
+        assertEquals(1, offerDao.findAllWithPriceInRange(10., 60.).size());
+        assertEquals(3, offerDao.findAllWithPriceInRange(10., 120.).size());
+        assertEquals(2, offerDao.findAllWithPriceInRange(60., 200.).size());
+        assertEquals(0, offerDao.findAllWithPriceInRange(60., 70.).size());
+        assertEquals(0, offerDao.findAllWithPriceInRange(130., 40.).size());
+
+        // clean-up
+        offerDao.delete(offer1.getId());
+        offerDao.delete(offer2.getId());
+        offerDao.delete(offer3.getId());
+    }
+
+    @Test
     public void findAllWithTagsTest() {
         Offer offer1 = new Offer();
         Offer offer2 = new Offer();

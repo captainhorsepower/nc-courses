@@ -2,6 +2,7 @@ package com.netcracker.edu.varabey.dao;
 
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
+import com.netcracker.edu.varabey.entity.Price;
 import com.netcracker.edu.varabey.entity.Tag;
 import com.netcracker.edu.varabey.utils.PostgreSQLDatabaseEntityManagerFactory;
 
@@ -194,6 +195,32 @@ public class OfferDaoImpl implements OfferDao {
         );
 
         List<Offer> offers = (List<Offer>) q.getResultList();
+
+        em.getTransaction().commit();
+        em.close();
+        return offers;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Offer> findAllWithPriceInRange(Double lowerBound, Double upperBound) {
+        List<Offer> offers = new ArrayList<>();
+        if (lowerBound == null || upperBound == null) {
+            return offers;
+        }
+
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        Query q = em.createQuery(
+                "SELECT o FROM Offer o "
+                        + " WHERE o.price.value BETWEEN :lower AND :upper"
+        );
+
+        q.setParameter("lower", lowerBound);
+        q.setParameter("upper", upperBound);
+
+        offers = (List<Offer>) q.getResultList();
 
         em.getTransaction().commit();
         em.close();
