@@ -1,5 +1,6 @@
 package com.netcracker.edu.varabey.dao;
 
+import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface OfferDao {
     void delete(Long id);
 
     List<Offer> readAll();
+    List<Offer> findAllByCategory(Category category);
 }
