@@ -2,7 +2,9 @@ package com.netcracker.edu.varabey.dao;
 
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
+import com.netcracker.edu.varabey.entity.Tag;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface OfferDao {
@@ -13,4 +15,5 @@ public interface OfferDao {
 
     List<Offer> readAll();
     List<Offer> findAllByCategory(Category category);
+    List<Offer> findAllWithTags(Collection<Tag> tags);
 }
