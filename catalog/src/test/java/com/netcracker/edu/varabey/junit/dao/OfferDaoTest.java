@@ -7,12 +7,48 @@ import com.netcracker.edu.varabey.entity.Price;
 import com.netcracker.edu.varabey.entity.Tag;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class OfferDaoTest {
 
     private OfferDao offerDao = new OfferDaoImpl();
 
+    @Test
+    public void findOffersByCategoryTest() {
+        Offer offer1 = new Offer();
+        Offer offer2 = new Offer();
+        Offer offer3 = new Offer();
+
+        Category cat = new Category("findOffersByCategoryTest category1");
+
+        offer1.setName("offer1");
+        offer1.setPrice(new Price(10D));
+        offer1.setCategory(cat);
+        offer1 = offerDao.create(offer1);
+
+        cat = offer1.getCategory();
+
+        offer2.setName("offer2");
+        offer2.setPrice(new Price(20D));
+        offer2.setCategory(cat);
+        offer2 = offerDao.create(offer2);
+
+        offer3.setName("offer2");
+        offer3.setPrice(new Price(30D));
+        offer3.setCategory(new Category("findOffersByCategoryTest category2"));
+        offer3 = offerDao.create(offer3);
+
+        List<Offer> catOffers = offerDao.findAllByCategory(cat);
+        assertEquals(2, catOffers.size());
+        assertEquals(1, offerDao.findAllByCategory(offer3.getCategory()).size());
+
+        // clean-up
+        offerDao.delete(offer1.getId());
+        offerDao.delete(offer2.getId());
+        offerDao.delete(offer3.getId());
+    }
     @Test
     public void createAndReadOneOfferTest() {
 

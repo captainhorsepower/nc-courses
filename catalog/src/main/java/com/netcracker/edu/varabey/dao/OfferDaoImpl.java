@@ -1,11 +1,13 @@
 package com.netcracker.edu.varabey.dao;
 
+import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 import com.netcracker.edu.varabey.utils.PostgreSQLDatabaseEntityManagerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -121,5 +123,30 @@ public class OfferDaoImpl implements OfferDao {
         em.remove(offer);
         em.getTransaction().commit();
         em.close();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Offer> findAllByCategory(Category category) {
+        List<Offer> offers = new ArrayList<>();
+        if (category == null || category.getName() == null) {
+            return offers;
+        }
+
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        Query q = em.createQuery(
+                "SELECT o FROM Offer o "
+                + " WHERE o.category.name = :category_name"
+        );
+
+        q.setParameter("category_name", category.getName());
+
+        offers = (List<Offer>) q.getResultList();
+
+        em.getTransaction().commit();
+        em.close();
+        return offers;
     }
 }
