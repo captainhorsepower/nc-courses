@@ -7,6 +7,7 @@ import com.netcracker.edu.varabey.entity.Price;
 import com.netcracker.edu.varabey.entity.Tag;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -49,6 +50,90 @@ public class OfferDaoTest {
         offerDao.delete(offer2.getId());
         offerDao.delete(offer3.getId());
     }
+
+    @Test
+    public void findAllWithTagsTest() {
+        Offer offer1 = new Offer();
+        Offer offer2 = new Offer();
+        Offer offer3 = new Offer();
+
+        Category cat = new Category("findAllWithTagsTest category1");
+        CategoryDao cDao = new CategoryDaoImpl();
+        cat = cDao.create(cat);
+
+        TagDao tDao = new TagDaoImpl();
+        Tag t1 = new Tag("findAllWithTagsTest t1");
+        Tag t2 = new Tag("findAllWithTagsTest t2");
+        Tag t3 = new Tag("findAllWithTagsTest t3");
+        Tag t4 = new Tag("findAllWithTagsTest t4");
+
+        t1 = tDao.create(t1);
+        t2 = tDao.create(t2);
+        t3 = tDao.create(t3);
+        t4 = tDao.create(t4);
+
+
+        /* t1, t2 */
+        offer1.setName("offer1");
+        offer1.setPrice(new Price(10D));
+        offer1.setCategory(cat);
+        offer1.addTag(t1);
+        offer1.addTag(t2);
+        offer1 = offerDao.create(offer1);
+
+        /* t1, t3, t4 */
+        offer2.setName("offer2");
+        offer2.setPrice(new Price(20D));
+        offer2.setCategory(cat);
+        offer2.addTag(t1);
+        offer2.addTag(t3);
+        offer2.addTag(t4);
+        offer2 = offerDao.create(offer2);
+
+        /* t3, t4 */
+        offer3.setName("offer3");
+        offer3.setPrice(new Price(30D));
+        offer3.setCategory(cat);
+        offer3.addTag(t3);
+        offer3.addTag(t4);
+        offer3 = offerDao.create(offer3);
+
+        List<Offer> offers;
+
+        /* t1 */
+        offers = offerDao.findAllWithTags(Arrays.asList(t1));
+        assertEquals(2, offers.size());
+
+        /* t1, t2 */
+        offers = offerDao.findAllWithTags(Arrays.asList(t1, t2));
+        assertEquals(1, offers.size());
+
+        /* t2 */
+        offers = offerDao.findAllWithTags(Arrays.asList(t2));
+        assertEquals(1, offers.size());
+
+        /* t1, t3, t4 */
+        offers = offerDao.findAllWithTags(Arrays.asList(t1, t3, t4));
+        assertEquals(1, offers.size());
+
+        /* t3 */
+        offers = offerDao.findAllWithTags(Arrays.asList(t3));
+        assertEquals(2, offers.size());
+
+        /* t3, t4 */
+        offers = offerDao.findAllWithTags(Arrays.asList(t3, t4));
+        assertEquals(2, offers.size());
+
+        /* t1, t2, t3, t4 */
+        offers = offerDao.findAllWithTags(Arrays.asList(t1, t2, t3, t4));
+        assertEquals(0, offers.size());
+
+        // clean-up
+        offerDao.delete(offer1.getId());
+        offerDao.delete(offer2.getId());
+        offerDao.delete(offer3.getId());
+    }
+
     @Test
     public void createAndReadOneOfferTest() {
 

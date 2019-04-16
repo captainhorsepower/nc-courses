@@ -2,12 +2,14 @@ package com.netcracker.edu.varabey.dao;
 
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
+import com.netcracker.edu.varabey.entity.Tag;
 import com.netcracker.edu.varabey.utils.PostgreSQLDatabaseEntityManagerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -144,6 +146,54 @@ public class OfferDaoImpl implements OfferDao {
         q.setParameter("category_name", category.getName());
 
         offers = (List<Offer>) q.getResultList();
+
+        em.getTransaction().commit();
+        em.close();
+        return offers;
+    }
+
+    /**
+     * find all offers that suit given tags-filter.
+     * Found offers will contain ALL the tags specified,
+     * so the more tags, the less offers
+     *
+     * tags are not checked in database, they are distinguished by name only.
+     * null tags and tags with null names are ignored.
+     *
+     * @param tags filter
+     * @return narrowed down list of offers.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Offer> findAllWithTags(Collection<Tag> tags) {
+        if (tags == null || tags.isEmpty()) {
+            return readAll();
+        }
+
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        StringBuilder qlBuilder = new StringBuilder();
+        qlBuilder.append(" SELECT o FROM Offer o ");
+        qlBuilder.append(" JOIN Tag t ON o MEMBER OF t.offers ");
+        qlBuilder.append(" WHERE t.name IN (");
+
+        long tagCount = tags.stream()
+                .filter( t -> t != null && t.getName() != null)
+                .map(Tag::getName)
+                .peek( name -> qlBuilder.append("'").append(name).append("'").append(", "))
+                .count();
+
+        /* remove last ", " */
+        qlBuilder.setLength(qlBuilder.length() - 2);
+        qlBuilder.append(")");
+        qlBuilder.append(" GROUP BY o.id HAVING COUNT(DISTINCT t.name) = " + tagCount);
+
+        Query q = em.createQuery(
+                qlBuilder.toString()
+        );
+
+        List<Offer> offers = (List<Offer>) q.getResultList();
 
         em.getTransaction().commit();
         em.close();
