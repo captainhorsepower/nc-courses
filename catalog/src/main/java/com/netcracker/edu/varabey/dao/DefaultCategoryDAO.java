@@ -11,12 +11,12 @@ import java.util.Collection;
 /**
  * Service for category. Uses transactional scope entity manager.
  */
-public class DefaultCategoryService implements CategoryService {
+public class DefaultCategoryDAO implements CategoryDAO {
     private EntityManagerFactory emf = PostgreSQLDatabaseEntityManagerFactory.getInstance();
 
     /**
-     * create new category in inventory. At this point category id should be null,
-     * name should be unique.
+     * create new category in catalog. At this point category id should be null,
+     * offers should be empty, name should be unique.
      * @param category with null id
      * @return created category with initialized id
      */
@@ -47,7 +47,7 @@ public class DefaultCategoryService implements CategoryService {
     }
 
     /**
-     * retrieve category from the Inventory.
+     * retrieve category from the Catalog.
      * @param id of wanted category
      * @return retrieved category, or null if nothing found.
      */
@@ -59,21 +59,8 @@ public class DefaultCategoryService implements CategoryService {
         return category;
     }
 
-    private Category update(Category category, EntityManager em) {
-        Query q = em.createQuery("SELECT count(c.id) FROM Category c where c.id = ?1");
-        q.setParameter(1, category.getId());
-        long persistedOrderCategoryCount = (Long) q.getSingleResult();
-        if (persistedOrderCategoryCount == 0) {
-            em.getTransaction().rollback();
-            em.close();
-            throw new IllegalArgumentException("unable to update category, that is not stored in database");
-        }
-        category = em.merge(category);
-        return category;
-    }
-
     /**
-     * Merge the state of the given category into the inventory.
+     * Merge the state of the given category into the catalog.
      *
      * @param category  category instance
      * @return updated category.
@@ -83,14 +70,24 @@ public class DefaultCategoryService implements CategoryService {
     public Category update(Category category) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        category = update(category, em);
+
+        Query q = em.createQuery("SELECT count(c.id) FROM Category c where c.id = ?1");
+        q.setParameter(1, category.getId());
+        long persistedCategoryCount = (Long) q.getSingleResult();
+        if (persistedCategoryCount == 0) {
+            em.getTransaction().rollback();
+            em.close();
+            throw new IllegalArgumentException("unable to update category, that is not stored in database");
+        }
+
+        category = em.merge(category);
         em.getTransaction().commit();
         em.close();
         return category;
     }
 
     /**
-     * removes category and all related orderItems from the Inventory.
+     * removes category and all related offers from the catalog.
      * @param id of category to be removed
      */
     @Override

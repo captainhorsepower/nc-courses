@@ -12,9 +12,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class OfferDaoTest {
+public class OfferDAOTest {
 
-    private OfferDao offerDao = new OfferDaoImpl();
+    private OfferDAO offerDao = new DefaultOfferDAO();
 
     @Test
     public void findOffersByCategoryTest() {
@@ -95,10 +95,10 @@ public class OfferDaoTest {
         Offer offer3 = new Offer();
 
         Category cat = new Category("findAllWithTagsTest category1");
-        CategoryDao cDao = new CategoryDaoImpl();
+        CategoryDAO cDao = new DefaultCategoryDAO();
         cat = cDao.create(cat);
 
-        TagDao tDao = new TagDaoImpl();
+        TagDAO tDao = new DefaultTagDAO();
         Tag t1 = new Tag("findAllWithTagsTest t1");
         Tag t2 = new Tag("findAllWithTagsTest t2");
         Tag t3 = new Tag("findAllWithTagsTest t3");
@@ -307,7 +307,7 @@ public class OfferDaoTest {
 
         Category c = offer.getCategory();
 
-        CategoryDao categoryDao = new CategoryDaoImpl();
+        CategoryDAO categoryDao = new DefaultCategoryDAO();
 
         /* while offer exists, it should be contained in category */
         c = categoryDao.read(c.getId());
@@ -362,7 +362,7 @@ public class OfferDaoTest {
 
         offerDao.delete(offer.getId());
 
-        TagDao tagDao = new TagDaoImpl();
+        TagDAO tagDao = new DefaultTagDAO();
         tag1 = tagDao.read(tag1.getId());
         tag2 = tagDao.read(tag2.getId());
         tag3 = tagDao.read(tag3.getId());

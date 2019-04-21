@@ -13,10 +13,10 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class InventoryDatabaseTests {
-    private static CategoryService caService = new DefaultCategoryService();
-    private static CustomerService cuService = new DefaultCustomerService();
-    private static OrderService oService = new DefaultOrderService();
-    private static TagService tService = new DefaultTagService();
+    private static CategoryDAO caService = new DefaultCategoryDAO();
+    private static CustomerDAO cuService = new DefaultCustomerDAO();
+    private static OrderDAO oService = new DefaultOrderDAO();
+    private static TagDAO tService = new DefaultTagDAO();
 
     private static EntityManagerFactory emf = PostgreSQLDatabaseEntityManagerFactory.getInstance();
 

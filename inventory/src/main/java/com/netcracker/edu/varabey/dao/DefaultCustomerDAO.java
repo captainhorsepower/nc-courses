@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
-public class DefaultCustomerService implements CustomerService {
+public class DefaultCustomerDAO implements CustomerDAO {
     private EntityManagerFactory emf = PostgreSQLDatabaseEntityManagerFactory.getInstance();
 
     @Override

@@ -2,7 +2,6 @@ package com.netcracker.edu.varabey.dao;
 
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
-import com.netcracker.edu.varabey.entity.Price;
 import com.netcracker.edu.varabey.entity.Tag;
 import com.netcracker.edu.varabey.utils.PostgreSQLDatabaseEntityManagerFactory;
 
@@ -16,7 +15,7 @@ import java.util.List;
 /**
  * Service class for offer. Operates with transaction-scoped entity manager.
  */
-public class OfferDaoImpl implements OfferDao {
+public class DefaultOfferDAO implements OfferDAO {
     private EntityManagerFactory emf = PostgreSQLDatabaseEntityManagerFactory.getInstance();
 
     /**
