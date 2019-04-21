@@ -60,7 +60,7 @@ public class Order {
      * Можно добавить айтем, с помощью addItem()
      * Можно получить из листа айтем и его удалить с помощью removeItem()
      * Для изменения ордер айтема, нужно получить ссылку на него из этого листа,
-     * внести изменения и обновить order с помощью OrderService
+     * внести изменения и обновить order с помощью OrderDAO
      */
     public List<OrderItem> getItems() {
         return Collections.unmodifiableList(items);

@@ -4,7 +4,7 @@ import com.netcracker.edu.varabey.entity.Category;
 
 import java.util.Collection;
 
-public interface CategoryDao {
+public interface CategoryDAO {
     Category create(Category category);
     Collection<Category> createAll(Collection<Category> categories);
     Category read(Long id);

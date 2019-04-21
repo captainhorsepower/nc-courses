@@ -11,7 +11,7 @@ import java.util.StringJoiner;
 /**
  * customer, who may place orders.
  *
- * Customer's orders will be populated from database automatically via using OrderService.
+ * Customer's orders will be populated from database automatically via using OrderDAO.
  */
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -42,7 +42,7 @@ public class Customer {
 
     /**
      * получить неизменяемый лист оредеров. Изменить, удалить или добавить ордер
-     * клиенту можно и нужно с помщью OrderService.
+     * клиенту можно и нужно с помщью OrderDAO.
      */
     public List<Order> getOrders() {
         return Collections.unmodifiableList(orders);

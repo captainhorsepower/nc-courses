@@ -8,7 +8,7 @@ import com.netcracker.edu.varabey.entity.Tag;
 import java.util.Collection;
 import java.util.List;
 
-public interface OfferDao {
+public interface OfferDAO {
     Offer create(Offer offer);
     Offer read(Long id);
     Offer update(Offer offer);

@@ -1,24 +1,22 @@
 package com.netcracker.edu.varabey.junit.dao;
 
-import com.netcracker.edu.varabey.dao.CategoryDao;
-import com.netcracker.edu.varabey.dao.CategoryDaoImpl;
-import com.netcracker.edu.varabey.dao.OfferDao;
-import com.netcracker.edu.varabey.dao.OfferDaoImpl;
+import com.netcracker.edu.varabey.dao.CategoryDAO;
+import com.netcracker.edu.varabey.dao.DefaultCategoryDAO;
+import com.netcracker.edu.varabey.dao.OfferDAO;
+import com.netcracker.edu.varabey.dao.DefaultOfferDAO;
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 import com.netcracker.edu.varabey.entity.Price;
 import com.netcracker.edu.varabey.entity.Tag;
 import org.junit.Test;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class CategoryDaoTest {
-    private CategoryDao categoryDao = new CategoryDaoImpl();
-    private OfferDao offerDao = new OfferDaoImpl();
+public class CategoryDAOTest {
+    private CategoryDAO categoryDao = new DefaultCategoryDAO();
+    private OfferDAO offerDao = new DefaultOfferDAO();
 
     @Test
     public void testCreateAndReadOneCategoryWithoutOffer() {

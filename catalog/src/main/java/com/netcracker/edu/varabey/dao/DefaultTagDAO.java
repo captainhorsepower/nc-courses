@@ -14,7 +14,7 @@ import java.util.Collection;
  * for simplicity and security. So performance might suffer just a little
  * tiny bit. If performance is a bottleneck for you, try another implementation.
  */
-public class TagDaoImpl implements TagDao {
+public class DefaultTagDAO implements TagDAO {
     private EntityManagerFactory emf = PostgreSQLDatabaseEntityManagerFactory.getInstance();
 
     /**

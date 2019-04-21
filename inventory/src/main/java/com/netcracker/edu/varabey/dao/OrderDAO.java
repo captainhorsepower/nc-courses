@@ -4,7 +4,7 @@ import com.netcracker.edu.varabey.entity.*;
 
 import java.util.List;
 
-public interface OrderService {
+public interface OrderDAO {
     Order create(Order order);
     Order read(Long id);
     List<Order> readAll();

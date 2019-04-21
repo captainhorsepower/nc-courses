@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultOrderService implements OrderService {
+public class DefaultOrderDAO implements OrderDAO {
     private EntityManagerFactory emf = PostgreSQLDatabaseEntityManagerFactory.getInstance();
 
     /** записать оффер и входящие в него айтемы в б.д. */

@@ -4,7 +4,7 @@ import com.netcracker.edu.varabey.entity.Tag;
 
 import java.util.Collection;
 
-public interface TagDao {
+public interface TagDAO {
     Tag create(Tag tag);
     Collection<Tag> createAll(Collection<Tag> tag);
     Tag read(Long id);
