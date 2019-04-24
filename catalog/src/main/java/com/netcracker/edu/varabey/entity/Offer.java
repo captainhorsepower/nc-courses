@@ -1,10 +1,12 @@
 package com.netcracker.edu.varabey.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -18,37 +20,28 @@ import java.util.StringJoiner;
  * corresponding service.
  *
  */
+@Data
 @Entity
 @Table(name = "offers")
 public class Offer {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "offer_id")
     private Long id;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String name;
 
-    @Getter
-    @Setter
     @OneToOne (optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "price_id")
     private Price price;
 
-    @Getter
-    @Setter
     @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "category_id")
     private Category category;
 
 
-    @Getter
-    @Setter
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "offer_tag",
             joinColumns = @JoinColumn(name = "offer_id"),
@@ -81,5 +74,21 @@ public class Offer {
                 .add("price=" + price)
                 .add("name=" + name)
                 .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Offer offer = (Offer) o;
+        return Objects.equals(id, offer.id) &&
+                Objects.equals(name, offer.name) &&
+                Objects.equals(price, offer.price) &&
+                Objects.equals(category, offer.category);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, category);
     }
 }

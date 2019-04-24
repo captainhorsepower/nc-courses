@@ -54,7 +54,7 @@ public class TagDAOTest {
         offer.setName("of1");
         offer.setPrice(new Price(100.));
         offer.setCategory(new Category("updateTagNameUpdatesTagNameInOffer c1"));
-        offer.getTags().add(tag);
+        offer.addTag(tag);
 
         offer = offerDao.create(offer);
 
@@ -89,16 +89,16 @@ public class TagDAOTest {
         offer.setPrice(new Price(10D));
 
         Tag tag = new Tag("deleteTagDeletesReferenceInOffers tag1");
-        tag = tagDao.create(tag);
-        offer.getTags().add(tag);
+        tag = service.createTag(tag);
+        offer.addTag(tag);
 
         tag = new Tag("deleteTagDeletesReferenceInOffers tag2");
-        tag = tagDao.create(tag);
-        offer.getTags().add(tag);
+        tag = service.createTag(tag);
+        offer.addTag(tag);
 
         offer = offerDao.create(offer);
 
-        offer.getTags().remove(tag);
+        offer.removeTag(tag);
 
 
         /* delete tag2 */

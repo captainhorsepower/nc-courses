@@ -1,6 +1,8 @@
 package com.netcracker.edu.varabey.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -16,29 +18,27 @@ import java.util.StringJoiner;
  * that you can get via getters. But to get all tags of any offer,
  * read thad offer from database via corresponding service first.
  */
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name = "tags")
 public class Tag {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue
     @Column(name = "tag_id")
     private Long id;
 
-    @Getter
-    @Setter
     @NonNull
     @Column(nullable = false, name = "tag", unique = true)
     private String name;
 
-    @Getter
-    @Setter
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tags")
     private Set<Offer> offers = new HashSet<>();
+
+    public Tag(@NonNull String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {

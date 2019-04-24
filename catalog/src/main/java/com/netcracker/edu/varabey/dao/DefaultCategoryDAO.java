@@ -1,18 +1,18 @@
 package com.netcracker.edu.varabey.dao;
 
 import com.netcracker.edu.varabey.entity.Category;
-import com.netcracker.edu.varabey.utils.PostgreSQLDatabaseEntityManagerFactory;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
+import javax.persistence.PersistenceContext;
 import java.util.Collection;
 
-/**
- * Service for category. Uses transactional scope entity manager.
- */
+/** Service for category. Uses transactional scope entity manager. */
+@Repository
 public class DefaultCategoryDAO implements CategoryDAO {
-    private EntityManagerFactory emf = PostgreSQLDatabaseEntityManagerFactory.getInstance();
+
+    @PersistenceContext
+    private EntityManager em;
 
     /**
      * create new category in catalog. At this point category id should be null,
@@ -22,11 +22,7 @@ public class DefaultCategoryDAO implements CategoryDAO {
      */
     @Override
     public Category create(Category category) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
         em.persist(category);
-        em.getTransaction().commit();
-        em.close();
         return category;
     }
 
@@ -38,11 +34,8 @@ public class DefaultCategoryDAO implements CategoryDAO {
      */
     @Override
     public Collection<Category> createAll(Collection<Category> categories) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
         categories.forEach(em::persist);
         em.getTransaction().commit();
-        em.close();
         return categories;
     }
 
@@ -53,36 +46,17 @@ public class DefaultCategoryDAO implements CategoryDAO {
      */
     @Override
     public Category read(Long id) {
-        EntityManager em = emf.createEntityManager();
-        Category category = em.find(Category.class, id);
-        em.close();
-        return category;
+        return em.find(Category.class, id);
     }
 
     /**
      * Merge the state of the given category into the catalog.
-     *
      * @param category  category instance
      * @return updated category.
-     * @throws IllegalArgumentException if category is new or removed category
      */
     @Override
     public Category update(Category category) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-
-        Query q = em.createQuery("SELECT count(c.id) FROM Category c where c.id = ?1");
-        q.setParameter(1, category.getId());
-        long persistedCategoryCount = (Long) q.getSingleResult();
-        if (persistedCategoryCount == 0) {
-            em.getTransaction().rollback();
-            em.close();
-            throw new IllegalArgumentException("unable to update category, that is not stored in database");
-        }
-
         category = em.merge(category);
-        em.getTransaction().commit();
-        em.close();
         return category;
     }
 
@@ -92,11 +66,7 @@ public class DefaultCategoryDAO implements CategoryDAO {
      */
     @Override
     public void delete(Long id) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
         Category c = em.getReference(Category.class, id);
         em.remove(c);
-        em.getTransaction().commit();
-        em.close();
     }
 }
