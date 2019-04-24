@@ -5,9 +5,9 @@ import com.netcracker.edu.varabey.entity.Customer;
 import java.util.List;
 
 public interface CustomerDAO {
-    Customer create(Customer customer);
-    Customer read(Long id);
+    Customer save(Customer customer);
+    Customer findById(Long id);
     Customer update(Customer customer);
-    void delete(Customer customer);
-    List<Customer> readAll();
+    void deleteById(Long id);
+    List<Customer> findAll();
 }
