@@ -3,20 +3,21 @@ package com.netcracker.edu.varabey.dao;
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 import com.netcracker.edu.varabey.entity.Tag;
-import com.netcracker.edu.varabey.utils.PostgreSQLDatabaseEntityManagerFactory;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * Service class for offer. Operates with transaction-scoped entity manager.
  */
+@Repository
 public class DefaultOfferDAO implements OfferDAO {
-    private EntityManagerFactory emf = PostgreSQLDatabaseEntityManagerFactory.getInstance();
+    @PersistenceContext
+    private EntityManager em;
 
     /**
      * Creates offer into the database.
@@ -30,17 +31,11 @@ public class DefaultOfferDAO implements OfferDAO {
      */
     @Override
     public Offer create(Offer offer) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-
         /* use merge() instead of persist(), because offer
          * might share tags and categories with other methods,
          * so persist would throw exception because of detached
-         * category/tag.
-         */
+         * category/tag. */
         offer = em.merge(offer);
-        em.getTransaction().commit();
-        em.close();
         return offer;
     }
 
@@ -51,12 +46,7 @@ public class DefaultOfferDAO implements OfferDAO {
      */
     @Override
     public Offer read(Long id) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Offer offer = em.find(Offer.class, id);
-        em.getTransaction().commit();
-        em.close();
-        return offer;
+        return em.find(Offer.class, id);
     }
 
     /**
@@ -65,19 +55,13 @@ public class DefaultOfferDAO implements OfferDAO {
      */
     @Override
     public List<Offer> readAll() {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        List<Offer> offers = em
+        return em
                 .createQuery("SELECT offer From Offer offer", Offer.class)
                 .getResultList();
-        em.getTransaction().commit();
-        em.close();
-        return offers;
     }
 
     /**
      * Merge the state of the given offer into the catalog database.
-     * Throws IllegalArgumentException if you try to create new Offer via update.
      * Allows you to update:
      *  -price (value only)
      *  -remove tags
@@ -89,27 +73,10 @@ public class DefaultOfferDAO implements OfferDAO {
      *
      * @param offer  offer instance with updated fields
      * @return updated offer
-     * @throws IllegalArgumentException if instance's id isn't present in database
      */
     @Override
     public Offer update(Offer offer) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-
-        /* check, that offer is stored in database.
-         * If not, abort update */
-        Query q = em.createQuery("SELECT count(o.id) FROM Offer o where o.id = ?1");
-        q.setParameter(1, offer.getId());
-        long persistedOfferCount = (Long) q.getSingleResult();
-        if (persistedOfferCount == 0) {
-            em.getTransaction().rollback();
-            em.close();
-            throw new IllegalArgumentException("unable to update offer, that is not stored in database");
-        }
-
         offer = em.merge(offer);
-        em.getTransaction().commit();
-        em.close();
         return offer;
     }
 
@@ -119,25 +86,13 @@ public class DefaultOfferDAO implements OfferDAO {
      */
     @Override
     public void delete(Long id) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
         Offer offer = em.getReference(Offer.class, id);
         em.remove(offer);
-        em.getTransaction().commit();
-        em.close();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List<Offer> findAllByCategory(Category category) {
-        List<Offer> offers = new ArrayList<>();
-        if (category == null || category.getName() == null) {
-            return offers;
-        }
-
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-
         Query q = em.createQuery(
                 "SELECT o FROM Offer o "
                 + " WHERE o.category.name = :category_name"
@@ -145,11 +100,7 @@ public class DefaultOfferDAO implements OfferDAO {
 
         q.setParameter("category_name", category.getName());
 
-        offers = (List<Offer>) q.getResultList();
-
-        em.getTransaction().commit();
-        em.close();
-        return offers;
+        return (List<Offer>) q.getResultList();
     }
 
     /**
@@ -166,13 +117,6 @@ public class DefaultOfferDAO implements OfferDAO {
     @SuppressWarnings("unchecked")
     @Override
     public List<Offer> findAllWithTags(Collection<Tag> tags) {
-        if (tags == null || tags.isEmpty()) {
-            return readAll();
-        }
-
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-
         StringBuilder qlBuilder = new StringBuilder();
         qlBuilder.append(" SELECT o FROM Offer o ");
         qlBuilder.append(" JOIN Tag t ON o MEMBER OF t.offers ");
@@ -186,31 +130,21 @@ public class DefaultOfferDAO implements OfferDAO {
 
         /* remove last ", " */
         qlBuilder.setLength(qlBuilder.length() - 2);
-        qlBuilder.append(")");
-        qlBuilder.append(" GROUP BY o.id HAVING COUNT(DISTINCT t.name) = " + tagCount);
+        qlBuilder
+                .append(")")
+                .append(" GROUP BY o.id HAVING COUNT(DISTINCT t.name) = ")
+                .append(tagCount);
 
         Query q = em.createQuery(
                 qlBuilder.toString()
         );
 
-        List<Offer> offers = (List<Offer>) q.getResultList();
-
-        em.getTransaction().commit();
-        em.close();
-        return offers;
+        return (List<Offer>) q.getResultList();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List<Offer> findAllWithPriceInRange(Double lowerBound, Double upperBound) {
-        List<Offer> offers = new ArrayList<>();
-        if (lowerBound == null || upperBound == null) {
-            return offers;
-        }
-
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-
         Query q = em.createQuery(
                 "SELECT o FROM Offer o "
                         + " WHERE o.price.value BETWEEN :lower AND :upper"
@@ -219,10 +153,6 @@ public class DefaultOfferDAO implements OfferDAO {
         q.setParameter("lower", lowerBound);
         q.setParameter("upper", upperBound);
 
-        offers = (List<Offer>) q.getResultList();
-
-        em.getTransaction().commit();
-        em.close();
-        return offers;
+        return (List<Offer>) q.getResultList();
     }
 }

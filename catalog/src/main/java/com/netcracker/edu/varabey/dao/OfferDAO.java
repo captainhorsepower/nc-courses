@@ -2,7 +2,6 @@ package com.netcracker.edu.varabey.dao;
 
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
-import com.netcracker.edu.varabey.entity.Price;
 import com.netcracker.edu.varabey.entity.Tag;
 
 import java.util.Collection;
