@@ -1,8 +1,7 @@
 package com.netcracker.edu.varabey.entity;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.*;
@@ -17,25 +16,21 @@ import java.util.*;
  * то и изменять его нужно посредством ордера и OrderDAO.
  * (см. Order для подробностей по обновлению ордер айтема
  */
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "items")
 public class OrderItem {
 
-    @Getter
     @Id
     @GeneratedValue
     @Column(name = "item_id")
     private Long id;
 
-    @Getter
-    @Setter
     @OneToOne (optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "price_id")
     private Price price;
 
-    @Getter
-    @Setter
     @Column(nullable = false)
     private String name;
 
@@ -45,13 +40,10 @@ public class OrderItem {
      * ценой (инфляция все дела).
      * по сему есть вот эта строгая привязка к ордеру.
      */
-    @Setter
     @ManyToOne(optional = false)
     @JoinColumn(name = "order_id")
     private Order owningOrder;
 
-    @Getter
-    @Setter
     /* категория будет задаваться из соотвествующего оффера из каталога,
      * т.е. создаздать категорию в дао -> создать айтем с категорией */
     @ManyToOne(optional = false)
@@ -109,6 +101,22 @@ public class OrderItem {
         OrderItem duplicate = new OrderItem(item.getPrice().getValue(), item.getName(), item.getCategory());
         item.getTags().forEach(duplicate::addTag);
         return duplicate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return Objects.equals(price, orderItem.price) &&
+                Objects.equals(name, orderItem.name) &&
+                Objects.equals(owningOrder, orderItem.owningOrder) &&
+                Objects.equals(category, orderItem.category);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(price, name, owningOrder, category);
     }
 
     @Override

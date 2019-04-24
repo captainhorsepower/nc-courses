@@ -15,19 +15,19 @@ public class DefaultCategoryDAO implements CategoryDAO {
     private EntityManager em;
 
     /**
-     * create new category in catalog. At this point category id should be null,
+     * save new category in catalog. At this point category id should be null,
      * offers should be empty, name should be unique.
      * @param category with null id
      * @return created category with initialized id
      */
     @Override
-    public Category create(Category category) {
+    public Category save(Category category) {
         em.persist(category);
         return category;
     }
 
     /**
-     * same as <code>create(Category category)</code>, but for the whole
+     * same as <code>save(Category category)</code>, but for the whole
      * Collection of categories
      * @param categories with null ids
      * @return Collection of created categories
@@ -45,7 +45,7 @@ public class DefaultCategoryDAO implements CategoryDAO {
      * @return retrieved category, or null if nothing found.
      */
     @Override
-    public Category read(Long id) {
+    public Category findById(Long id) {
         return em.find(Category.class, id);
     }
 

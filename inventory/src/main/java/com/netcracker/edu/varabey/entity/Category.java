@@ -1,10 +1,12 @@
 package com.netcracker.edu.varabey.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * категория ордер айтема.
@@ -12,20 +14,18 @@ import java.util.stream.Collectors;
  * айтемов по категории.
  * категории можно обновить имя, больше ничего обновлять не нужно.
  */
+@Data
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "categories")
 public class Category {
 
-    @Getter
     @Id
     @GeneratedValue
     @Column(name = "category_id")
     private Long id;
 
-    @Getter
-    @Setter
     @NonNull
     @Column(nullable = false, unique = true, name = "name")
     private String name;
@@ -36,6 +36,19 @@ public class Category {
 
     public List<OrderItem> getItems() {
         return Collections.unmodifiableList(new ArrayList<>(items));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return name.equals(category.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     @Override

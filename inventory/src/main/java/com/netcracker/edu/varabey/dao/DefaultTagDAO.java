@@ -1,10 +1,10 @@
 package com.netcracker.edu.varabey.dao;
 
 import com.netcracker.edu.varabey.entity.Tag;
-import com.netcracker.edu.varabey.utils.PostgreSQLDatabaseEntityManagerFactory;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Collection;
 
@@ -14,8 +14,10 @@ import java.util.Collection;
  * for simplicity and security. So performance might suffer just a little
  * tiny bit. If performance is a bottleneck for you, try another implementation.
  */
+@Repository
 public class DefaultTagDAO implements TagDAO {
-    private EntityManagerFactory emf = PostgreSQLDatabaseEntityManagerFactory.getInstance();
+    @PersistenceContext
+    private EntityManager em;
 
     /**
      * creates a tag in the underlying database.
@@ -26,28 +28,20 @@ public class DefaultTagDAO implements TagDAO {
      * @return given tag with initialized id.
      */
     @Override
-    public Tag create(Tag tag) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
+    public Tag save(Tag tag) {
         em.persist(tag);
-        em.getTransaction().commit();
-        em.close();
         return tag;
     }
 
     /**
-     * Same rules as for <code>create(Tag tag)</code>.
+     * Same rules as for <code>save(Tag tag)</code>.
      *
      * @param tags with set names and nothing else.
      * @return given collection of tags with initialized ids
      */
     @Override
-    public Collection<Tag> createAll(Collection<Tag> tags) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
+    public Collection<Tag> saveAll(Collection<Tag> tags) {
         tags.forEach(em::persist);
-        em.getTransaction().commit();
-        em.close();
         return tags;
     }
 
@@ -57,11 +51,8 @@ public class DefaultTagDAO implements TagDAO {
      * @return tag with everything set.
      */
     @Override
-    public Tag read(Long id) {
-        EntityManager em = emf.createEntityManager();
-        Tag tag = em.find(Tag.class, id);
-        em.close();
-        return tag;
+    public Tag find(Long id) {
+        return em.find(Tag.class, id);
     }
 
     /**
@@ -75,9 +66,6 @@ public class DefaultTagDAO implements TagDAO {
      */
     @Override
     public Tag update(Tag tag) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-
         Query q = em.createQuery("SELECT count(t.id) FROM Tag t where t.id = ?1");
         q.setParameter(1, tag.getId());
         long persistedTagCount = (Long) q.getSingleResult();
@@ -86,10 +74,7 @@ public class DefaultTagDAO implements TagDAO {
             em.close();
             throw new IllegalArgumentException("unable to update tag, that is not stored in database");
         }
-        tag = em.merge(tag);
-        em.getTransaction().commit();
-        em.close();
-        return tag;
+        return em.merge(tag);
     }
 
     /**
@@ -101,17 +86,12 @@ public class DefaultTagDAO implements TagDAO {
      */
     @Override
     public void delete(Long id) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
         Tag tag = em.getReference(Tag.class, id);
         em.remove(tag);
-
         /* this relation has to be removed by hand, because
          * offer it the owner of the owner ship (which means it removes
          * rows from relation table automatically), while tag is NOT the owner
          */
         tag.getItems().forEach( i -> i.getTags().remove(tag));
-        em.getTransaction().commit();
-        em.close();
     }
 }

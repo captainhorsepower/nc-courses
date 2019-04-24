@@ -1,29 +1,32 @@
 package com.netcracker.edu.varabey.junit.dao;
 
-import com.netcracker.edu.varabey.dao.OfferDAO;
-import com.netcracker.edu.varabey.dao.DefaultOfferDAO;
-import com.netcracker.edu.varabey.dao.TagDAO;
-import com.netcracker.edu.varabey.dao.DefaultTagDAO;
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 import com.netcracker.edu.varabey.entity.Price;
 import com.netcracker.edu.varabey.entity.Tag;
+import com.netcracker.edu.varabey.junit.service.CatalogService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
 
-public class TagDAOTest {
-    private TagDAO tagDao = new DefaultTagDAO();
-    private OfferDAO offerDao = new DefaultOfferDAO();
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class TagDaoTests {
 
+    @Autowired
+    private CatalogService service;
 
     @Test
     public void testCreateAndReadOneTag() {
         Tag tag = new Tag();
         tag.setName("testCreateAndReadOneTag tag1");
-        tag = tagDao.create(tag);
+        tag = service.createTag(tag);
 
-        Tag tag1 = tagDao.read(tag.getId());
+        Tag tag1 = service.findTag(tag.getId());
         assertNotNull(tag1);
         assertEquals(tag.toString(), tag1.toString());
     }
@@ -32,13 +35,13 @@ public class TagDAOTest {
     public void testUpdateTag() {
         Tag tag = new Tag();
         tag.setName("testUpdateTag tag1");
-        tag = tagDao.create(tag);
+        tag = service.createTag(tag);
 
         tag.setName("testUpdateTag new tag1");
 
-        tag = tagDao.update(tag);
+        tag = service.updateTag(tag);
 
-        Tag tag1 = tagDao.read(tag.getId());
+        Tag tag1 = service.findTag(tag.getId());
         assertNotNull(tag1);
         assertEquals(tag.toString(), tag1.toString());
     }
@@ -47,7 +50,7 @@ public class TagDAOTest {
     public void updateTagNameUpdatesTagNameInOffer() {
         Tag tag = new Tag();
         tag.setName("updateTagNameUpdatesTagNameInOffer tag1");
-        tag = tagDao.create(tag);
+        tag = service.createTag(tag);
 
 
         Offer offer = new Offer();
@@ -56,14 +59,14 @@ public class TagDAOTest {
         offer.setCategory(new Category("updateTagNameUpdatesTagNameInOffer c1"));
         offer.addTag(tag);
 
-        offer = offerDao.create(offer);
+        offer = service.createOffer(offer);
 
         tag.setName("updateTagNameUpdatesTagNameInOffer new tag1");
-        tag = tagDao.update(tag);
+        tag = service.updateTag(tag);
 
-        offer = offerDao.read(offer.getId());
+        offer = service.findOffer(offer.getId());
         assertNotNull(offer);
-        assertEquals(tagDao.read(tag.getId()).getName(), offer.getTags().iterator().next().getName());
+        assertEquals(service.findTag(tag.getId()).getName(), offer.getTags().iterator().next().getName());
     }
 
     @Test
@@ -71,11 +74,11 @@ public class TagDAOTest {
         Tag tag = new Tag();
         tag.setName("testDeleteTag tag1");
 
-        tag = tagDao.create(tag);
+        tag = service.createTag(tag);
 
-        tagDao.delete(tag.getId());
+        service.deleteTag(tag.getId());
 
-        Tag tag1 = tagDao.read(tag.getId());
+        Tag tag1 = service.findTag(tag.getId());
 
         assertNull(tag1);
     }
@@ -96,18 +99,18 @@ public class TagDAOTest {
         tag = service.createTag(tag);
         offer.addTag(tag);
 
-        offer = offerDao.create(offer);
+        offer = service.createOffer(offer);
 
         offer.removeTag(tag);
 
 
         /* delete tag2 */
-        tagDao.delete(tag.getId());
+        service.deleteTag(tag.getId());
 
-        Tag tag1 = tagDao.read(tag.getId());
+        Tag tag1 = service.findTag(tag.getId());
         assertNull(tag1);
 
-        Offer readOffer = offerDao.read(offer.getId());
+        Offer readOffer = service.findOffer(offer.getId());
 
         assertNotNull(readOffer);
         assertEquals(offer.getTags().size(), readOffer.getTags().size());

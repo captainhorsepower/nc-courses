@@ -1,7 +1,8 @@
 package com.netcracker.edu.varabey.entity;
 
 import com.netcracker.edu.varabey.entity.utils.OrderStatus;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,12 +14,12 @@ import java.util.stream.Collectors;
  * Order entity. Stores information about the order.
  * The most important entity in inventory module.
  */
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "orders")
 public class Order {
 
-    @Getter
     @Id
     @GeneratedValue
     @Column(name = "order_id")
@@ -29,23 +30,17 @@ public class Order {
             cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<OrderItem> items = new ArrayList<>();
 
-    @Getter
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @Getter
     @Column(nullable = false, name = "created_on")
     private LocalDate createdOnDate;
 
-    @Getter
-    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "order_status")
     private OrderStatus status = OrderStatus.APPROVED;
 
-    @Getter
-    @Setter
     @Column(nullable = false, name = "is_paid")
     private Boolean isPaid = false;
 
@@ -109,11 +104,12 @@ public class Order {
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
         return Objects.equals(getId(), order.getId()) &&
-                Objects.equals(getCreatedOnDate(), order.getCreatedOnDate());
+                Objects.equals(getCreatedOnDate(), order.getCreatedOnDate()) &&
+                Objects.equals(getItemCount(), order.getItemCount());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCreatedOnDate());
+        return Objects.hash(getId(), getCreatedOnDate(), getItemCount());
     }
 
     @Override

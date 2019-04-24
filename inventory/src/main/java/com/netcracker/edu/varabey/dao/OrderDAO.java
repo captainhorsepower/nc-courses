@@ -5,9 +5,9 @@ import com.netcracker.edu.varabey.entity.*;
 import java.util.List;
 
 public interface OrderDAO {
-    Order create(Order order);
-    Order read(Long id);
-    List<Order> readAll();
+    Order save(Order order);
+    Order find(Long id);
+    List<Order> findAll();
     Order update(Order order);
     void delete(Long id);
 
