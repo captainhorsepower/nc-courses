@@ -1,15 +1,19 @@
 package com.netcracker.edu.varabey.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.util.StringJoiner;
 
 /** полностью аналогично цене из каталога */
-@Entity
-@Table(name = "prices")
+@Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Entity
+@Table(name = "prices")
 public class Price {
 
     @Id
@@ -17,8 +21,6 @@ public class Price {
     @Column(name = "price_id")
     private Long id;
 
-    @Getter
-    @Setter
     @NonNull
     @Column(nullable = false)
     private Double value;

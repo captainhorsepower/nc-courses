@@ -1,6 +1,9 @@
 package com.netcracker.edu.varabey.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.util.*;
@@ -9,20 +12,18 @@ import java.util.*;
  * Тэги, в этом модуле могут быть (и будут) общие даже у ордерайтемов
  * из разных заказов, т.к. так искать по тэгу удобнее и эффективнее
  */
+@Data
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Entity
 @Table(name = "tags")
 public class Tag {
 
-    @Getter
     @Id
     @GeneratedValue
     @Column(name = "tag_id")
     private Long id;
 
-    @Getter
-    @Setter
     @NonNull
     @Column(nullable = false, unique = true)
     private String name;

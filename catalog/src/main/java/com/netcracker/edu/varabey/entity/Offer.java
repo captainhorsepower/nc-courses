@@ -15,7 +15,7 @@ import java.util.StringJoiner;
  * Stores information about name, tags, category and price.
  *
  * Any field, that you can get by getter, of an initialized
- * (created or read via service) offer, is valid. Offers, stored in
+ * (created or findById via service) offer, is valid. Offers, stored in
  * category are not loaded until you explicitly load them via
  * corresponding service.
  *

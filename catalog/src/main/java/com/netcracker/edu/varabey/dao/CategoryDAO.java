@@ -5,9 +5,9 @@ import com.netcracker.edu.varabey.entity.Category;
 import java.util.Collection;
 
 public interface CategoryDAO {
-    Category create(Category category);
+    Category save(Category category);
     Collection<Category> createAll(Collection<Category> categories);
-    Category read(Long id);
+    Category findById(Long id);
     Category update(Category category);
     void delete(Long id);
 }

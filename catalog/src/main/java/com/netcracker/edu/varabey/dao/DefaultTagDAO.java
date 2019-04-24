@@ -27,19 +27,19 @@ public class DefaultTagDAO implements TagDAO {
      * @return given tag with initialized id.
      */
     @Override
-    public Tag create(Tag tag) {
+    public Tag save(Tag tag) {
         em.persist(tag);
         return tag;
     }
 
     /**
-     * Same rules as for <code>create(Tag tag)</code>.
+     * Same rules as for <code>save(Tag tag)</code>.
      *
      * @param tags with set names and nothing else.
      * @return given collection of tags with initialized ids
      */
     @Override
-    public Collection<Tag> createAll(Collection<Tag> tags) {
+    public Collection<Tag> saveAll(Collection<Tag> tags) {
         tags.forEach(em::persist);
         return tags;
     }
@@ -50,7 +50,7 @@ public class DefaultTagDAO implements TagDAO {
      * @return tag with everything set.
      */
     @Override
-    public Tag read(Long id) {
+    public Tag find(Long id) {
         return em.find(Tag.class, id);
     }
 

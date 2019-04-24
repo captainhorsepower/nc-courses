@@ -30,7 +30,7 @@ public class DefaultOfferDAO implements OfferDAO {
      * @return offer with everything set.
      */
     @Override
-    public Offer create(Offer offer) {
+    public Offer save(Offer offer) {
         /* use merge() instead of persist(), because offer
          * might share tags and categories with other methods,
          * so persist would throw exception because of detached
@@ -42,10 +42,10 @@ public class DefaultOfferDAO implements OfferDAO {
     /**
      * retrieve offer from the underlying database.
      * @param id of an offer
-     * @return read from the database offer
+     * @return findById from the database offer
      */
     @Override
-    public Offer read(Long id) {
+    public Offer save(Long id) {
         return em.find(Offer.class, id);
     }
 
@@ -54,7 +54,7 @@ public class DefaultOfferDAO implements OfferDAO {
      * @return List of offers in the catalog.
      */
     @Override
-    public List<Offer> readAll() {
+    public List<Offer> findAll() {
         return em
                 .createQuery("SELECT offer From Offer offer", Offer.class)
                 .getResultList();
@@ -65,9 +65,9 @@ public class DefaultOfferDAO implements OfferDAO {
      * Allows you to update:
      *  -price (value only)
      *  -remove tags
-     *  -add tags (you can create new tag,
+     *  -add tags (you can save new tag,
      *          but then it's id should be null when you pass it to this method)
-     *  -change category (you can create new one, -||-)
+     *  -change category (you can save new one, -||-)
      *
      * You should NOT change names of existing tags nor categories.
      *
@@ -104,7 +104,7 @@ public class DefaultOfferDAO implements OfferDAO {
     }
 
     /**
-     * find all offers that suit given tags-filter.
+     * save all offers that suit given tags-filter.
      * Found offers will contain ALL the tags specified,
      * so the more tags, the less offers
      *
