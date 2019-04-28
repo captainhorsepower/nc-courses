@@ -31,15 +31,19 @@ public class CatalogService {
     }
 
     public Category findCategory(Long id) {
-        return categoryDAO.findById(id);
+        return categoryDAO.findById(id)
+                .orElse(null);
     }
 
     public Category updateCategory(Category category) {
-        return categoryDAO.update(category);
+        if (category == null || !categoryDAO.existsById(category.getId())) {
+            throw new IllegalArgumentException("Illegal category passed to update");
+        }
+        return categoryDAO.save(category);
     }
 
     public void deleteCategory(Long id) {
-        categoryDAO.delete(id);
+        categoryDAO.deleteById(id);
     }
 
     public List<Offer> findAllOffers() {
