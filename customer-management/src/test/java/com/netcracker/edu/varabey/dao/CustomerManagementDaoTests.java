@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -65,5 +65,28 @@ public class CustomerManagementDaoTests {
         service.delete(c3.getId());
 
         assertEquals(0, service.findAll().size());
+    }
+
+    @Test
+    public void UpdateCustomerNameTest() {
+        Customer c1 = new Customer("name 1", 20);
+        c1 = service.save(c1);
+
+        assertEquals("name 1", c1.getFio());
+
+        c1.setFio("name 10001010");
+        c1 = service.update(c1);
+
+        assertEquals("name 10001010", c1.getFio());
+
+        Customer c2 = new Customer("name 2", 30);
+        try {
+            service.update(c2);
+        } catch (IllegalArgumentException exc) {
+            assertTrue(!false);
+            return;
+        }
+
+        fail();
     }
 }
