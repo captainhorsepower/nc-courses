@@ -37,7 +37,7 @@ public class InventoryService {
     }
 
     public Customer createCustomer(Customer customer) {
-        return customerDAO.create(customer);
+        return customerDAO.save(customer);
     }
 
     public Customer findCustomer(Long id) {
@@ -45,11 +45,12 @@ public class InventoryService {
     }
 
     public Category findCategory(Long id) {
-        return categoryDAO.find(id);
+        return categoryDAO.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public Tag findTag(Long id) {
-        return tagDAO.find(id);
+        return tagDAO.findById(id).orElseThrow(IllegalAccessError::new);
     }
 
     public Order createOrder(Order order) {

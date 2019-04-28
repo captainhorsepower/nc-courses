@@ -12,7 +12,7 @@ public class DefaultCustomerDAO implements CustomerDAO {
     private EntityManager em;
 
     @Override
-    public Customer create(Customer customer) {
+    public Customer save(Customer customer) {
         em.persist(customer);
         return customer;
     }
