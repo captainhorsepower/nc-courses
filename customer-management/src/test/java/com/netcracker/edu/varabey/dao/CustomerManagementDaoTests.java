@@ -1,6 +1,7 @@
 package com.netcracker.edu.varabey.dao;
 
 import com.netcracker.edu.varabey.entity.Customer;
+import com.netcracker.edu.varabey.service.CustomerManagementService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import static org.junit.Assert.*;
 public class CustomerManagementDaoTests {
 
     @Autowired
-    CustomerService service;
+    CustomerManagementService service;
 
     @Test
     @Transactional
@@ -57,8 +58,8 @@ public class CustomerManagementDaoTests {
         service.save(c2);
         service.save(c3);
 
-        assertEquals(c1.getFio(), service.findById(c1.getId()).getFio());
-        assertEquals(c3.getFio(), service.findById(c3.getId()).getFio());
+        assertEquals(c1.getFio(), service.find(c1.getId()).getFio());
+        assertEquals(c3.getFio(), service.find(c3.getId()).getFio());
 
         service.delete(c1.getId());
         service.delete(c2.getId());
@@ -78,7 +79,8 @@ public class CustomerManagementDaoTests {
         c1 = service.update(c1);
 
         assertEquals("name 10001010", c1.getFio());
-
+        service.delete(c1.getId());
+        assertNull(service.find(c1.getId()));
         Customer c2 = new Customer("name 2", 30);
         try {
             service.update(c2);
