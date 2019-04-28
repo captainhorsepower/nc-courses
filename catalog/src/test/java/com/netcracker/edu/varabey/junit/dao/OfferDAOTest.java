@@ -14,7 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -324,7 +325,7 @@ public class OfferDAOTest {
         tag4 = offer2.getTags().stream()
                 .filter( t -> t.getName().equals(finalTag4.getName()))
                 .findAny()
-                .get();
+                .orElse(null);
 
         service.deleteOffer(offer.getId());
 
