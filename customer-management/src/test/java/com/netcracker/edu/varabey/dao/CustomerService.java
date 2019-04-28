@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,15 +21,21 @@ public class CustomerService {
     }
 
     public Customer update(Customer c) {
-        return customerDAO.update(c);
+        if (c == null || c.getId() == null || !customerDAO.existsById(c.getId())) {
+            throw new IllegalArgumentException("illegal customer passed to update");
+        }
+        return customerDAO.save(c);
     }
 
     public List<Customer> findAll() {
-        return customerDAO.findAll();
+        List<Customer> list = new ArrayList<>();
+        customerDAO.findAll().forEach(list::add);
+        return list;
     }
 
     public Customer findById(Long id) {
-        return customerDAO.findById(id);
+        return customerDAO.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     public void delete(Long id) {
