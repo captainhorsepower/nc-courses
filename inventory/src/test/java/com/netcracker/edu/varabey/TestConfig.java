@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = "com.netcracker.edu.varabey.dao")
+@ComponentScan(basePackages = {"com.netcracker.edu.varabey.dao"})
 public class TestConfig {
     @Autowired
     private InventoryService service;
