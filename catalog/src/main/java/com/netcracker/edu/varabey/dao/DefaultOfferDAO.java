@@ -45,7 +45,7 @@ public class DefaultOfferDAO implements OfferDAO {
      * @return findById from the database offer
      */
     @Override
-    public Offer save(Long id) {
+    public Offer findById(Long id) {
         return em.find(Offer.class, id);
     }
 
@@ -65,9 +65,9 @@ public class DefaultOfferDAO implements OfferDAO {
      * Allows you to update:
      *  -price (value only)
      *  -remove tags
-     *  -add tags (you can save new tag,
+     *  -add tags (you can findById new tag,
      *          but then it's id should be null when you pass it to this method)
-     *  -change category (you can save new one, -||-)
+     *  -change category (you can findById new one, -||-)
      *
      * You should NOT change names of existing tags nor categories.
      *
@@ -85,7 +85,7 @@ public class DefaultOfferDAO implements OfferDAO {
      * @param id of an offer to be removed.
      */
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         Offer offer = em.getReference(Offer.class, id);
         em.remove(offer);
     }
@@ -104,7 +104,7 @@ public class DefaultOfferDAO implements OfferDAO {
     }
 
     /**
-     * save all offers that suit given tags-filter.
+     * findById all offers that suit given tags-filter.
      * Found offers will contain ALL the tags specified,
      * so the more tags, the less offers
      *

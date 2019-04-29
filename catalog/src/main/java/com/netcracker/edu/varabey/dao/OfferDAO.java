@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface OfferDAO {
     Offer save(Offer offer);
-    Offer save(Long id);
+    Offer findById(Long id);
     Offer update(Offer offer);
-    void delete(Long id);
+    void deleteById(Long id);
 
     List<Offer> findAll();
     List<Offer> findAllByCategory(Category category);

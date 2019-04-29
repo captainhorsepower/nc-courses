@@ -11,8 +11,8 @@ import java.util.StringJoiner;
 
 /**
  * Tag, that can be attached to offers.
- * To save a fully functional tag, initialize new tag with
- * a unique name, save it in database via service, use.
+ * To findById a fully functional tag, initialize new tag with
+ * a unique name, findById it in database via service, use.
  *
  * You cat trust the Id, name, and ids and names of offers
  * that you can get via getters. But to get all tags of any offer,

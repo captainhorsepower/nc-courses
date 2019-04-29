@@ -4,7 +4,7 @@ import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 import com.netcracker.edu.varabey.entity.Price;
 import com.netcracker.edu.varabey.entity.Tag;
-import com.netcracker.edu.varabey.junit.service.CatalogService;
+import com.netcracker.edu.varabey.service.CatalogService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +104,7 @@ public class TagDaoTests {
         offer.removeTag(tag);
 
 
-        /* delete tag2 */
+        /* deleteById tag2 */
         service.deleteTag(tag.getId());
 
         Tag tag1 = service.findTag(tag.getId());
