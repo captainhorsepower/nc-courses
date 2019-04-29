@@ -27,8 +27,7 @@ public class DefaultOrderDAO implements OrderDAO {
     public Order find(Long id) {
         Order order = em.find(Order.class, id);
         /* without refresh list of items gets polluted with
-         * some random items, god only knows why.
-         */
+         * some random items, god only knows why. */
         if (order != null) em.refresh(order);
         return order;
     }
@@ -39,8 +38,7 @@ public class DefaultOrderDAO implements OrderDAO {
         List<Order> orders = (List<Order>) em.createQuery("SELECT o"
                 + " FROM Order o").getResultList();
         /* without refresh list of items gets polluted with
-         * some random items, god only knows why.
-         */
+         * some random items, god only knows why. */
         orders.forEach(em::refresh);
         return orders;
     }

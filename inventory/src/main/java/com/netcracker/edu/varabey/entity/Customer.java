@@ -34,14 +34,12 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER,
             cascade = {CascadeType.REMOVE}, orphanRemoval = true)
-    private List<Order> orders = new ArrayList<>();
+    private Set<Order> orders = new HashSet<>();
 
-    /**
-     * получить неизменяемый лист оредеров. Изменить, удалить или добавить ордер
-     * клиенту можно и нужно с помщью OrderDAO.
-     */
+    /* получить неизменяемый лист оредеров. Изменить, удалить или добавить ордер
+     * клиенту можно и нужно с помщью OrderDAO. */
     public List<Order> getOrders() {
-        return Collections.unmodifiableList(orders);
+        return Collections.unmodifiableList(new ArrayList<>(orders));
     }
 
     @Override
@@ -49,8 +47,7 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(id, customer.id) &&
-                Objects.equals(fio, customer.fio) &&
+        return Objects.equals(fio, customer.fio) &&
                 Objects.equals(age, customer.age);
     }
 

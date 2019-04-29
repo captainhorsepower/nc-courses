@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -35,7 +35,7 @@ public class Order {
     private Customer customer;
 
     @Column(nullable = false, name = "created_on")
-    private LocalDate createdOnDate;
+    private LocalDateTime createdOnDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "order_status")
@@ -44,7 +44,7 @@ public class Order {
     @Column(nullable = false, name = "is_paid")
     private Boolean isPaid = false;
 
-    public Order(Customer c, LocalDate d) {
+    public Order(Customer c, LocalDateTime d) {
         this.customer = c;
         this.createdOnDate = d;
     }
@@ -105,7 +105,7 @@ public class Order {
         Order order = (Order) o;
         return Objects.equals(getId(), order.getId()) &&
                 Objects.equals(getCreatedOnDate(), order.getCreatedOnDate()) &&
-                Objects.equals(getItemCount(), order.getItemCount());
+                Objects.equals(getCustomer(), order.getCustomer());
     }
     @Override
     public int hashCode() {

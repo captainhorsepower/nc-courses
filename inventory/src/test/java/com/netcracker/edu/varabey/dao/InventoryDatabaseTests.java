@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,8 +30,8 @@ public class InventoryDatabaseTests {
     @Autowired private Tag t2;
     @Autowired private Tag t3;
 
-    private LocalDate d1 = LocalDate.of(2019, 3, 23);
-    private LocalDate d2 = LocalDate.of(2019, 4, 15);
+    private LocalDateTime d1 = LocalDateTime.of(2019, 3, 23, 13, 40, 0);
+    private LocalDateTime d2 = LocalDateTime.of(2019, 4, 15, 10, 10, 10);
 
     @Test
     public void itAtLeastInitializesTest() {
@@ -360,5 +360,14 @@ public class InventoryDatabaseTests {
         assertNull(service.findOrder(o1.getId()));
         assertNull(service.findOrder(o2.getId()));
         assertNull(service.findOrder(o3.getId()));
+    }
+
+    @Test
+    public void findCategoryByNameTest() {
+        Category utils = service.findCategory("utils");
+        assertEquals(utilsCategory, utils);
+
+        Category notFound = service.findCategory("smth random");
+        assertNull(notFound);
     }
 }
