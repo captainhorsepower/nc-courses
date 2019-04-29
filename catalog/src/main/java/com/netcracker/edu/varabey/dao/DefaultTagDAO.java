@@ -33,7 +33,7 @@ public class DefaultTagDAO implements TagDAO {
     }
 
     /**
-     * Same rules as for <code>save(Tag tag)</code>.
+     * Same rules as for <code>findById(Tag tag)</code>.
      *
      * @param tags with set names and nothing else.
      * @return given collection of tags with initialized ids
@@ -46,26 +46,12 @@ public class DefaultTagDAO implements TagDAO {
 
     /**
      * retrieves the tag from the database by id.
-     * @param id
+     * @param id - must not be null
      * @return tag with everything set.
      */
     @Override
-    public Tag find(Long id) {
+    public Tag findById(Long id) {
         return em.find(Tag.class, id);
-    }
-
-    /**
-     * updates given tag's state in the database.
-     * Use this to change tag name only.
-     * You should NOT add any offers to the tag via this method
-     *
-     * @param tag with updates
-     * @return updated tag
-     */
-    @Override
-    public Tag update(Tag tag) {
-        em.merge(tag);
-        return tag;
     }
 
     /**

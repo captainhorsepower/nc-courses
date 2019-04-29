@@ -7,7 +7,6 @@ import java.util.Collection;
 public interface TagDAO {
     Tag save(Tag tag);
     Collection<Tag> saveAll(Collection<Tag> tag);
-    Tag find(Long id);
-    Tag update(Tag tag);
+    Tag findById(Long id);
     void delete(Long id);
 }

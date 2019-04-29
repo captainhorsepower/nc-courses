@@ -4,16 +4,17 @@ import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 import com.netcracker.edu.varabey.entity.Price;
 import com.netcracker.edu.varabey.entity.Tag;
-import com.netcracker.edu.varabey.junit.service.CatalogService;
+import com.netcracker.edu.varabey.service.CatalogService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -144,31 +145,31 @@ public class OfferDAOTest {
         List<Offer> offers;
 
         /* t1 */
-        offers = service.findAllOffersWithTags(Arrays.asList(t1));
+        offers = service.findAllOffersWithTags(Collections.singletonList(t1));
         assertEquals(2, offers.size());
 
         /* t1, t2 */
-        offers = service.findAllOffersWithTags(Arrays.asList(t1, t2));
+        offers = service.findAllOffersWithTags(asList(t1, t2));
         assertEquals(1, offers.size());
 
         /* t2 */
-        offers = service.findAllOffersWithTags(Arrays.asList(t2));
+        offers = service.findAllOffersWithTags(Collections.singletonList(t2));
         assertEquals(1, offers.size());
 
         /* t1, t3, t4 */
-        offers = service.findAllOffersWithTags(Arrays.asList(t1, t3, t4));
+        offers = service.findAllOffersWithTags(asList(t1, t3, t4));
         assertEquals(1, offers.size());
 
         /* t3 */
-        offers = service.findAllOffersWithTags(Arrays.asList(t3));
+        offers = service.findAllOffersWithTags(Collections.singletonList(t3));
         assertEquals(2, offers.size());
 
         /* t3, t4 */
-        offers = service.findAllOffersWithTags(Arrays.asList(t3, t4));
+        offers = service.findAllOffersWithTags(asList(t3, t4));
         assertEquals(2, offers.size());
 
         /* t1, t2, t3, t4 */
-        offers = service.findAllOffersWithTags(Arrays.asList(t1, t2, t3, t4));
+        offers = service.findAllOffersWithTags(asList(t1, t2, t3, t4));
         assertEquals(0, offers.size());
 
         // clean-up
@@ -325,7 +326,7 @@ public class OfferDAOTest {
         tag4 = offer2.getTags().stream()
                 .filter( t -> t.getName().equals(finalTag4.getName()))
                 .findAny()
-                .orElse(null);
+                .orElse(new Tag());
 
         service.deleteOffer(offer.getId());
 
