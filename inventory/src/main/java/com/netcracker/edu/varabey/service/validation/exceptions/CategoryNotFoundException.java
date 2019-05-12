@@ -1,4 +1,4 @@
-package com.netcracker.edu.varabey.service.validation;
+package com.netcracker.edu.varabey.service.validation.exceptions;
 
 import javax.persistence.EntityNotFoundException;
 

@@ -35,7 +35,7 @@ public class Order {
     private Customer customer;
 
     @Column(nullable = false, name = "created_on")
-    private LocalDateTime createdOnDate;
+    private LocalDateTime createdOnDate = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "order_status")
@@ -46,7 +46,9 @@ public class Order {
 
     public Order(Customer c, LocalDateTime d) {
         this.customer = c;
-        this.createdOnDate = d;
+        if (d != null) {
+            this.createdOnDate = d;
+        }
     }
 
     /**
@@ -97,19 +99,28 @@ public class Order {
         return this.items.size();
     }
 
-    /* не очень нужные equals & hashCode */
+    public void setPaid(Boolean isPaid) {
+        this.isPaid = isPaid;
+    }
+
+    public Boolean isPaid() {
+        return this.isPaid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(getId(), order.getId()) &&
+        return Objects.equals(getCustomer(), order.getCustomer()) &&
                 Objects.equals(getCreatedOnDate(), order.getCreatedOnDate()) &&
-                Objects.equals(getCustomer(), order.getCustomer());
+                getStatus() == order.getStatus() &&
+                Objects.equals(getIsPaid(), order.getIsPaid());
     }
+
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCreatedOnDate(), getItemCount());
+        return Objects.hash(getCreatedOnDate(), getItemCount());
     }
 
     @Override
