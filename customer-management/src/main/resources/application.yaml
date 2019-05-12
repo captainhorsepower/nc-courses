@@ -13,3 +13,8 @@ spring:
         jdbc:
           lob:
             non_contextual_creation : true
+  mvc:
+    servlet:
+      path: /customer-management
+server:
+  port: 8088
