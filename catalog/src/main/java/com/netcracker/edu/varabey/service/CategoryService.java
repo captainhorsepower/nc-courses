@@ -1,10 +1,10 @@
 package com.netcracker.edu.varabey.service;
 
 import com.netcracker.edu.varabey.entity.Category;
-import com.netcracker.edu.varabey.service.validation.CategoryNotFoundException;
-import com.netcracker.edu.varabey.service.validation.InvalidCategoryException;
+import com.netcracker.edu.varabey.service.validation.exceptions.CategoryNotFoundException;
+import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCategoryException;
 
-interface CategoryService {
+public interface CategoryService {
 
     /**
      * Saves a given category.
@@ -12,14 +12,28 @@ interface CategoryService {
      * @return saved category
      * @throws InvalidCategoryException if category is null || is detached || has invalid name
      */
-    Category createCategory(Category category);
+    Category save(Category category);
 
     /**
      * Retrieves a category by it's id.
      * @param id - must not be null.
      * @return found category or null.
      */
-    Category findCategory(Long id);
+    Category findById(Long id);
+
+    /**
+     * Retrieves a category by it's name.
+     * @param name - must not be null.
+     * @return found category or null.
+     */
+    Category findByName(String name);
+
+    /**
+     * Retrieves a category by it's name.
+     * @param name - must not be null.
+     * @return found category or null.
+     */
+    Category getByName(String name);
 
     /**
      * Updates category's name.
@@ -28,11 +42,11 @@ interface CategoryService {
      * @throws InvalidCategoryException if category is new or if it has invalid name
      * @throws CategoryNotFoundException if category wasn't saved before.
      */
-    Category updateCategory(Category category);
+    Category updateName(Category category);
 
     /**
      * Deletes category by id
      * @param id - must not be null
      */
-    void deleteCategory(Long id);
+    void delete(Long id);
 }

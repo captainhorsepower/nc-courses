@@ -20,7 +20,7 @@ import java.util.StringJoiner;
  */
 @Data
 @NoArgsConstructor
-@Entity
+@javax.persistence.Entity
 @Table(name = "tags")
 public class Tag {
 

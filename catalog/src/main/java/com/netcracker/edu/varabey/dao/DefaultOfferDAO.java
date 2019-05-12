@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,9 +32,10 @@ public class DefaultOfferDAO implements OfferDAO {
      */
     @Override
     public Offer save(Offer offer) {
+
         /* use merge() instead of persist(), because offer
          * might share tags and categories with other methods,
-         * so persist would throw exception because of detached
+         * so persist would throw exceptions because of detached
          * category/tag. */
         offer = em.merge(offer);
         return offer;
@@ -42,7 +44,7 @@ public class DefaultOfferDAO implements OfferDAO {
     /**
      * retrieve offer from the underlying database.
      * @param id of an offer
-     * @return findById from the database offer
+     * @return found from the database offer
      */
     @Override
     public Offer findById(Long id) {
@@ -65,9 +67,9 @@ public class DefaultOfferDAO implements OfferDAO {
      * Allows you to update:
      *  -price (value only)
      *  -remove tags
-     *  -add tags (you can findById new tag,
+     *  -add tags (you can create new tag,
      *          but then it's id should be null when you pass it to this method)
-     *  -change category (you can findById new one, -||-)
+     *  -change category (you can create new one, -||-)
      *
      * You should NOT change names of existing tags nor categories.
      *
@@ -90,21 +92,21 @@ public class DefaultOfferDAO implements OfferDAO {
         em.remove(offer);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<Offer> findAllByCategory(Category category) {
-        Query q = em.createQuery(
+        TypedQuery<Offer> q = em.createQuery(
                 "SELECT o FROM Offer o "
                 + " WHERE o.category.name = :category_name"
+                , Offer.class
         );
 
         q.setParameter("category_name", category.getName());
 
-        return (List<Offer>) q.getResultList();
+        return q.getResultList();
     }
 
     /**
-     * findById all offers that suit given tags-filter.
+     * finds all offers that suit given tags-filter.
      * Found offers will contain ALL the tags specified,
      * so the more tags, the less offers
      *

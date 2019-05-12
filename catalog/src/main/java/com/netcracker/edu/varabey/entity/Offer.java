@@ -19,7 +19,7 @@ import java.util.StringJoiner;
  *
  */
 @Data
-@Entity
+@javax.persistence.Entity
 @Table(name = "offers")
 public class Offer {
 

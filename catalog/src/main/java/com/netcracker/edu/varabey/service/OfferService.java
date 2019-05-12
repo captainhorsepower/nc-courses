@@ -3,11 +3,11 @@ package com.netcracker.edu.varabey.service;
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 import com.netcracker.edu.varabey.entity.Tag;
-import com.netcracker.edu.varabey.service.validation.InvalidOfferException;
+import com.netcracker.edu.varabey.service.validation.exceptions.InvalidOfferException;
 
 import java.util.List;
 
-interface OfferService {
+public interface OfferService {
 
     /**
      * Saves an offer.
@@ -15,19 +15,19 @@ interface OfferService {
      * @return saved offer
      * @throws InvalidOfferException if offer is null || is detached || has invalid properties
      */
-    Offer createOffer(Offer offer);
+    Offer create(Offer offer);
 
     /**
      * Finds an offer by id.
      * @param id - must not be null
      * @return found offer or null
      */
-    Offer findOffer(Long id);
+    Offer findById(Long id);
 
     /**
      * @return list with all existing offers
      */
-    List<Offer> findAllOffers();
+    List<Offer> findAll();
 
     /**
      * Merge the state of the given offer into the catalog database.
@@ -44,14 +44,22 @@ interface OfferService {
      * @return updated offer
      * @throws InvalidOfferException if offer is null or has any invalid properties
      */
-    Offer updateOffer(Offer offer);
+    Offer update(Offer offer);
+
+    Offer addTags(Long id, List<String> tagNames);
+
+    Offer removeTags(Long id, List<String> tagNames);
+
+    Offer changeCategory(Long id, Category category);
+
+    Offer updateNameAndPrice(Offer offer);
 
     /**
      * Deletes an offer by id
      * @param id - must not be null
      * @throws IllegalArgumentException if id is null
      */
-    void deleteOffer(Long id);
+    void delete(Long id);
 
     /**
      * Finds all offers with given category
