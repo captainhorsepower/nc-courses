@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Service class for Tags. Allows for creating, updating and removing tags from
@@ -33,7 +35,7 @@ public class DefaultTagDAO implements TagDAO {
     }
 
     /**
-     * Same rules as for <code>findById(Tag tag)</code>.
+     * Same rules as for <code>save(Tag tag)</code>.
      *
      * @param tags with set names and nothing else.
      * @return given collection of tags with initialized ids
@@ -52,6 +54,18 @@ public class DefaultTagDAO implements TagDAO {
     @Override
     public Tag findById(Long id) {
         return em.find(Tag.class, id);
+    }
+
+    @Override
+    public Tag findByName(String name) {
+        TypedQuery<Tag> q = em.createQuery(
+                "SELECT t FROM Tag t where t.name = :name",
+                Tag.class
+        );
+        q.setParameter("name", name);
+
+        List<Tag> list = q.setMaxResults(1).getResultList();
+        return list.stream().findFirst().orElse(null);
     }
 
     /**

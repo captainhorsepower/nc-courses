@@ -18,7 +18,7 @@ import java.util.StringJoiner;
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor
-@Entity
+@javax.persistence.Entity
 @Table(name = "categories")
 public class Category {
 

@@ -8,5 +8,6 @@ public interface TagDAO {
     Tag save(Tag tag);
     Collection<Tag> saveAll(Collection<Tag> tag);
     Tag findById(Long id);
+    Tag findByName(String name);
     void delete(Long id);
 }

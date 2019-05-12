@@ -11,7 +11,7 @@ import java.util.StringJoiner;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Entity
+@javax.persistence.Entity
 @Table(name = "prices")
 public class Price {
 
