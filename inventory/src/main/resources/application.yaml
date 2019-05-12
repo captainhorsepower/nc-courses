@@ -13,3 +13,9 @@ spring:
         jdbc:
           lob:
             non_contextual_creation : true
+
+  mvc:
+    servlet:
+      path: /inventory
+server:
+  port: 8800

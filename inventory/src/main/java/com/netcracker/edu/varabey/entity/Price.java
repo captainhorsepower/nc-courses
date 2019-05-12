@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /** полностью аналогично цене из каталога */
@@ -31,5 +32,18 @@ public class Price {
                 .add("id=" + id)
                 .add("value=" + value)
                 .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Price price = (Price) o;
+        return getValue().equals(price.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getValue());
     }
 }

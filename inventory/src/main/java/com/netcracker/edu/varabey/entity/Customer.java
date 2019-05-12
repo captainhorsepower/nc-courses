@@ -2,8 +2,6 @@ package com.netcracker.edu.varabey.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.util.*;
@@ -15,7 +13,6 @@ import java.util.*;
  */
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name = "customers")
 public class Customer {
@@ -25,12 +22,8 @@ public class Customer {
     @Column(name = "customer_id")
     private Long id;
 
-    @NonNull
-    @Column(name = "fio", nullable = false)
-    private String fio;
-
-    @NonNull
-    private Integer age;
+    @Column(name = "email", nullable = false)
+    private String email;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER,
             cascade = {CascadeType.REMOVE}, orphanRemoval = true)
@@ -47,21 +40,19 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(fio, customer.fio) &&
-                Objects.equals(age, customer.age);
+        return Objects.equals(email, customer.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fio, age);
+        return Objects.hash(email);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Customer.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
-                .add("fio='" + fio + "'")
-                .add("age=" + age)
+                .add("email=" + email)
                 .toString();
     }
 }

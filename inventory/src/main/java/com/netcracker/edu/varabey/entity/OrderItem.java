@@ -110,13 +110,12 @@ public class OrderItem {
         OrderItem orderItem = (OrderItem) o;
         return Objects.equals(price, orderItem.price) &&
                 Objects.equals(name, orderItem.name) &&
-                Objects.equals(owningOrder, orderItem.owningOrder) &&
                 Objects.equals(category, orderItem.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(price, name, owningOrder, category);
+        return Objects.hash(price, name, category);
     }
 
     @Override
