@@ -18,17 +18,19 @@ public class Customer {
     @Column(name = "customer_id")
     private Long id;
 
-    @NonNull
     @Column(name = "customer_fio", nullable = false)
     private String fio;
 
-    @NonNull
     @Column(name = "customer_age", nullable = false)
     private Integer age;
 
-    public Customer(@NonNull String fio, @NonNull Integer age) {
+    @Column(name ="email", nullable = false)
+    private String email;
+
+    public Customer(String fio, Integer age, String email) {
         this.fio = fio;
         this.age = age;
+        this.email = email;
     }
 
     @Override
@@ -37,6 +39,7 @@ public class Customer {
                 .add("id=" + id)
                 .add("fio='" + fio + "'")
                 .add("age=" + age)
+                .add("email='" + email + "'")
                 .toString();
     }
 }
