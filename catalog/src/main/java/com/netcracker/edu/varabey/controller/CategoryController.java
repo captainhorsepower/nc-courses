@@ -30,6 +30,13 @@ public class CategoryController {
         return categoryTransformer.toDto(category);
     }
 
+    @GetMapping("/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public CategoryDTO findCategoryById(@PathVariable("name") String name) {
+        Category category = checkFound(categoryService.findByName(name));
+        return categoryTransformer.toDto(category);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDTO saveCategory(@RequestBody CategoryDTO dto) {

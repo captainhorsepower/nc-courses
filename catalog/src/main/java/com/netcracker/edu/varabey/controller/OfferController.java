@@ -27,7 +27,6 @@ public class OfferController {
     private final OfferService offerService;
     private final CategoryService categoryService;
     private final TagService tagService;
-    private final String notSetFlag = "-1.00";
 
     public OfferController(Transformer<Offer, OfferDTO> offerTransformer, Transformer<Category, CategoryDTO> categoryTransformer, OfferService offerService, CategoryService categoryService, TagService tagService) {
         this.offerTransformer = offerTransformer;
