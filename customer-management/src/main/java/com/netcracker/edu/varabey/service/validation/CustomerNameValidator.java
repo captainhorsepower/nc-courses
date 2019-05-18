@@ -2,7 +2,6 @@ package com.netcracker.edu.varabey.service.validation;
 
 import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCustomerException;
 import com.netcracker.edu.varabey.spring.Validator;
-import lombok.Data;
 import lombok.Getter;
 
 @Getter
