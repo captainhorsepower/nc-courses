@@ -6,6 +6,6 @@ public class InvalidTagException extends IllegalArgumentException {
     }
 
     public InvalidTagException() {
-        this("provided tag is invalid");
+        this("provided tags is invalid");
     }
 }
