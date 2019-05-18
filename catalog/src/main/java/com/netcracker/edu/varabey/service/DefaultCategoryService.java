@@ -4,7 +4,6 @@ import com.netcracker.edu.varabey.dao.CategoryDAO;
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.service.validation.NameValidator;
 import com.netcracker.edu.varabey.service.validation.ServiceValidator;
-import com.netcracker.edu.varabey.service.validation.exceptions.CategoryNotFoundException;
 import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCategoryException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +43,17 @@ public class DefaultCategoryService implements CategoryService {
     public Category findByName(String name) {
         categoryNameValidator.check(name);
         return categoryDAO.findByName(name);
+    }
+
+    @Override
+    public Category find(String input) {
+        if (input.matches("\\d+")) {
+            Long id = Long.parseLong(input);
+            return findById(id);
+        } else {
+            String name = input.replaceAll("%20", " ");
+            return findByName(name);
+        }
     }
 
     @Override

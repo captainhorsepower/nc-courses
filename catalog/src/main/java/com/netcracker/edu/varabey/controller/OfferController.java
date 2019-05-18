@@ -3,7 +3,6 @@ package com.netcracker.edu.varabey.controller;
 import com.netcracker.edu.varabey.controller.dto.CategoryDTO;
 import com.netcracker.edu.varabey.controller.dto.OfferDTO;
 import com.netcracker.edu.varabey.controller.dto.transformer.Transformer;
-import com.netcracker.edu.varabey.controller.dto.util.OfferFilterDTO;
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 import com.netcracker.edu.varabey.entity.Tag;
@@ -13,7 +12,6 @@ import com.netcracker.edu.varabey.service.TagService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 

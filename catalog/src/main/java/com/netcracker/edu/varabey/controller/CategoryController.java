@@ -23,17 +23,10 @@ public class CategoryController {
         this.categoryTransformer = categoryTransformer;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{input}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryDTO findCategoryById(@PathVariable("id") Long id) {
-        Category category = checkFound(categoryService.findById(id));
-        return categoryTransformer.toDto(category);
-    }
-
-    @GetMapping("/{name}")
-    @ResponseStatus(HttpStatus.OK)
-    public CategoryDTO findCategoryById(@PathVariable("name") String name) {
-        Category category = checkFound(categoryService.findByName(name));
+    public CategoryDTO findCategory(@PathVariable("input") String input) {
+        Category category = checkFound(categoryService.find(input));
         return categoryTransformer.toDto(category);
     }
 
@@ -45,7 +38,7 @@ public class CategoryController {
         return categoryTransformer.toDto(category);
     }
 
-    @PostMapping("saveAll")
+    @PostMapping("/saveAll")
     @ResponseStatus(HttpStatus.CREATED)
     public List<CategoryDTO> saveAllCategories(@RequestBody List<CategoryDTO> dtoList) {
         return dtoList.stream()

@@ -1,8 +1,8 @@
 package com.netcracker.edu.varabey.controller.dto.transformer;
 
 import com.netcracker.edu.varabey.controller.dto.CategoryDTO;
-import com.netcracker.edu.varabey.controller.dto.OfferDTO;
 import com.netcracker.edu.varabey.entity.Category;
+import com.netcracker.edu.varabey.entity.Offer;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,16 +13,16 @@ public class CategoryTransformer implements Transformer<Category, CategoryDTO> {
      * are some complications */
     @Override
     public Category toEntity(CategoryDTO dto) {
-        return new Category(dto.getName());
+        String name = (dto.getName() == null) ? null : dto.getName().trim();
+        return new Category(name);
     }
 
     @Override
     public CategoryDTO toDto(Category category) {
         CategoryDTO dto = new CategoryDTO(category.getId(), category.getName());
 
-        /* this offer dto is simplified (doesn't contain tags) */
         category.getOffers().stream()
-                .map( offer -> new OfferDTO(offer.getId(), offer.getName(), offer.getPrice().getValue(), offer.getCategory().getName()))
+                .mapToLong(Offer::getId)
                 .forEach(dto::addOffer);
         return dto;
     }

@@ -14,8 +14,8 @@ public class OfferTransformer implements Transformer<Offer, OfferDTO> {
         Offer offer = new Offer();
         offer.setName(dto.getName());
         offer.setPrice( new Price(dto.getPrice()) );
-        offer.setCategory( new Category(dto.getCategory()) );
-        dto.getTags().forEach(tagName -> offer.addTag( new Tag(tagName)) );
+        offer.setCategory( new Category(dto.getCategory().trim()) );
+        dto.getTags().forEach(tagName -> offer.addTag( new Tag(tagName.trim())) );
         return offer;
     }
 
