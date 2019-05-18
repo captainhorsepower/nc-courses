@@ -1,0 +1,18 @@
+server:
+  port: 8000
+
+inventory:
+  host: http://localhost
+  port: 8800
+  path: /inventory
+  url: ${inventory.host}:${inventory.port}/${inventory.path}
+customer-management:
+  host: http://localhost
+  port: 8088
+  path: /customer-management
+  url: ${customer-management.host}:${customer-management.port}/${customer-management.path}
+catalog:
+  host: http://localhost
+  port: 8045
+  path: /catalog
+  url: ${catalog.host}:${catalog.port}/${catalog.path}
