@@ -1,10 +1,11 @@
 package com.netcracker.edu.varabey.controller;
 
-import com.netcracker.edu.varabey.controller.client.WebClient;
+import com.netcracker.edu.varabey.controller.client.CatalogClient;
+import com.netcracker.edu.varabey.dto.CategoryDTO;
 import com.netcracker.edu.varabey.dto.CustomerDTO;
-import com.netcracker.edu.varabey.dto.input.OrderInputDTO;
 import com.netcracker.edu.varabey.dto.OfferDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.netcracker.edu.varabey.dto.TagDTO;
+import com.netcracker.edu.varabey.dto.input.OrderInputDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,47 +13,150 @@ import java.util.List;
 
 @RestController
 public class ProcessorController {
-    private final WebClient webClient;
+    private final CatalogClient catalogClient;
 
-    @Autowired
-    public ProcessorController(WebClient webClient) {
-        this.webClient = webClient;
+    public ProcessorController(CatalogClient catalogClient) {
+        this.catalogClient = catalogClient;
     }
 
-    @GetMapping(value = "/offers")
-    @ResponseStatus(HttpStatus.OK)
-    public List<OfferDTO> getAllOffers() {
-        return webClient.findAllOffers();
+    @PostMapping("/offers")
+    @ResponseStatus(HttpStatus.CREATED)
+    public OfferDTO createOffer(@RequestBody OfferDTO offerDTO) {
+        return catalogClient.createOffer(offerDTO);
     }
 
-    @GetMapping(value = "/offers/{id}")
+    @GetMapping("/offers/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OfferDTO getOfferById(@PathVariable("id") Long id) {
-        return webClient.findOfferById(id);
+        return catalogClient.findOfferById(id);
     }
+
+    @GetMapping("/offers")
+    @ResponseStatus(HttpStatus.OK)
+    public List<OfferDTO> getAllOffers(
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "tags", required = false) List<String> tags,
+            @RequestParam(name = "minPrice", required = false) Double minPrice,
+            @RequestParam(name = "maxPrice", required = false) Double maxPrice
+    ) {
+        return catalogClient.findAllOffers(category, tags, minPrice, maxPrice);
+    }
+
+    @PutMapping("/offers/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public OfferDTO updateOfferNameAndPrice(@PathVariable("id") Long id, @RequestBody OfferDTO offerDTO) {
+        return catalogClient.updateOfferNameAndPrice(id, offerDTO);
+    }
+
+    @PutMapping("/offers/{id}/addTags")
+    @ResponseStatus(HttpStatus.OK)
+    public OfferDTO addTagsToOffer(@PathVariable("id") Long id, @RequestBody List<String> tags) {
+        return catalogClient.addTagsToOffer(id, tags);
+    }
+
+    @PutMapping("/offers/{id}/removeTags")
+    @ResponseStatus(HttpStatus.OK)
+    public OfferDTO removeTagsFromOffer(@PathVariable("id") Long id, @RequestBody List<String> tags) {
+        return catalogClient.removeTagsFromOffer(id, tags);
+    }
+
+    @PutMapping("/offers/{id}/changeCategory")
+    @ResponseStatus(HttpStatus.OK)
+    public OfferDTO changeOfferCategory(@PathVariable("id") Long id, @RequestBody CategoryDTO categoryDTO) {
+        return catalogClient.changeOfferCategory(id, categoryDTO);
+    }
+
+    @DeleteMapping("/offers/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOffer(@PathVariable("id") Long id) {
+        catalogClient.deleteOffer(id);
+    }
+
+    @PostMapping("/categories")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CategoryDTO createCategory(@RequestBody CategoryDTO categoryDTO) {
+        return catalogClient.createCategory(categoryDTO);
+    }
+
+    @PostMapping("/categories/saveAll")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<CategoryDTO> createAllCategories(@RequestBody List<CategoryDTO> categoryDTOS) {
+        return catalogClient.createAllCategories(categoryDTOS);
+    }
+
+    @GetMapping("/categories/{input}")
+    @ResponseStatus(HttpStatus.OK)
+    public CategoryDTO findCategoryById(@PathVariable("input") String input) {
+        return catalogClient.findCategory(input);
+    }
+
+    @PutMapping("/categories/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CategoryDTO updateCategoryName(@PathVariable("id") Long id, @RequestBody CategoryDTO categoryDTO) {
+        return catalogClient.updateCategoryName(id, categoryDTO);
+    }
+
+    @DeleteMapping("/categories/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCategory(@PathVariable("id") Long id) {
+        catalogClient.deleteCategory(id);
+    }
+
+    @PostMapping("/tags")
+    @ResponseStatus(HttpStatus.CREATED)
+    public TagDTO createTag(@RequestBody TagDTO tagDTO) {
+        return catalogClient.createTag(tagDTO);
+    }
+
+    @PostMapping("/tags/saveAll")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<TagDTO> createAllTags(@RequestBody List<TagDTO> tagDTOS) {
+        return catalogClient.createAllTags(tagDTOS);
+    }
+
+    @GetMapping("/tags/{input}")
+    @ResponseStatus(HttpStatus.OK)
+    public TagDTO findTagById(@PathVariable("input") String input) {
+        return catalogClient.findTag(input);
+    }
+
+    @PutMapping("/tags/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TagDTO updateTagName(@PathVariable("id") Long id, @RequestBody TagDTO tagDTO) {
+        return catalogClient.updateTagName(id, tagDTO);
+    }
+
+    @DeleteMapping("/tags/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTag(@PathVariable("id") Long id) {
+        catalogClient.deleteTag(id);
+    }
+
+
+
 
     @GetMapping(value = "/customers")
     @ResponseStatus(HttpStatus.OK)
     public List<CustomerDTO> getAllCustomers() {
-        return webClient.findAllCustomers();
+        return catalogClient.findAllCustomers();
     }
 
     @GetMapping(value = "/customers/{emailOrId}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerDTO getCustomerByIdOrEmail(@PathVariable("emailOrId") String emailOrId) {
-        return webClient.findCustomer(emailOrId);
+        return catalogClient.findCustomer(emailOrId);
     }
 
     @PostMapping(value = "/customers")
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO signUp(@RequestBody CustomerDTO customerDTO) {
-        return webClient.signUpWithEmail(customerDTO);
+        return catalogClient.signUpWithEmail(customerDTO);
     }
 
     @PostMapping(value = "/orders")
     @ResponseStatus(HttpStatus.CREATED)
     public com.netcracker.edu.varabey.dto.OrderDTO createOrder(@RequestBody OrderInputDTO inputOrderInputDTO) {
-        return webClient.createOrder(inputOrderInputDTO);
+        return catalogClient.createOrder(inputOrderInputDTO);
     }
 
 //    @GetMapping(value = "/orders/{id:[\\d]+}")

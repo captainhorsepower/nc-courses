@@ -10,9 +10,9 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class CategoryDTO {
-    private Long id = 0L;
+    private Long id;
     private String name = "";
-    private Set<OfferDTO> offers = new HashSet<>();
+    private Set<Long> offers = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
