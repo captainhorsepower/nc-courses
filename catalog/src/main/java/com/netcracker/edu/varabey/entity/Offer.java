@@ -47,19 +47,19 @@ public class Offer {
     private Set<Tag> tags = new HashSet<>();
 
     /**
-     * add tag to the offer.
+     * add tags to the offer.
      * Tag are distinguished by their name.
      *
      * @param tag to be added
-     * @return false, if tag was already present in offer.
+     * @return false, if tags was already present in offer.
      */
     public boolean addTag(Tag tag) {
         return tags.add(tag);
     }
 
     /**
-     * remove tag from offer
-     * @param tag true, of offer contained that tag.
+     * remove tags from offer
+     * @param tag true, of offer contained that tags.
      */
     public void removeTag(Tag tag) {
         tags.remove(tag);

@@ -34,7 +34,7 @@ public interface OfferService {
      * Allows you to update:
      *  -price (value only)
      *  -remove tags
-     *  -add tags (you can findById new tag,
+     *  -add tags (you can findById new tags,
      *          but then it's id should be null when you pass it to this method)
      *  -change category (you can findById new one, -||-)
      *

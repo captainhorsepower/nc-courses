@@ -7,49 +7,49 @@ import com.netcracker.edu.varabey.service.validation.exceptions.TagNotFoundExcep
 public interface TagService {
 
     /**
-     * Saves a given tag
+     * Saves a given tags
      * @param tag - new entity
      * @return saved entity\
-     * @throws InvalidTagException if tag is null || invalid || detached
+     * @throws InvalidTagException if tags is null || invalid || detached
      */
     Tag create(Tag tag);
 
     /**
-     * Finds tag by id
+     * Finds tags by id
      * @param id - must not be null
-     * @return found tag or null
+     * @return found tags or null
      */
     Tag findById(Long id);
 
     /**
-     * Finds tag by name
+     * Finds tags by name
      * @param name - must not be null
-     * @return found tag or null
+     * @return found tags or null
      */
     Tag findTagByName(String name);
 
     /**
-     * Finds tag by name
+     * Finds tags by name
      * @param name - must not be null nor empty
-     * @return found tag or null
+     * @return found tags or null
      * @throws IllegalArgumentException if name is null or empty
      */
     Tag getByName(String name);
 
     /**
-     * Allows to update tag's name
+     * Allows to update tags's name
      * @param tag with updated name
-     * @return updated tag
-     * @throws InvalidTagException if tag has invalid properties or is null || new
-     * @throws TagNotFoundException if tag was never saved before
+     * @return updated tags
+     * @throws InvalidTagException if tags has invalid properties or is null || new
+     * @throws TagNotFoundException if tags was never saved before
      */
     Tag updateName(Tag tag);
 
     /**
-     * Removes a tag.
+     * Removes a tags.
      *
-     * @param id of the tag to be removed.
-     * @throws javax.persistence.EntityNotFoundException if there is no tag
+     * @param id of the tags to be removed.
+     * @throws javax.persistence.EntityNotFoundException if there is no tags
      *      with given id in the database.
      * @throws IllegalArgumentException if id is null
      */

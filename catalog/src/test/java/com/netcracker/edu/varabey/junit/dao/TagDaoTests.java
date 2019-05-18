@@ -22,63 +22,63 @@
 //
 //    @Test
 //    public void testCreateAndReadOneTag() {
-//        Tag tag = new Tag();
-//        tag.setName("testCreateAndReadOneTag tag1");
-//        tag = service.create(tag);
+//        Tag tags = new Tag();
+//        tags.setName("testCreateAndReadOneTag tag1");
+//        tags = service.create(tags);
 //
-//        Tag tag1 = service.findById(tag.getId());
+//        Tag tag1 = service.findById(tags.getId());
 //        assertNotNull(tag1);
-//        assertEquals(tag.toString(), tag1.toString());
+//        assertEquals(tags.toString(), tag1.toString());
 //    }
 //
 //    @Test
 //    public void testUpdateTag() {
-//        Tag tag = new Tag();
-//        tag.setName("testUpdateTag tag1");
-//        tag = service.create(tag);
+//        Tag tags = new Tag();
+//        tags.setName("testUpdateTag tag1");
+//        tags = service.create(tags);
 //
-//        tag.setName("testUpdateTag new tag1");
+//        tags.setName("testUpdateTag new tag1");
 //
-//        tag = service.update(tag);
+//        tags = service.update(tags);
 //
-//        Tag tag1 = service.findById(tag.getId());
+//        Tag tag1 = service.findById(tags.getId());
 //        assertNotNull(tag1);
-//        assertEquals(tag.toString(), tag1.toString());
+//        assertEquals(tags.toString(), tag1.toString());
 //    }
 //
 //    @Test
 //    public void updateTagNameUpdatesTagNameInOffer() {
-//        Tag tag = new Tag();
-//        tag.setName("updateTagNameUpdatesTagNameInOffer tag1");
-//        tag = service.create(tag);
+//        Tag tags = new Tag();
+//        tags.setName("updateTagNameUpdatesTagNameInOffer tag1");
+//        tags = service.create(tags);
 //
 //
 //        Offer offer = new Offer();
 //        offer.setName("of1");
 //        offer.setPrice(new Price(100.));
 //        offer.setCategory(new Category("updateTagNameUpdatesTagNameInOffer c1"));
-//        offer.addTag(tag);
+//        offer.addTag(tags);
 //
 //        offer = service.create(offer);
 //
-//        tag.setName("updateTagNameUpdatesTagNameInOffer new tag1");
-//        tag = service.update(tag);
+//        tags.setName("updateTagNameUpdatesTagNameInOffer new tag1");
+//        tags = service.update(tags);
 //
 //        offer = service.findById(offer.getId());
 //        assertNotNull(offer);
-//        assertEquals(service.findById(tag.getId()).getName(), offer.getTags().iterator().next().getName());
+//        assertEquals(service.findById(tags.getId()).getName(), offer.getTags().iterator().next().getName());
 //    }
 //
 //    @Test
 //    public void testDeleteTag() {
-//        Tag tag = new Tag();
-//        tag.setName("testDeleteTag tag1");
+//        Tag tags = new Tag();
+//        tags.setName("testDeleteTag tag1");
 //
-//        tag = service.create(tag);
+//        tags = service.create(tags);
 //
-//        service.deleteTag(tag.getId());
+//        service.deleteTag(tags.getId());
 //
-//        Tag tag1 = service.findById(tag.getId());
+//        Tag tag1 = service.findById(tags.getId());
 //
 //        assertNull(tag1);
 //    }
@@ -91,23 +91,23 @@
 //        offer.setCategory(new Category("deleteTagDeletesReferenceInOffers cat1"));
 //        offer.setPrice(new Price(10D));
 //
-//        Tag tag = new Tag("deleteTagDeletesReferenceInOffers tag1");
-//        tag = service.create(tag);
-//        offer.addTag(tag);
+//        Tag tags = new Tag("deleteTagDeletesReferenceInOffers tag1");
+//        tags = service.create(tags);
+//        offer.addTag(tags);
 //
-//        tag = new Tag("deleteTagDeletesReferenceInOffers tag2");
-//        tag = service.create(tag);
-//        offer.addTag(tag);
+//        tags = new Tag("deleteTagDeletesReferenceInOffers tag2");
+//        tags = service.create(tags);
+//        offer.addTag(tags);
 //
 //        offer = service.create(offer);
 //
-//        offer.removeTag(tag);
+//        offer.removeTag(tags);
 //
 //
 //        /* deleteById tag2 */
-//        service.deleteTag(tag.getId());
+//        service.deleteTag(tags.getId());
 //
-//        Tag tag1 = service.findById(tag.getId());
+//        Tag tag1 = service.findById(tags.getId());
 //        assertNull(tag1);
 //
 //        Offer readOffer = service.findById(offer.getId());

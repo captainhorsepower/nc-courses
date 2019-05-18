@@ -10,20 +10,20 @@ import java.util.Set;
 public class OfferDTO {
     private Long id;
     private String name;
-    private Double priceValue;
-    private String categoryName;
-    private Set<String> tagNames;
+    private Double price;
+    private String category;
+    private Set<String> tags;
 
-    public OfferDTO(Long id, String name, Double priceValue, String categoryName) {
+    public OfferDTO(Long id, String name, Double price, String category) {
         this.id = id;
         this.name = name;
-        this.priceValue = priceValue;
-        this.categoryName = categoryName;
-        tagNames = new HashSet<>();
+        this.price = price;
+        this.category = category;
+        tags = new HashSet<>();
     }
 
     public void addTag(String tagName) {
-        tagNames.add(tagName);
+        tags.add(tagName);
     }
 
     @Override
@@ -33,12 +33,12 @@ public class OfferDTO {
         OfferDTO offerDTO = (OfferDTO) o;
         return Objects.equals(id, offerDTO.id) &&
                 name.equals(offerDTO.name) &&
-                priceValue.equals(offerDTO.priceValue) &&
-                categoryName.equals(offerDTO.categoryName);
+                price.equals(offerDTO.price) &&
+                category.equals(offerDTO.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, priceValue, categoryName);
+        return Objects.hash(id, name, price, category);
     }
 }

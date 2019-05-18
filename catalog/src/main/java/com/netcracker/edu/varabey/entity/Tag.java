@@ -11,7 +11,7 @@ import java.util.StringJoiner;
 
 /**
  * Tag, that can be attached to offers.
- * To findById a fully functional tag, initialize new tag with
+ * To findById a fully functional tags, initialize new tags with
  * a unique name, findById it in database via service, use.
  *
  * You cat trust the Id, name, and ids and names of offers
@@ -30,7 +30,7 @@ public class Tag {
     private Long id;
 
     @NonNull
-    @Column(nullable = false, name = "tag", unique = true)
+    @Column(nullable = false, name = "tags", unique = true)
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tags")
