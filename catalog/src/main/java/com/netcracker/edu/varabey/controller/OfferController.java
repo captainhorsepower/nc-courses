@@ -27,6 +27,7 @@ public class OfferController {
     private final OfferService offerService;
     private final CategoryService categoryService;
     private final TagService tagService;
+    private final String notSetFlag = "-1.00";
 
     public OfferController(Transformer<Offer, OfferDTO> offerTransformer, Transformer<Category, CategoryDTO> categoryTransformer, OfferService offerService, CategoryService categoryService, TagService tagService) {
         this.offerTransformer = offerTransformer;
@@ -49,14 +50,17 @@ public class OfferController {
                 .collect(Collectors.toList());
     }
 
-    private List<OfferDTO> findAllOffersByCategory(OfferFilterDTO filter) {
-        return offerService.findAllOffersByCategory(categoryService.getByName(filter.getCategory())).stream()
+    private List<OfferDTO> findAllOffersByCategory(String category) {
+        category = category.replaceAll("%20", " ");
+        return offerService.findAllOffersByCategory(
+                categoryService.getByName(category)
+        ).stream()
                 .map(offerTransformer::toDto)
                 .collect(Collectors.toList());
     }
 
-    private List<OfferDTO> findAllOffersByTags(OfferFilterDTO filter) {
-        List<Tag> tags = filter.getTags().stream()
+    private List<OfferDTO> findAllOffersByTags(List<String> tagNames) {
+        List<Tag> tags = tagNames.stream()
                 .map(tagService::getByName)
                 .collect(Collectors.toList());
         return offerService.findAllOffersWithTags(tags).stream()
@@ -64,9 +68,7 @@ public class OfferController {
                 .collect(Collectors.toList());
     }
 
-    private List<OfferDTO> findAllByPriceRange(OfferFilterDTO filter) {
-        Double minPrice = filter.getPriceRange().getMinPrice();
-        Double maxPrice = filter.getPriceRange().getMaxPrice();
+    private List<OfferDTO> findAllByPriceRange(Double minPrice, Double maxPrice) {
         return offerService.findAllWithPriceInRange(minPrice, maxPrice).stream()
                 .map(offerTransformer::toDto)
                 .collect(Collectors.toList());
@@ -74,20 +76,21 @@ public class OfferController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<OfferDTO> findAllOffersFiltered(@RequestBody(required = false) OfferFilterDTO filter) {
-        if (filter == null) {
+    public List<OfferDTO> findOffers(
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "tags", required = false) List<String> tags,
+            @RequestParam(name = "minPrice", required = false) Double minPrice,
+            @RequestParam(name = "maxPrice", required = false) Double maxPrice
+            ) {
+        if (category != null) {
+            return findAllOffersByCategory(category);
+        } else if (tags != null) {
+            return findAllOffersByTags(tags);
+        } else if (minPrice != null || maxPrice != null) {
+                return findAllByPriceRange(minPrice, maxPrice);
+        } else {
             return findAllOffers();
         }
-
-        if (filter.getCategory() != null) {
-            return findAllOffersByCategory(filter);
-        } else if (filter.getTags() != null) {
-            return findAllOffersByTags(filter);
-        } else if (filter.getPriceRange() != null){
-            return findAllByPriceRange(filter);
-        }
-
-        throw new IllegalArgumentException(filter + " should specify at least one query parameter");
     }
 
     @PostMapping
