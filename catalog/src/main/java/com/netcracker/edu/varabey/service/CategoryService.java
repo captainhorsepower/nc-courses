@@ -28,6 +28,8 @@ public interface CategoryService {
      */
     Category findByName(String name);
 
+    Category find(String input);
+
     /**
      * Retrieves a category by it's name.
      * @param name - must not be null.

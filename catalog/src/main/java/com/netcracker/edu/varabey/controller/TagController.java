@@ -25,10 +25,10 @@ public class TagController {
         this.tagService = tagService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{input}")
     @ResponseStatus(HttpStatus.OK)
-    public TagDTO findTagById(@PathVariable("id") Long id) {
-        Tag tag = checkFound(tagService.findById(id));
+    public TagDTO findTag(@PathVariable("input") String input) {
+        Tag tag = checkFound(tagService.find(input));
         return tagTransformer.toDto(tag);
     }
 

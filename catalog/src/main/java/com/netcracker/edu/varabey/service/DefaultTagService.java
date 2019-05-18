@@ -4,7 +4,6 @@ import com.netcracker.edu.varabey.dao.TagDAO;
 import com.netcracker.edu.varabey.entity.Tag;
 import com.netcracker.edu.varabey.service.validation.NameValidator;
 import com.netcracker.edu.varabey.service.validation.ServiceValidator;
-import com.netcracker.edu.varabey.service.validation.exceptions.TagNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,7 @@ public class DefaultTagService implements TagService {
     @Override
     public Tag create(Tag tag) {
         tagValidator.checkForPersist(tag);
-        Tag existingTag = findTagByName(tag.getName());
+        Tag existingTag = findByName(tag.getName());
         if (existingTag != null) {
             return existingTag;
         }
@@ -38,14 +37,25 @@ public class DefaultTagService implements TagService {
     }
 
     @Override
-    public Tag findTagByName(String name) {
+    public Tag findByName(String name) {
         tagNameValidator.check(name);
         return tagDAO.findByName(name);
     }
 
     @Override
+    public Tag find(String input) {
+        if (input.matches("\\d+")) {
+            Long id = Long.parseLong(input);
+            return findById(id);
+        } else {
+            String name = input.replaceAll("%20", " ");
+            return findByName(name);
+        }
+    }
+
+    @Override
     public Tag getByName(String name) {
-        Tag existing = findTagByName(name);
+        Tag existing = findByName(name);
         return (existing == null) ? new Tag(name) : existing;
     }
 

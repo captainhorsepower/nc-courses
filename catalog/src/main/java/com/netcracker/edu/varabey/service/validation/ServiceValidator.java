@@ -1,7 +1,5 @@
 package com.netcracker.edu.varabey.service.validation;
 
-import sun.misc.Resource;
-
 import javax.persistence.EntityNotFoundException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

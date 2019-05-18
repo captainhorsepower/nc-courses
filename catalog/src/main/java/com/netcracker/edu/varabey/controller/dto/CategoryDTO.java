@@ -10,7 +10,7 @@ import java.util.Set;
 public class CategoryDTO {
     private Long id;
     private String name;
-    private Set<OfferDTO> offers;
+    private Set<Long> offers;
 
     public CategoryDTO(Long id, String name) {
         this.id = id;
@@ -18,8 +18,8 @@ public class CategoryDTO {
         offers = new HashSet<>();
     }
 
-    public void addOffer(OfferDTO offerDTO) {
-        offers.add(offerDTO);
+    public void addOffer(Long offerId) {
+        offers.add(offerId);
     }
 
     @Override

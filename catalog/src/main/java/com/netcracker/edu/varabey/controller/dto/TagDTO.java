@@ -10,7 +10,7 @@ import java.util.Set;
 public class TagDTO {
     private Long id;
     private String name;
-    private Set<OfferDTO> offers;
+    private Set<Long> offers;
 
     public TagDTO(Long id, String name) {
         this.id = id;
@@ -18,8 +18,8 @@ public class TagDTO {
         offers = new HashSet<>();
     }
 
-    public void addOffer(OfferDTO offerDTO) {
-        offers.add(offerDTO);
+    public void addOffer(Long id) {
+        offers.add(id);
     }
 
     @Override

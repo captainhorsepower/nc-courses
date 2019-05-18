@@ -26,7 +26,9 @@ public interface TagService {
      * @param name - must not be null
      * @return found tags or null
      */
-    Tag findTagByName(String name);
+    Tag findByName(String name);
+
+    Tag find(String input);
 
     /**
      * Finds tags by name
