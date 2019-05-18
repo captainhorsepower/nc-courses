@@ -82,9 +82,9 @@ public class OfferController {
             @RequestParam(name = "minPrice", required = false) Double minPrice,
             @RequestParam(name = "maxPrice", required = false) Double maxPrice
             ) {
-        if (category != null) {
+        if (category != null && !category.isEmpty()) {
             return findAllOffersByCategory(category);
-        } else if (tags != null) {
+        } else if (tags != null && !tags.isEmpty()) {
             return findAllOffersByTags(tags);
         } else if (minPrice != null || maxPrice != null) {
                 return findAllByPriceRange(minPrice, maxPrice);
