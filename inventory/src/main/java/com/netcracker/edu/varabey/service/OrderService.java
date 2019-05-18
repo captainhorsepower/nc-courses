@@ -50,7 +50,7 @@ public interface OrderService {
     void deleteOrder(Long id);
 
     /**
-     * Retrieves all orderItems of given customer having given tag.
+     * Retrieves all orderItems of given customer having given tags.
      * @param customer must have valid id
      * @param tag must have valid id
      * @return List of all found OrderItems

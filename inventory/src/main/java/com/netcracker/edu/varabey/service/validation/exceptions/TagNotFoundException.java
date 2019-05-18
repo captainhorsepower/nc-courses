@@ -8,6 +8,6 @@ public class TagNotFoundException extends EntityNotFoundException {
     }
 
     public TagNotFoundException() {
-        this("tag with given id wasn't found");
+        this("tags with given id wasn't found");
     }
 }
