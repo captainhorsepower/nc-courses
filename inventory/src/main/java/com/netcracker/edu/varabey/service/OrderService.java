@@ -2,8 +2,6 @@ package com.netcracker.edu.varabey.service;
 
 import com.netcracker.edu.varabey.entity.*;
 import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCategoryException;
-import com.netcracker.edu.varabey.service.validation.exceptions.InvalidOrderException;
-import com.netcracker.edu.varabey.service.validation.exceptions.OrderNotFoundException;
 
 import java.util.List;
 

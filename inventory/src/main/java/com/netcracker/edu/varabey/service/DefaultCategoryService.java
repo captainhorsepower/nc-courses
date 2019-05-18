@@ -4,8 +4,6 @@ import com.netcracker.edu.varabey.dao.CategoryDAO;
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.service.validation.NameValidator;
 import com.netcracker.edu.varabey.service.validation.ServiceValidator;
-import com.netcracker.edu.varabey.service.validation.exceptions.CategoryNotFoundException;
-import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCategoryException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
