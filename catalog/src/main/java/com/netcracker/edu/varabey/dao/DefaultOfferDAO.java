@@ -36,7 +36,7 @@ public class DefaultOfferDAO implements OfferDAO {
         /* use merge() instead of persist(), because offer
          * might share tags and categories with other methods,
          * so persist would throw exceptions because of detached
-         * category/tag. */
+         * category/tags. */
         offer = em.merge(offer);
         return offer;
     }
@@ -67,7 +67,7 @@ public class DefaultOfferDAO implements OfferDAO {
      * Allows you to update:
      *  -price (value only)
      *  -remove tags
-     *  -add tags (you can create new tag,
+     *  -add tags (you can create new tags,
      *          but then it's id should be null when you pass it to this method)
      *  -change category (you can create new one, -||-)
      *

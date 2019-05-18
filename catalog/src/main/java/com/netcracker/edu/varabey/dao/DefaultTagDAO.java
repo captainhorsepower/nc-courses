@@ -21,12 +21,12 @@ public class DefaultTagDAO implements TagDAO {
     private EntityManager em;
 
     /**
-     * creates a tag in the underlying database.
+     * creates a tags in the underlying database.
      * Tag should have null id and offers should be empty.
      * Otherwise, expect issues with data.
      *
      * @param tag with set unique name and nothing else
-     * @return given tag with initialized id.
+     * @return given tags with initialized id.
      */
     @Override
     public Tag save(Tag tag) {
@@ -35,7 +35,7 @@ public class DefaultTagDAO implements TagDAO {
     }
 
     /**
-     * Same rules as for <code>save(Tag tag)</code>.
+     * Same rules as for <code>save(Tag tags)</code>.
      *
      * @param tags with set names and nothing else.
      * @return given collection of tags with initialized ids
@@ -47,9 +47,9 @@ public class DefaultTagDAO implements TagDAO {
     }
 
     /**
-     * retrieves the tag from the database by id.
+     * retrieves the tags from the database by id.
      * @param id - must not be null
-     * @return tag with everything set.
+     * @return tags with everything set.
      */
     @Override
     public Tag findById(Long id) {
@@ -69,10 +69,10 @@ public class DefaultTagDAO implements TagDAO {
     }
 
     /**
-     * removes a tag from the database.
+     * removes a tags from the database.
      *
-     * @param id of the tag to be removed.
-     * @throws javax.persistence.EntityNotFoundException if there is no tag
+     * @param id of the tags to be removed.
+     * @throws javax.persistence.EntityNotFoundException if there is no tags
      *      with given id in the database.
      */
     @Override
@@ -82,7 +82,7 @@ public class DefaultTagDAO implements TagDAO {
 
         /* this relation has to be removed by hand, because
          * offer it the owner of the owner ship (which means it removes
-         * rows from relation table automatically), while tag is NOT the owner
+         * rows from relation table automatically), while tags is NOT the owner
          */
         tag.getOffers().forEach( o -> o.getTags().remove(tag));
     }

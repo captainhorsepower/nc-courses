@@ -227,7 +227,7 @@ public class OfferDAOTest {
     @Test
     public void updateTagSetTest() {
         Offer offer = new Offer();
-        offer.setName("tag set update test1");
+        offer.setName("tags set update test1");
         offer.setCategory(new Category("updateTagSetTest category"));
         offer.setPrice(new Price(1D));
 
