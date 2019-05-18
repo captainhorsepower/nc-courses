@@ -31,10 +31,23 @@ public class CustomerController {
         return customerTransformer.toDto(newCustomer);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{idOrEmail}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerDTO findCustomer(@PathVariable(value = "id") Long id) {
+    public CustomerDTO findCustomer(@PathVariable("idOrEmail") String input) {
+        if (input.matches("\\d+")) {
+            return findCustomerById(Long.parseLong(input));
+        } else {
+            return findCustomerByEmail(input);
+        }
+    }
+
+    private CustomerDTO findCustomerById(Long id) {
         Customer customer = checkFound(customerService.find(id));
+        return customerTransformer.toDto(customer);
+    }
+
+    private CustomerDTO findCustomerByEmail(String email) {
+        Customer customer = checkFound(customerService.findByEmail(email));
         return customerTransformer.toDto(customer);
     }
 
