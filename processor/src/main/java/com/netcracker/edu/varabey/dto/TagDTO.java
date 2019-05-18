@@ -3,7 +3,6 @@ package com.netcracker.edu.varabey.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -12,7 +11,7 @@ import java.util.Set;
 public class TagDTO {
     private Long id;
     private String name;
-    private Set<OfferDTO> offers;
+    private Set<Long> offers;
 
     @Override
     public boolean equals(Object o) {

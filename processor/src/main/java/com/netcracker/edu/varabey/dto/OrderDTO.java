@@ -1,7 +1,6 @@
 package com.netcracker.edu.varabey.dto;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
