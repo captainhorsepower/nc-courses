@@ -6,7 +6,6 @@ import com.netcracker.edu.varabey.service.validation.AgeValidator;
 import com.netcracker.edu.varabey.service.validation.EmailValidator;
 import com.netcracker.edu.varabey.service.validation.NameValidator;
 import com.netcracker.edu.varabey.service.validation.ServiceValidator;
-import com.netcracker.edu.varabey.service.validation.exceptions.CustomerNotFoundException;
 import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCustomerException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
