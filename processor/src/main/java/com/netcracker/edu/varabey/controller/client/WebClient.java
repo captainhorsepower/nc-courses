@@ -19,15 +19,15 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public class CatalogClient {
+public class WebClient {
     private final RestTemplate restTemplate;
     private final String inventoryUrl;
     private final String catalogUrl;
     private final String customerManagementUrl;
     private final Transformer<OfferDTO, OrderItemDTO> offerToOrderItemTransformer;
 
-    public CatalogClient(@Value("${inventory.url}") String inventoryUrl, @Value("${catalog.url}") String catalogUrl,
-                         @Value("${customer-management.url}") String customerManagementUrl, RestTemplate restTemplate, ResponseErrorHandler restTemplateResponseErrorHandler, OfferDTOOrderItemDTOTransformer offerToOrderItemTransformer) {
+    public WebClient(@Value("${inventory.url}") String inventoryUrl, @Value("${catalog.url}") String catalogUrl,
+                     @Value("${customer-management.url}") String customerManagementUrl, RestTemplate restTemplate, ResponseErrorHandler restTemplateResponseErrorHandler, OfferDTOOrderItemDTOTransformer offerToOrderItemTransformer) {
         this.inventoryUrl = inventoryUrl;
         this.catalogUrl = catalogUrl;
         this.customerManagementUrl = customerManagementUrl;
@@ -263,31 +263,68 @@ public class CatalogClient {
         );
     }
 
-    public List<CustomerDTO> findAllCustomers() {
-        ResponseEntity<List<CustomerDTO>> response = restTemplate.exchange(
-                customerManagementUrl + "/customers",
-                HttpMethod.GET,
-                HttpEntity.EMPTY,
-                new ParameterizedTypeReference<List<CustomerDTO>>(){});
+
+
+    public CustomerDTO signUpUsingEmail(CustomerDTO customer) {
+        ResponseEntity<CustomerDTO> response = restTemplate.exchange(
+                UriComponentsBuilder
+                        .fromHttpUrl(customerManagementUrl)
+                        .path("/customers")
+                        .toUriString(),
+                HttpMethod.POST,
+                new HttpEntity<>(customer),
+                new ParameterizedTypeReference<CustomerDTO>(){}
+        );
         return response.getBody();
     }
 
-    public CustomerDTO findCustomer(String email) {
+    public CustomerDTO findCustomer(String query) {
         ResponseEntity<CustomerDTO> response = restTemplate.exchange(
-                customerManagementUrl + "/customers/" + email,
+                UriComponentsBuilder
+                        .fromHttpUrl(customerManagementUrl)
+                        .path("/customers")
+                        .path("/" + query)
+                        .toUriString(),
                 HttpMethod.GET,
                 HttpEntity.EMPTY,
                 new ParameterizedTypeReference<CustomerDTO>(){});
         return response.getBody();
     }
 
-    public CustomerDTO signUpWithEmail(CustomerDTO customer) {
-        return restTemplate.exchange(
-                customerManagementUrl + "/customers",
-                HttpMethod.POST,
-                new HttpEntity<>(customer),
+    public List<CustomerDTO> findAllCustomers() {
+        ResponseEntity<List<CustomerDTO>> response = restTemplate.exchange(
+                UriComponentsBuilder
+                        .fromHttpUrl(customerManagementUrl)
+                        .path("/customers")
+                        .toUriString(),
+                HttpMethod.GET,
+                HttpEntity.EMPTY,
+                new ParameterizedTypeReference<List<CustomerDTO>>(){});
+        return response.getBody();
+    }
+
+    public CustomerDTO editCustomer(Long id, CustomerDTO customerDTO) {
+        ResponseEntity<CustomerDTO> response = restTemplate.exchange(
+                UriComponentsBuilder
+                        .fromHttpUrl(customerManagementUrl)
+                        .path("/customers")
+                        .path("/" + id)
+                        .toUriString(),
+                HttpMethod.PUT,
+                new HttpEntity<>(customerDTO),
                 new ParameterizedTypeReference<CustomerDTO>(){}
-                ).getBody();
+        );
+        return response.getBody();
+    }
+
+    public void deleteCustomer(Long id) {
+        // all orders coupled with customers email will remain in the database.
+        restTemplate.delete(UriComponentsBuilder
+                .fromHttpUrl(customerManagementUrl)
+                .path("/customers")
+                .path("/" + id)
+                .toUriString()
+        );
     }
 
     public com.netcracker.edu.varabey.dto.OrderDTO createOrder(OrderInputDTO inputOrderInputDTO) {
