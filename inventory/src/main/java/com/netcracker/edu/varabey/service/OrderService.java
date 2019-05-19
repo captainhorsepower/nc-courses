@@ -4,6 +4,7 @@ import com.netcracker.edu.varabey.entity.*;
 import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCategoryException;
 
 import java.util.List;
+import java.util.Set;
 
 public interface OrderService {
 
@@ -34,11 +35,11 @@ public interface OrderService {
      */
     List<Order> findAll();
 
-    Order updatePaymentAndStatus(Order order);
+    Order updatePaymentAndStatus(Long id, Order order);
 
     Order addItems(Long id, List<OrderItem> items);
 
-    Order removeItems(Long id, List<OrderItem> items);
+    Order removeItems(Long id, Set<Long> itemIds);
 
     /**
      * Removes an order with given id.
