@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.*;
 
 /**
- * customer, who may place orders.
+ * email, who may place orders.
  *
  * Customer's orders will be populated from database automatically via using OrderDAO.
  */

@@ -6,6 +6,6 @@ public class InvalidCustomerException extends IllegalArgumentException {
     }
 
     public InvalidCustomerException() {
-        this("customer is invalid");
+        this("email is invalid");
     }
 }

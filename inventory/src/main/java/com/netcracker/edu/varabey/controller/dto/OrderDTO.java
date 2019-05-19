@@ -1,33 +1,25 @@
 package com.netcracker.edu.varabey.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.netcracker.edu.varabey.entity.utils.OrderStatus;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class OrderDTO {
     private Long id;
-    private CustomerDTO customer;
-    private LocalDateTime createdOnDate;
-    private OrderStatus orderStatus;
+    private String email;
     private Boolean isPaid;
+    private OrderStatus orderStatus;
+    private LocalDateTime createdOnDate;
     private Double totalPrice;
     private Integer itemCount;
-    private List<OrderItemDTO> items;
-
-    public OrderDTO(Long id, CustomerDTO customer, LocalDateTime createdOnDate, OrderStatus orderStatus, Boolean isPaid, Double totalPrice, Integer itemCount) {
-        this.id = id;
-        this.customer = customer;
-        this.createdOnDate = createdOnDate;
-        this.orderStatus = orderStatus;
-        this.isPaid = isPaid;
-        this.totalPrice = totalPrice;
-        this.itemCount = itemCount;
-        items = new ArrayList<>();
-    }
+    private List<OrderItemDTO> items = new ArrayList<>();
 
     public void addItem(OrderItemDTO item) {
         items.add(item);
@@ -37,6 +29,7 @@ public class OrderDTO {
         this.isPaid = isPaid;
     }
 
+    @JsonIgnore
     public Boolean isPaid() {
         return this.isPaid;
     }

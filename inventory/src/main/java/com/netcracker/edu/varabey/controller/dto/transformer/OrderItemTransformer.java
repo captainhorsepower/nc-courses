@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class OrderItemTransformer implements Transformer<OrderItem, OrderItemDTO> {
     @Override
     public OrderItem toEntity(OrderItemDTO dto) {
-        OrderItem item = new OrderItem(dto.getPriceValue(), dto.getName().trim(), new Category(dto.getCategory()));
+        OrderItem item = new OrderItem(dto.getPrice(), dto.getName().trim(), new Category(dto.getCategory()));
         item.setId(dto.getId());
         dto.getTags().stream()
                 .map(Tag::new)

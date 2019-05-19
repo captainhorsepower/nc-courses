@@ -48,7 +48,7 @@ public interface OrderService {
     void deleteOrder(Long id);
 
     /**
-     * Retrieves all orderItems of given customer having given tags.
+     * Retrieves all orderItems of given email having given tags.
      * @param customer must have valid id
      * @param tag must have valid id
      * @return List of all found OrderItems
@@ -56,7 +56,7 @@ public interface OrderService {
     List<OrderItem> findAllOrderItemsByCustomerAndTag(Customer customer, Tag tag);
 
     /**
-     * Retrieves all orderItems of given customer with given category.
+     * Retrieves all orderItems of given email with given category.
      * @param customer must have valid id
      * @param category must have valid id
      * @return List of all found OrderItems
