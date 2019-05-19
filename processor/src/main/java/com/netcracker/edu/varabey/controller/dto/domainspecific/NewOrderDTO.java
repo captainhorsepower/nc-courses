@@ -1,5 +1,6 @@
-package com.netcracker.edu.varabey.dto.input;
+package com.netcracker.edu.varabey.controller.dto.domainspecific;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,13 +10,14 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class OrderInputDTO {
-    private String email = "";
-    private String orderStatus = "";
-    private Boolean isPaid = false;
+public class NewOrderDTO {
+    private String email;
+    private String orderStatus;
+    private Boolean isPaid;
     private LocalDateTime createdOnDate = LocalDateTime.now();
     private Set<Long> offerIds = new HashSet<>();
 
+    @JsonIgnore
     public Boolean getPaid() {
         return isPaid;
     }

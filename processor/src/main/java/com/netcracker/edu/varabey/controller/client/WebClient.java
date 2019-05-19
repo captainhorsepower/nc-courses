@@ -1,9 +1,12 @@
 package com.netcracker.edu.varabey.controller.client;
 
-import com.netcracker.edu.varabey.dto.*;
-import com.netcracker.edu.varabey.dto.input.OrderInputDTO;
-import com.netcracker.edu.varabey.dto.transformer.OfferDTOOrderItemDTOTransformer;
-import com.netcracker.edu.varabey.dto.transformer.Transformer;
+import com.netcracker.edu.varabey.controller.dto.*;
+import com.netcracker.edu.varabey.controller.dto.domainspecific.InventoryOrderDTO;
+import com.netcracker.edu.varabey.controller.dto.domainspecific.NewOrderDTO;
+import com.netcracker.edu.varabey.controller.dto.domainspecific.SimplifiedOrderDTO;
+import com.netcracker.edu.varabey.controller.dto.domainspecific.VerboseOrderDTO;
+import com.netcracker.edu.varabey.controller.dto.transformer.OfferDTOOrderItemDTOTransformer;
+import com.netcracker.edu.varabey.controller.dto.transformer.Transformer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -14,9 +17,9 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class WebClient {
@@ -25,14 +28,18 @@ public class WebClient {
     private final String catalogUrl;
     private final String customerManagementUrl;
     private final Transformer<OfferDTO, OrderItemDTO> offerToOrderItemTransformer;
+    private final Transformer<InventoryOrderDTO, VerboseOrderDTO> verboseOrderTransformer;
+    private final Transformer<InventoryOrderDTO, SimplifiedOrderDTO> simpleOrderTransformer;
 
     public WebClient(@Value("${inventory.url}") String inventoryUrl, @Value("${catalog.url}") String catalogUrl,
-                     @Value("${customer-management.url}") String customerManagementUrl, RestTemplate restTemplate, ResponseErrorHandler restTemplateResponseErrorHandler, OfferDTOOrderItemDTOTransformer offerToOrderItemTransformer) {
+                     @Value("${customer-management.url}") String customerManagementUrl, RestTemplate restTemplate, ResponseErrorHandler restTemplateResponseErrorHandler, OfferDTOOrderItemDTOTransformer offerToOrderItemTransformer, Transformer<InventoryOrderDTO, VerboseOrderDTO> verboseOrderTransformer, Transformer<InventoryOrderDTO, SimplifiedOrderDTO> simpleOrderTransformer) {
         this.inventoryUrl = inventoryUrl;
         this.catalogUrl = catalogUrl;
         this.customerManagementUrl = customerManagementUrl;
         this.restTemplate = restTemplate;
         this.offerToOrderItemTransformer = offerToOrderItemTransformer;
+        this.verboseOrderTransformer = verboseOrderTransformer;
+        this.simpleOrderTransformer = simpleOrderTransformer;
         this.restTemplate.setErrorHandler(restTemplateResponseErrorHandler);
     }
 
@@ -327,127 +334,172 @@ public class WebClient {
         );
     }
 
-    public com.netcracker.edu.varabey.dto.OrderDTO createOrder(OrderInputDTO inputOrderInputDTO) {
+    public VerboseOrderDTO createOrder(NewOrderDTO inputOrderInputDTO) {
         CustomerDTO customer = findCustomer(inputOrderInputDTO.getEmail());
 
-        Set<OrderItemDTO> items = new HashSet<>();
+        List<OrderItemDTO> items = new ArrayList<>();
         inputOrderInputDTO.getOfferIds().stream()
                 .map(this::findOfferById)
                 .map(offerToOrderItemTransformer::convert)
                 .forEach(items::add);
 
-
-        com.netcracker.edu.varabey.dto.OrderDTO orderDTO = new com.netcracker.edu.varabey.dto.OrderDTO();
+        InventoryOrderDTO orderDTO = new InventoryOrderDTO();
         orderDTO.setPaid(inputOrderInputDTO.getPaid());
         orderDTO.setOrderStatus(inputOrderInputDTO.getOrderStatus());
         orderDTO.setCreatedOnDate(inputOrderInputDTO.getCreatedOnDate());
-        orderDTO.setCustomer(customer);
+        orderDTO.setEmail(customer.getEmail());
         orderDTO.setItems(items);
 
-        orderDTO = restTemplate.exchange(
-                inventoryUrl + "/orders",
+        ResponseEntity<VerboseOrderDTO> response = restTemplate.exchange(
+                UriComponentsBuilder
+                        .fromHttpUrl(inventoryUrl)
+                        .path("/orders")
+                        .toUriString(),
                 HttpMethod.POST,
                 new HttpEntity<>(orderDTO),
-                new ParameterizedTypeReference<com.netcracker.edu.varabey.dto.OrderDTO>(){})
-                .getBody();
-        return orderDTO;
+                new ParameterizedTypeReference<VerboseOrderDTO>(){}
+        );
+        response.getBody().setCustomer(customer);
+        return response.getBody();
     }
-//
-//    private Set<OfferDTO> getOffersByIds(Set<Long> itemIds) {
-//    }
-//
-//    public OrderInputDTO getOrderById(Long id) {
-//        return restTemplate.exchange(inventoryUrl + "/orders/" + id,
-//                HttpMethod.GET,
-//                null,
-//                new ParameterizedTypeReference<>(){}).getBody();
-//    }
-//
-//    public List<OrderInputDTO> getAllOrders() {
-//        return restTemplate.exchange(inventoryUrl + "/orders",
-//                HttpMethod.GET,
-//                null,
-//                new ParameterizedTypeReference<>(){})
-//                .getBody();
-//    }
-//
-//    public OrderInputDTO addItemToOrder(Long orderId, Long itemId) {
-//        return restTemplate.exchange(inventoryUrl + "/orders/" + orderId + "/items",
-//                HttpMethod.PUT,
-//                new HttpEntity<>(offerToOrderItemTransformer.convert(findOfferById(itemId))),
-//                new ParameterizedTypeReference<>(){}).getBody();
-//    }
-//
-//    public void removeItemFromOrder(Long orderId, Long itemId) {
-//        restTemplate.exchange(inventoryUrl + "/orders/" + orderId + "/items/" + itemId,
-//                HttpMethod.DELETE,
-//                null,
-//                new ParameterizedTypeReference<>(){}
-//                ).getBody();
-//    }
-//
-//    public OrderInputDTO payForOrder(Long orderId) {
-//        return restTemplate.exchange(inventoryUrl + "/orders/" + orderId + "/pay",
-//                HttpMethod.PUT,
-//                null,
-//                new ParameterizedTypeReference<>(){})
-//                .getBody();
-//    }
-//
-//    public List<OrderInputDTO> getAllOrdersByPaymentStatus(String status) {
-//        return restTemplate.exchange(inventoryUrl + "/statuses/" + status,
-//                HttpMethod.GET,
-//                null,
-//                new ParameterizedTypeReference<List<OrderInputDTO>>(){})
-//                .getBody();
-//    }
-//
-//    public List<OrderInputDTO> getAllOrdersByEmail(String email) {
-//        return restTemplate.exchange(inventoryUrl + "/emails/" + email,
-//                HttpMethod.GET,
-//                null,
-//                new ParameterizedTypeReference<List<OrderInputDTO>>(){})
-//                .getBody();
-//    }
 
-//    public Integer getAmountOfItemsBoughtByCustomerWithEmail(String email) {
-//        return restTemplate.exchange(inventoryUrl + "/emails/" + email + "/amount",
-//                HttpMethod.GET,
-//                null,
-//                new ParameterizedTypeReference<Integer>(){}() {
-//                }).getBody();
-//    }
-//
-//    public Double GetFullPriceOfItemsBoughtByCustomerWithEmail(String email) {
-//        return restTemplate.exchange(inventoryUrl + "/emails/" + email + "/full-price",
-//                HttpMethod.GET,
-//                null,
-//                new ParameterizedTypeReference<>(){}() {
-//                }).getBody();
-//    }
-//
-//    public OrderInputDTO setNextOrderStatus(Long orderId) {
-//        return restTemplate.exchange(inventoryUrl + "/orders/" + orderId + "/status/next",
-//                HttpMethod.PUT,
-//                null,
-//                new ParameterizedTypeReference<>(){}())
-//                .getBody();
-//    }
-//
-//    private OrderInputDTO saveOrder(OrderInputDTO orderDTO) {
-//        orderDTO = restTemplate.exchange(
-//                inventoryUrl + "/orders",
-//                HttpMethod.POST,
-//                new HttpEntity<>(orderDTO),
-//                new ParameterizedTypeReference<>(){}() {
-//                }
-//        ).getBody();
-//        return orderDTO;
-//    }
-//
-//    private Set<OfferDTO> getOffersByIds(Set<Long> ids) {
-//        return ids.stream()
-//                .map(this::findOfferById)
-//                .collect(Collectors.toSet());
-//    }
+    public VerboseOrderDTO findOrder(Long id) {
+        ResponseEntity<InventoryOrderDTO> response = restTemplate.exchange(
+                UriComponentsBuilder.fromHttpUrl(inventoryUrl)
+                        .path("/orders")
+                        .path("/" + id)
+                        .toUriString(),
+                HttpMethod.GET,
+                HttpEntity.EMPTY,
+                new ParameterizedTypeReference<InventoryOrderDTO>() {}
+        );
+        InventoryOrderDTO inventoryOrder = response.getBody();
+        VerboseOrderDTO processorOrder = verboseOrderTransformer.convert(inventoryOrder);
+
+        CustomerDTO customerDTO = findCustomer(inventoryOrder.getEmail());
+        processorOrder.setCustomer(customerDTO);
+        return processorOrder;
+    }
+
+    public List<SimplifiedOrderDTO> findAllOrdersByPaymentStatus(Boolean isPaid) {
+        ResponseEntity<List<InventoryOrderDTO>> response = restTemplate.exchange(
+                UriComponentsBuilder
+                        .fromHttpUrl(inventoryUrl)
+                        .path("/orders")
+                        .toUriString(),
+                HttpMethod.GET,
+                HttpEntity.EMPTY,
+                new ParameterizedTypeReference<List<InventoryOrderDTO>>() {}
+        );
+        return response.getBody().stream()
+                .filter(order -> order.isPaid() == isPaid)
+                .map(simpleOrderTransformer::convert)
+                .collect(Collectors.toList());
+    }
+
+    public List<SimplifiedOrderDTO> findAllOrdersByEmail(String email) {
+        ResponseEntity<List<InventoryOrderDTO>> response = restTemplate.exchange(
+                UriComponentsBuilder
+                        .fromHttpUrl(inventoryUrl)
+                        .path("/orders")
+                        .toUriString(),
+                HttpMethod.GET,
+                HttpEntity.EMPTY,
+                new ParameterizedTypeReference<List<InventoryOrderDTO>>() {}
+        );
+        return response.getBody().stream()
+                .map(simpleOrderTransformer::convert)
+                .filter(order -> order.getEmail().equals(email))
+                .collect(Collectors.toList());
+    }
+
+    public Double getEmailSpendings(String email) {
+        List<SimplifiedOrderDTO> orders = findAllOrdersByEmail(email);
+        return orders.stream()
+                .mapToDouble(SimplifiedOrderDTO::getTotalPrice)
+                .reduce(0, Double::sum);
+    }
+
+    public Integer getEmailOrderCount(String email) {
+        List<SimplifiedOrderDTO> orders = findAllOrdersByEmail(email);
+        return orders.size();
+    }
+
+    public SimplifiedOrderDTO confirmPaymentForOrder(Long id) {
+        SimplifiedOrderDTO orderWithPayment = new SimplifiedOrderDTO();
+        orderWithPayment.setPaid(true);
+
+        ResponseEntity<InventoryOrderDTO> response = restTemplate.exchange(
+                UriComponentsBuilder
+                        .fromHttpUrl(inventoryUrl)
+                        .path("/orders")
+                        .path("/" + id)
+                        .toUriString(),
+                HttpMethod.PUT,
+                new HttpEntity<>(orderWithPayment),
+                new ParameterizedTypeReference<InventoryOrderDTO>(){}
+        );
+
+        return simpleOrderTransformer.convert(response.getBody());
+    }
+
+    public SimplifiedOrderDTO changeOrderStatus(Long id, String status) {
+        SimplifiedOrderDTO orderWithStatus = new SimplifiedOrderDTO();
+        orderWithStatus.setOrderStatus(status);
+
+        ResponseEntity<InventoryOrderDTO> response = restTemplate.exchange(
+                UriComponentsBuilder
+                        .fromHttpUrl(inventoryUrl)
+                        .path("/orders")
+                        .path("/" + id)
+                        .toUriString(),
+                HttpMethod.PUT,
+                new HttpEntity<>(orderWithStatus),
+                new ParameterizedTypeReference<InventoryOrderDTO>(){}
+        );
+
+        return simpleOrderTransformer.convert(response.getBody());
+    }
+
+    public SimplifiedOrderDTO addItemsToOrder(Long orderId, List<Long> offerIds) {
+        List<OrderItemDTO> items = offerIds.stream()
+                .map(this::findOfferById)
+                .map(offerToOrderItemTransformer::convert)
+                .collect(Collectors.toList());
+        ResponseEntity<InventoryOrderDTO> response = restTemplate.exchange(
+                UriComponentsBuilder.
+                        fromHttpUrl(inventoryUrl)
+                        .path("/orders")
+                        .path("/" + orderId)
+                        .path("/items")
+                        .toUriString(),
+                HttpMethod.POST,
+                new HttpEntity<>(items),
+                new ParameterizedTypeReference<InventoryOrderDTO>() {}
+        );
+        return simpleOrderTransformer.convert(response.getBody());
+    }
+
+    public SimplifiedOrderDTO removeItemsFromOrder(Long orderId, List<Long> itemIds) {
+        VerboseOrderDTO orderDTO = findOrder(orderId);
+        if (orderDTO.isPaid()) {
+            // TODO use grown up validation
+            throw new RuntimeException("don't delete items form paid order");
+        }
+        ResponseEntity<InventoryOrderDTO> response = restTemplate.exchange(
+                UriComponentsBuilder.
+                        fromHttpUrl(inventoryUrl)
+                        .path("/orders")
+                        .path("/" + orderId)
+                        .path("/items")
+                        .queryParam("id", itemIds.stream()
+                                .map(Object::toString)
+                                .collect(Collectors.joining(",")))
+                        .toUriString(),
+                HttpMethod.DELETE,
+                HttpEntity.EMPTY,
+                new ParameterizedTypeReference<InventoryOrderDTO>() {}
+        );
+        return simpleOrderTransformer.convert(response.getBody());
+    }
 }

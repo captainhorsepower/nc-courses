@@ -1,4 +1,4 @@
-package com.netcracker.edu.varabey.dto;
+package com.netcracker.edu.varabey.controller.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
