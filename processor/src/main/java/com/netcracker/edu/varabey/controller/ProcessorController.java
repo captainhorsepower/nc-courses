@@ -1,10 +1,13 @@
 package com.netcracker.edu.varabey.controller;
 
 import com.netcracker.edu.varabey.controller.client.WebClient;
-import com.netcracker.edu.varabey.dto.CategoryDTO;
-import com.netcracker.edu.varabey.dto.CustomerDTO;
-import com.netcracker.edu.varabey.dto.OfferDTO;
-import com.netcracker.edu.varabey.dto.TagDTO;
+import com.netcracker.edu.varabey.controller.dto.CategoryDTO;
+import com.netcracker.edu.varabey.controller.dto.CustomerDTO;
+import com.netcracker.edu.varabey.controller.dto.OfferDTO;
+import com.netcracker.edu.varabey.controller.dto.TagDTO;
+import com.netcracker.edu.varabey.controller.dto.domainspecific.NewOrderDTO;
+import com.netcracker.edu.varabey.controller.dto.domainspecific.SimplifiedOrderDTO;
+import com.netcracker.edu.varabey.controller.dto.domainspecific.VerboseOrderDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -134,19 +137,19 @@ public class ProcessorController {
 
 
 
-    @PostMapping(value = "/customers")
+    @PostMapping("/customers")
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO signUp(@RequestBody CustomerDTO customerDTO) {
         return webClient.signUpUsingEmail(customerDTO);
     }
 
-    @GetMapping(value = "/customers/{emailOrId}")
+    @GetMapping("/customers/{emailOrId}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerDTO findCustomer(@PathVariable("emailOrId") String emailOrId) {
         return webClient.findCustomer(emailOrId);
     }
 
-    @GetMapping(value = "/customers")
+    @GetMapping("/customers")
     @ResponseStatus(HttpStatus.OK)
     public List<CustomerDTO> getAllCustomers() {
         return webClient.findAllCustomers();
@@ -164,72 +167,65 @@ public class ProcessorController {
         webClient.deleteCustomer(id);
     }
 
-//    @PostMapping(value = "/orders")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public com.netcracker.edu.varabey.dto.OrderDTO createOrder(@RequestBody OrderInputDTO inputOrderInputDTO) {
-//        return webClient.createOrder(inputOrderInputDTO);
-//    }
 
-//    @GetMapping(value = "/orders/{id:[\\d]+}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public OrderInputDTO getOrderById(@PathVariable("id") Long id) {
-//        return webClient.getOrderById(id);
-//    }
-//
-//    @GetMapping(value = "/orders")
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<OrderInputDTO> getAllOrders() {
-//        return webClient.getAllOrders();
-//    }
-//
-//    @PutMapping(value = "/orders/{id:[\\d]+}/items")
-//    @ResponseStatus(HttpStatus.OK)
-//    public OrderInputDTO addItemToOrder(@RequestBody Long itemId, @PathVariable("id") Long id) {
-//        return webClient.addItemToOrder(id, itemId);
-//    }
-//
-//    @DeleteMapping(value = "/orders/{id:[\\d]+}/items/{itemId:[\\d]+}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void removeItemFromOrder(@PathVariable("id") Long id, @PathVariable("itemId") Long itemId) {
-//        webClient.removeItemFromOrder(id, itemId);
-//    }
-//
-//    @PutMapping(value = "/orders/{id:[\\d]+}/pay")
-//    @ResponseStatus(HttpStatus.OK)
-//    public OrderInputDTO payForOrder(@PathVariable("id") Long id) {
-//        return webClient.payForOrder(id);
-//    }
-//
-//
-//    @GetMapping(value = "/statuses/{payStatus}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<OrderInputDTO> getAllOrdersByPaymentStatus(@PathVariable("payStatus") String status) {
-//        return webClient.getAllOrdersByPaymentStatus(status);
-//    }
-//
-//    @GetMapping(value = "/emails/{email}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<OrderInputDTO> getAllOrdersByEmail(@PathVariable("email") String email) {
-//        return webClient.getAllOrdersByEmail(email);
-//    }
-//
-//    @GetMapping(value = "/emails/{email}/amount")
-//    @ResponseStatus(HttpStatus.OK)
-//    public String getAmountOfItemsBoughtByCustomerWithEmail(@PathVariable("email") String email) {
-//        Integer amount = webClient.getAmountOfItemsBoughtByCustomerWithEmail(email);
-//        return "The number of offers purchased by the customer with e-mail: \"" + email + "\" is: " + amount + ";";
-//    }
-//
-//    @GetMapping(value = "/emails/{email}/price")
-//    @ResponseStatus(HttpStatus.OK)
-//    public String GetFullPriceOfItemsBoughtByCustomerWithEmail(@PathVariable("email") String email) {
-//        Double fullPrice = webClient.GetFullPriceOfItemsBoughtByCustomerWithEmail(email);
-//        return "The total price of goods purchased by the customer with e-mail: \"" + email + "\" is: " + String.format("%.2f", fullPrice) + " Belorussian rubles;";
-//    }
-//
-//    @PutMapping(value = "/orders/{id:[\\d]+}/status/next")
-//    @ResponseStatus(HttpStatus.OK)
-//    public OrderInputDTO setNextOrderStatus(@PathVariable("id") Long id) {
-//        return webClient.setNextOrderStatus(id);
-//    }
+
+    @PostMapping("/orders")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VerboseOrderDTO packNewOrder(@RequestBody NewOrderDTO newOrderDTO) {
+        return webClient.createOrder(newOrderDTO);
+    }
+
+    @GetMapping("/orders/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public VerboseOrderDTO getOrderDetails(@PathVariable("id") Long id) {
+        return webClient.findOrder(id);
+    }
+
+    @GetMapping("/orders")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SimplifiedOrderDTO> findAllOrdersByPaymentStatus(@RequestParam("isPaid") Boolean isPaid) {
+        return webClient.findAllOrdersByPaymentStatus(isPaid);
+    }
+
+    @GetMapping("/customers/{email}/orders")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SimplifiedOrderDTO> getAllOrdersByEmail(@PathVariable("email") String email) {
+        return webClient.findAllOrdersByEmail(email);
+    }
+
+    @GetMapping("/customers/{email}/orders/totalPrice")
+    @ResponseStatus(HttpStatus.OK)
+    public Double getTotalEmailSpendings(@PathVariable("email") String email) {
+        return webClient.getEmailSpendings(email);
+    }
+
+    @GetMapping("/customers/{email}/orders/count")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getEmailOrderCount(@PathVariable("email") String email) {
+        return webClient.getEmailOrderCount(email);
+    }
+
+    @PutMapping("/orders/{id}/pay")
+    @ResponseStatus(HttpStatus.OK)
+    public SimplifiedOrderDTO confirmPaymentForOrder(@PathVariable("id") Long id) {
+        return webClient.confirmPaymentForOrder(id);
+    }
+
+    @PutMapping("/orders/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public SimplifiedOrderDTO changeOrderStatus(@PathVariable("id") Long id, @RequestBody NewOrderDTO orderDTO) {
+        return webClient.changeOrderStatus(id, orderDTO.getOrderStatus());
+    }
+
+    @PostMapping("/orders/{id}/items")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SimplifiedOrderDTO addItemsToOrder(@PathVariable("id") Long orderId, @RequestParam("id") List<Long> offerIds) {
+        return webClient.addItemsToOrder(orderId, offerIds);
+    }
+
+    @DeleteMapping("/orders/{id}/items")
+    @ResponseStatus(HttpStatus.OK)
+    public SimplifiedOrderDTO removeItemsFromOrder(@PathVariable("id") Long orderId, @RequestParam("id") List<Long> itemIds) {
+        return webClient.removeItemsFromOrder(orderId, itemIds);
+    }
 }
