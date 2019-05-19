@@ -63,6 +63,8 @@ public interface OrderService {
      */
     List<OrderItem> findAllOrderItemsByCustomerAndCategory(Customer customer, Category category);
 
+    List<OrderItem> findAllOrderItemsByCustomer(Customer customer);
+
     /**
      * Refreshes tags and categories that are already persisted
      *

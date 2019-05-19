@@ -3,7 +3,6 @@ package com.netcracker.edu.varabey.controller;
 import com.netcracker.edu.varabey.controller.dto.OrderDTO;
 import com.netcracker.edu.varabey.controller.dto.OrderItemDTO;
 import com.netcracker.edu.varabey.controller.dto.transformer.Transformer;
-import com.netcracker.edu.varabey.controller.util.FilterDTO;
 import com.netcracker.edu.varabey.entity.*;
 import com.netcracker.edu.varabey.service.CategoryService;
 import com.netcracker.edu.varabey.service.CustomerService;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 import static com.netcracker.edu.varabey.controller.util.RestPreconditions.checkFound;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping
 public class OrderController {
     private final OrderService orderService;
     private final CategoryService categoryService;
@@ -36,7 +35,7 @@ public class OrderController {
         this.itemTransformer = itemTransformer;
     }
 
-    @PostMapping
+    @PostMapping("/orders")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO saveOrder(@RequestBody OrderDTO dto) {
         Order order = orderTransformer.toEntity(dto);
@@ -44,14 +43,14 @@ public class OrderController {
         return orderTransformer.toDto(order);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OrderDTO findOrder(@PathVariable("id") Long id) {
         Order order = checkFound(orderService.findById(id));
         return orderTransformer.toDto(order);
     }
 
-    @GetMapping
+    @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDTO> findAllOrders() {
         return orderService.findAll().stream()
@@ -59,28 +58,24 @@ public class OrderController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/filtered")
+    @GetMapping("/customers/{email}/orders")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderItemDTO> findItemsByCustomerAndTag(@RequestBody FilterDTO filter) {
-        if ((filter.getCustomerId() == null && filter.getEmail() == null) || (filter.getTag() == null && filter.getCategory() == null)) {
-            throw new IllegalArgumentException("bad filter. Impossible to find anything");
-        }
-
-        Customer customer = null;
-        if (filter.getEmail() != null) {
-            customer = customerService.findByEmail(filter.getEmail());
-        } else if (filter.getCustomerId() != null) {
-            customer = customerService.findCustomer(filter.getCustomerId());
-        }
-        checkFound(customer);
+    public List<OrderItemDTO> findItemsByCustomerAndTag(
+            @PathVariable(name = "email") String email,
+            @RequestParam(name = "tag", required = false) String tagName,
+            @RequestParam(name = "category", required = false) String categoryName
+            ) {
+        Customer customer = checkFound(customerService.findByEmail(email));
 
         List<OrderItem> filteredItems;
-        if (filter.getCategory() != null) {
-            Category category = checkFound(categoryService.findCategory(filter.getCategory()));
+        if (categoryName != null && !categoryName.isEmpty()) {
+            Category category = checkFound(categoryService.findCategory(categoryName));
             filteredItems = orderService.findAllOrderItemsByCustomerAndCategory(customer, category);
-        } else {
-            Tag tag = checkFound(tagService.findByName(filter.getTag()));
+        } else if (tagName != null && !tagName.isEmpty()) {
+            Tag tag = checkFound(tagService.findByName(tagName));
             filteredItems = orderService.findAllOrderItemsByCustomerAndTag(customer, tag);
+        } else {
+            filteredItems = orderService.findAllOrderItemsByCustomer(customer);
         }
 
         return filteredItems.stream()
@@ -88,7 +83,7 @@ public class OrderController {
                 .collect(Collectors.toList());
     }
 
-    @PutMapping("/{id}/addItems")
+    @PutMapping("/orders/{id}/addItems")
     @ResponseStatus(HttpStatus.OK)
     public OrderDTO addItemsToOrder(@PathVariable("id") Long id, @RequestBody List<OrderItemDTO> itemDTOs) {
         List<OrderItem> items = itemDTOs.stream().map(itemTransformer::toEntity).collect(Collectors.toList());
@@ -96,7 +91,7 @@ public class OrderController {
         return orderTransformer.toDto(order);
     }
 
-    @PutMapping("/{id}/removeItems")
+    @PutMapping("/orders/{id}/removeItems")
     @ResponseStatus(HttpStatus.OK)
     public OrderDTO removeItemsFromOrder(@PathVariable("id") Long id, @RequestBody List<OrderItemDTO> itemsDTOs) {
         List<OrderItem> items = itemsDTOs.stream().map(itemTransformer::toEntity).collect(Collectors.toList());
@@ -104,7 +99,7 @@ public class OrderController {
         return orderTransformer.toDto(order);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OrderDTO updateOrderStatusAndPaymentStatus(@PathVariable("id") Long id, @RequestBody OrderDTO dto) {
         Order order = orderTransformer.toEntity(dto);
@@ -112,7 +107,7 @@ public class OrderController {
         return orderTransformer.toDto(order);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrder(@PathVariable("id") Long id) {
         orderService.deleteOrder(id);

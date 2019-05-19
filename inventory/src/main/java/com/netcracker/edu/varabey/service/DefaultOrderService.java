@@ -120,6 +120,13 @@ public class DefaultOrderService implements OrderService {
     }
 
     @Override
+    public List<OrderItem> findAllOrderItemsByCustomer(Customer customer) {
+        customer = customerService.findByEmail(customer.getEmail());
+        customerValidator.checkFound(customer, "Customer with email\"" + customer.getEmail() + "\" was not found.");
+        return orderDAO.findAllOrderItemsByCustomer(customer);
+    }
+
+    @Override
     public List<OrderItem> getValidOrderItems(List<OrderItem> items) {
         return items.stream()
                 .peek(item -> {
