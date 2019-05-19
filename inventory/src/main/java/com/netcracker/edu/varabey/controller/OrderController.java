@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.netcracker.edu.varabey.controller.util.RestPreconditions.checkFound;
@@ -58,7 +59,7 @@ public class OrderController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/customers/{email}/orders")
+    @GetMapping("/customers/{email}/orders/items")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderItemDTO> findItemsByCustomerAndTag(
             @PathVariable(name = "email") String email,
@@ -83,7 +84,7 @@ public class OrderController {
                 .collect(Collectors.toList());
     }
 
-    @PutMapping("/orders/{id}/addItems")
+    @PostMapping("/orders/{id}/items")
     @ResponseStatus(HttpStatus.OK)
     public OrderDTO addItemsToOrder(@PathVariable("id") Long id, @RequestBody List<OrderItemDTO> itemDTOs) {
         List<OrderItem> items = itemDTOs.stream().map(itemTransformer::toEntity).collect(Collectors.toList());
@@ -91,11 +92,12 @@ public class OrderController {
         return orderTransformer.toDto(order);
     }
 
-    @PutMapping("/orders/{id}/removeItems")
+    @DeleteMapping("/orders/{id}/items")
     @ResponseStatus(HttpStatus.OK)
-    public OrderDTO removeItemsFromOrder(@PathVariable("id") Long id, @RequestBody List<OrderItemDTO> itemsDTOs) {
-        List<OrderItem> items = itemsDTOs.stream().map(itemTransformer::toEntity).collect(Collectors.toList());
-        Order order = orderService.removeItems(id, items);
+    public OrderDTO removeItemsFromOrder(
+            @PathVariable("id") Long id,
+            @RequestParam("id") Set<Long> itemIds) {
+        Order order = orderService.removeItems(id, itemIds);
         return orderTransformer.toDto(order);
     }
 
@@ -103,7 +105,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public OrderDTO updateOrderStatusAndPaymentStatus(@PathVariable("id") Long id, @RequestBody OrderDTO dto) {
         Order order = orderTransformer.toEntity(dto);
-        order = orderService.updatePaymentAndStatus(order);
+        order = orderService.updatePaymentAndStatus(id, order);
         return orderTransformer.toDto(order);
     }
 

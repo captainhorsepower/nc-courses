@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,9 +55,9 @@ public class DefaultOrderService implements OrderService {
     }
 
     @Override
-    public Order updatePaymentAndStatus(Order order) {
-        Order existingOrder = findById(order.getId());
-        orderValidator.checkFoundById(existingOrder, order.getId());
+    public Order updatePaymentAndStatus(Long id, Order order) {
+        Order existingOrder = findById(id);
+        orderValidator.checkFoundById(existingOrder, id);
 
         if (order.getStatus() != null) {
             existingOrder.setStatus(order.getStatus());
@@ -80,14 +81,15 @@ public class DefaultOrderService implements OrderService {
     }
 
     @Override
-    public Order removeItems(Long id, List<OrderItem> items) {
+    public Order removeItems(Long id, Set<Long> itemIds) {
         Order order = findById(id);
         orderValidator.checkFoundById(order, id);
 
-        items.stream()
-                .peek(orderItemValidator::checkProperties)
-                .forEach(order::removeItem);
+        List<OrderItem> trashCan = order.getItems().stream()
+                .filter(i -> itemIds.contains(i.getId()))
+                .collect(Collectors.toList());
 
+        trashCan.forEach(order::removeItem);
         return order;
     }
 
