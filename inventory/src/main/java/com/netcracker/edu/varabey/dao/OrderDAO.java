@@ -13,4 +13,5 @@ public interface OrderDAO {
 
     List<OrderItem> findAllOrderItemsByCustomerAndTag(Customer c, Tag t);
     List<OrderItem> findAllOrderItemsByCustomerAndCategory(Customer cu, Category ca);
+    List<OrderItem> findAllOrderItemsByCustomer(Customer customer);
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
@@ -86,5 +87,18 @@ public class DefaultOrderDAO implements OrderDAO {
         q.setParameter("customer_id", cu.getId());
 
         return (List<OrderItem>) q.getResultList();
+    }
+
+    @Override
+    public List<OrderItem> findAllOrderItemsByCustomer(Customer customer) {
+        TypedQuery<OrderItem> q = em.createQuery("SELECT i "
+                + " FROM OrderItem i "
+                + " WHERE i.owningOrder.customer.id = :customer_id",
+                OrderItem.class
+        );
+
+        q.setParameter("customer_id", customer.getId());
+
+        return q.getResultList();
     }
 }
