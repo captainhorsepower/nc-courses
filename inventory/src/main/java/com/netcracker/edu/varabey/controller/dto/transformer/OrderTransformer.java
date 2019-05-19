@@ -20,7 +20,11 @@ public class OrderTransformer implements Transformer<Order, OrderDTO> {
 
     @Override
     public Order toEntity(OrderDTO dto) {
-        Order order = new Order(customerTransformer.toEntity(dto.getCustomer()), dto.getCreatedOnDate());
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setEmail(dto.getEmail());
+        Customer customer = customerTransformer.toEntity(customerDTO);
+
+        Order order = new Order(customer, dto.getCreatedOnDate());
         order.setPaid(dto.isPaid());
         order.setStatus(dto.getOrderStatus());
         dto.getItems().stream()
@@ -31,10 +35,17 @@ public class OrderTransformer implements Transformer<Order, OrderDTO> {
 
     @Override
     public OrderDTO toDto(Order order) {
-        OrderDTO dto = new OrderDTO(order.getId(), customerTransformer.toDto(order.getCustomer()), order.getCreatedOnDate(), order.getStatus(), order.getIsPaid(), order.getTotalPrice(), order.getItemCount());
+        OrderDTO dto = new OrderDTO();
+        dto.setId(order.getId());
+        dto.setEmail(order.getCustomer().getEmail());
+        dto.setPaid(order.isPaid());
+        dto.setOrderStatus(order.getStatus());
+        dto.setCreatedOnDate(order.getCreatedOnDate());
         order.getItems().stream()
                 .map(itemTransformer::toDto)
                 .forEach(dto::addItem);
+        dto.setItemCount(order.getItemCount());
+        dto.setTotalPrice(order.getTotalPrice());
         return dto;
     }
 }

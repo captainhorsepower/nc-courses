@@ -128,7 +128,7 @@ public class Order {
         return new StringJoiner(", ", Order.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("createdOnDate=" + createdOnDate)
-                .add("customer=" + customer)
+                .add("email=" + customer)
                 .add("orderItemList=" + items)
                 .toString();
     }
