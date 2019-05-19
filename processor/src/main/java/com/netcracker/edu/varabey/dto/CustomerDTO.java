@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CustomerDTO {
-    private String email = "";
-    private String fio = "";
-    private int age = 0;
+    private Long id;
+    private String email;
+    private String fio;
+    private int age;
 }
