@@ -1,7 +1,7 @@
 package com.netcracker.edu.varabey.service.validation;
 
-import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCustomerException;
-import com.netcracker.edu.varabey.spring.Validator;
+import com.netcracker.edu.varabey.service.validation.exceptions.CustomerException;
+import com.netcracker.edu.varabey.util.custom.beanannotation.Validator;
 import lombok.Getter;
 
 @Getter
@@ -17,11 +17,10 @@ public class CustomerNameValidator implements NameValidator {
 
     @Override
     public void check(String name) {
-        if (name == null || name.length() < getMinNameLength()) {
-            throw new InvalidCustomerException("Name \"" + name + "\" is too short.");
-        }
-        if (name.matches(".*[" + getForbiddenSymbols() + "].*")) {
-            throw new InvalidCustomerException(name + "must not contain symbols \"" + getForbiddenSymbols() + "\"");
+        try {
+            NameValidator.super.check(name);
+        } catch (Exception e) {
+            throw new CustomerException(e);
         }
     }
 }

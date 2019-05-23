@@ -1,7 +1,6 @@
 package com.netcracker.edu.varabey.service;
 
 import com.netcracker.edu.varabey.entity.Customer;
-import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCustomerException;
 
 import java.util.List;
 

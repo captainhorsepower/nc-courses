@@ -8,7 +8,10 @@ import org.springframework.stereotype.Component;
 public class CustomerTransformer implements Transformer<Customer, CustomerDTO> {
     @Override
     public Customer toEntity(CustomerDTO dto) {
-        Customer customer = new Customer(dto.getFio(), dto.getAge(), dto.getEmail().trim().toLowerCase());
+        Customer customer = new Customer();
+        customer.setFio( (dto.getFio() == null) ? dto.getFio() : dto.getFio().trim());
+        customer.setAge(dto.getAge());
+        customer.setEmail( (dto.getEmail() == null) ? dto.getEmail() : dto.getEmail().trim().toLowerCase());
         customer.setId(dto.getId());
         return customer;
     }

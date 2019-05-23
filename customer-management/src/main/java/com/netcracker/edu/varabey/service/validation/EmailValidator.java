@@ -1,15 +1,15 @@
 package com.netcracker.edu.varabey.service.validation;
 
+import com.netcracker.edu.varabey.service.validation.exceptions.InvalidEmailException;
+
 import java.util.regex.Pattern;
 
 public interface EmailValidator {
+    Pattern getEmailPattern();
     default void check(String email) {
-        if (!Pattern
-                .compile("[a-z]([._\\-]?[a-z]+)*[@][a-z][a-z]*[.]((org)|(net)|(ru)|(com)|(by))", Pattern.UNICODE_CASE)
-                .matcher(email)
-                .matches()
-    ) {
-            throw new IllegalArgumentException("Email + " + email + " is invalid");
+        final boolean matchesEmail = !getEmailPattern().matcher(email).matches();
+        if (matchesEmail) {
+            throw new InvalidEmailException("Email + " + email + " is invalid");
         }
     }
 }

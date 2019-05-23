@@ -2,11 +2,10 @@ package com.netcracker.edu.varabey.service;
 
 import com.netcracker.edu.varabey.dao.CustomerDAO;
 import com.netcracker.edu.varabey.entity.Customer;
-import com.netcracker.edu.varabey.service.validation.AgeValidator;
-import com.netcracker.edu.varabey.service.validation.EmailValidator;
-import com.netcracker.edu.varabey.service.validation.NameValidator;
-import com.netcracker.edu.varabey.service.validation.ServiceValidator;
-import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCustomerException;
+import com.netcracker.edu.varabey.service.validation.CustomerValidator;
+import com.netcracker.edu.varabey.service.validation.exceptions.CustomerException;
+import com.netcracker.edu.varabey.util.custom.beanannotation.Logged;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,30 +20,25 @@ import java.util.List;
 @Transactional
 public class DefaultCustomerService implements CustomerService {
     private final CustomerDAO customerDAO;
-    private final ServiceValidator<Customer, Long> customerValidator;
-    private final EmailValidator customerEmailValidator;
-    private final NameValidator customerNameValidator;
-    private final AgeValidator customerAgeValidator;
+    private final CustomerValidator customerValidator;
 
-    public DefaultCustomerService(CustomerDAO customerDAO, ServiceValidator<Customer, Long> customerValidator, EmailValidator customerEmailValidator, NameValidator customerNameValidator, AgeValidator customerAgeValidator) {
+    public DefaultCustomerService(CustomerDAO customerDAO, CustomerValidator customerValidator) {
         this.customerDAO = customerDAO;
         this.customerValidator = customerValidator;
-        this.customerEmailValidator = customerEmailValidator;
-        this.customerNameValidator = customerNameValidator;
-        this.customerAgeValidator = customerAgeValidator;
     }
 
+    @Logged(messageBefore = "Saving customer to the database...",
+            messageAfter = "Customer saved.")
     @Override
     public Customer save(Customer c) {
         customerValidator.checkForPersist(c);
-        Customer customerWithSameEmail = customerDAO.findByEmail(c.getEmail());
-        if (customerWithSameEmail != null) {
-            throw new InvalidCustomerException("Email " + customerWithSameEmail.getEmail() + " is already in use.");
-        }
+        customerValidator.checkNotFoundByEmail(customerDAO.findByEmail(c.getEmail()), c.getEmail());
         return customerDAO.save(c);
     }
 
 
+    @Logged(messageBefore = "Looking for customer by id in the database...",
+            messageAfter = "Found customer")
     @Override
     public Customer find(Long id) {
         customerValidator.checkIdIsNotNull(id);
@@ -52,12 +46,16 @@ public class DefaultCustomerService implements CustomerService {
                 .orElse(null);
     }
 
+    @Logged(messageBefore = "Looking for customer by email in the database...",
+            messageAfter = "Found customer")
     @Override
     public Customer findByEmail(String email) {
-        customerEmailValidator.check(email);
+        customerValidator.checkEmail(email);
         return customerDAO.findByEmail(email);
     }
 
+    @Logged(messageBefore = "Getting all customers from the database...",
+            messageAfter = "Customers acquired.")
     @Override
     public List<Customer> findAll() {
         List<Customer> list = new ArrayList<>();
@@ -68,36 +66,34 @@ public class DefaultCustomerService implements CustomerService {
     }
 
 
+    @Logged(messageBefore = "Updating customer in the the database...",
+            messageAfter = "Customer updated.")
     @Override
     public Customer update(Customer c) {
         customerValidator.checkNotNull(c);
         customerValidator.checkIdIsNotNull(c.getId());
-        Customer existingCustomer = find(c.getId());
-        customerValidator.checkFoundById(existingCustomer, c.getId());
+        Customer existingCustomer = customerValidator.checkFoundById(find(c.getId()), c.getId());
 
         if (c.getFio() != null) {
-            customerNameValidator.check(c.getFio());
+            customerValidator.checkName(c.getFio());
             existingCustomer.setFio(c.getFio());
         }
         if (c.getAge() != null) {
-            customerAgeValidator.check(c.getAge());
+            customerValidator.checkAge(c.getAge());
             existingCustomer.setAge(c.getAge());
         }
-//        if (c.getEmail() != null) {
-//            Customer customerWithSameEmail = findByEmail(c.getEmail());
-//            if (customerWithSameEmail != null) {
-//                throw new InvalidCustomerException("Email " + customerWithSameEmail.getEmail() + " is already in use.");
-//            }
-//            existingCustomer.setEmail(c.getEmail());
-//        }
-
         return existingCustomer;
     }
 
-
+    @Logged(messageBefore = "Deleting customer from the database...",
+            messageAfter = "Customer deleted.")
     @Override
     public void delete(Long id) {
         customerValidator.checkIdIsNotNull(id);
-        customerDAO.deleteById(id);
+        try {
+            customerDAO.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CustomerException("Customer with id=" + id + " was not found. Unable to delete.");
+        }
     }
 }
