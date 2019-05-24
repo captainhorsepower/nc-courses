@@ -5,15 +5,14 @@ import com.netcracker.edu.varabey.controller.dto.domainspecific.InventoryOrderDT
 import com.netcracker.edu.varabey.controller.dto.domainspecific.NewOrderDTO;
 import com.netcracker.edu.varabey.controller.dto.domainspecific.SimplifiedOrderDTO;
 import com.netcracker.edu.varabey.controller.dto.domainspecific.VerboseOrderDTO;
-import com.netcracker.edu.varabey.controller.dto.transformer.OfferDTOOrderItemDTOTransformer;
 import com.netcracker.edu.varabey.controller.dto.transformer.Transformer;
+import com.netcracker.edu.varabey.util.custom.beanannotation.Logged;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -31,8 +30,13 @@ public class WebClient {
     private final Transformer<InventoryOrderDTO, VerboseOrderDTO> verboseOrderTransformer;
     private final Transformer<InventoryOrderDTO, SimplifiedOrderDTO> simpleOrderTransformer;
 
-    public WebClient(@Value("${inventory.url}") String inventoryUrl, @Value("${catalog.url}") String catalogUrl,
-                     @Value("${customer-management.url}") String customerManagementUrl, RestTemplate restTemplate, ResponseErrorHandler restTemplateResponseErrorHandler, OfferDTOOrderItemDTOTransformer offerToOrderItemTransformer, Transformer<InventoryOrderDTO, VerboseOrderDTO> verboseOrderTransformer, Transformer<InventoryOrderDTO, SimplifiedOrderDTO> simpleOrderTransformer) {
+    public WebClient(@Value("${inventory.url}") String inventoryUrl,
+                     @Value("${catalog.url}") String catalogUrl,
+                     @Value("${customer-management.url}") String customerManagementUrl,
+                     RestTemplate restTemplate,
+                     Transformer<OfferDTO, OrderItemDTO> offerToOrderItemTransformer,
+                     Transformer<InventoryOrderDTO, VerboseOrderDTO> verboseOrderTransformer,
+                     Transformer<InventoryOrderDTO, SimplifiedOrderDTO> simpleOrderTransformer) {
         this.inventoryUrl = inventoryUrl;
         this.catalogUrl = catalogUrl;
         this.customerManagementUrl = customerManagementUrl;
@@ -40,7 +44,6 @@ public class WebClient {
         this.offerToOrderItemTransformer = offerToOrderItemTransformer;
         this.verboseOrderTransformer = verboseOrderTransformer;
         this.simpleOrderTransformer = simpleOrderTransformer;
-        this.restTemplate.setErrorHandler(restTemplateResponseErrorHandler);
     }
 
     public OfferDTO createOffer(OfferDTO offerDTO) {
@@ -271,7 +274,8 @@ public class WebClient {
     }
 
 
-
+    @Logged(messageBefore = "Rerouting requst to customer-management server...",
+            messageAfter = "Recieved response from customer-management server.")
     public CustomerDTO signUpUsingEmail(CustomerDTO customer) {
         ResponseEntity<CustomerDTO> response = restTemplate.exchange(
                 UriComponentsBuilder

@@ -6,7 +6,7 @@ import com.netcracker.edu.varabey.controller.dto.domainspecific.VerboseOrderDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InventoryToProcessorOrderTransformer implements Transformer<InventoryOrderDTO, VerboseOrderDTO> {
+public class DefaultInventoryToVerboseOrderTransformer implements Transformer<InventoryOrderDTO, VerboseOrderDTO> {
     @Override
     public VerboseOrderDTO convert(InventoryOrderDTO input) {
         VerboseOrderDTO orderDTO = new VerboseOrderDTO();

@@ -5,7 +5,7 @@ import com.netcracker.edu.varabey.controller.dto.OrderItemDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OfferDTOOrderItemDTOTransformer implements Transformer<OfferDTO, OrderItemDTO> {
+public class DefaultOfferOrderItemTransformer implements Transformer<OfferDTO, OrderItemDTO> {
     public OrderItemDTO convert(OfferDTO offerDTO) {
         OrderItemDTO orderItemDTO = new OrderItemDTO();
 
