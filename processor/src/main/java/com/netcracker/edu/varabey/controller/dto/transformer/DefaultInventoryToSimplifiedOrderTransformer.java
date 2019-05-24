@@ -5,7 +5,7 @@ import com.netcracker.edu.varabey.controller.dto.domainspecific.SimplifiedOrderD
 import org.springframework.stereotype.Component;
 
 @Component
-public class InventoryToSimplifiedOrderTransformer implements Transformer<InventoryOrderDTO, SimplifiedOrderDTO> {
+public class DefaultInventoryToSimplifiedOrderTransformer implements Transformer<InventoryOrderDTO, SimplifiedOrderDTO> {
     @Override
     public SimplifiedOrderDTO convert(InventoryOrderDTO input) {
         SimplifiedOrderDTO orderDTO = new SimplifiedOrderDTO();

@@ -8,6 +8,7 @@ import com.netcracker.edu.varabey.controller.dto.TagDTO;
 import com.netcracker.edu.varabey.controller.dto.domainspecific.NewOrderDTO;
 import com.netcracker.edu.varabey.controller.dto.domainspecific.SimplifiedOrderDTO;
 import com.netcracker.edu.varabey.controller.dto.domainspecific.VerboseOrderDTO;
+import com.netcracker.edu.varabey.util.custom.beanannotation.Logged;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -136,31 +137,45 @@ public class ProcessorController {
 
 
 
-
+    @Logged(messageBefore = "Request to create new customer...",
+            messageAfter = "Customer created successfully!",
+            startFromNewLine = true)
     @PostMapping("/customers")
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO signUp(@RequestBody CustomerDTO customerDTO) {
         return webClient.signUpUsingEmail(customerDTO);
     }
 
+    @Logged(messageBefore = "Request to find customer by unique identifier...",
+            messageAfter = "Customer found!",
+            startFromNewLine = true)
     @GetMapping("/customers/{emailOrId}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerDTO findCustomer(@PathVariable("emailOrId") String emailOrId) {
         return webClient.findCustomer(emailOrId);
     }
 
+    @Logged(messageBefore = "Request to get all customers...",
+            messageAfter = "Successfully retrieved all customers!",
+            startFromNewLine = true)
     @GetMapping("/customers")
     @ResponseStatus(HttpStatus.OK)
     public List<CustomerDTO> getAllCustomers() {
         return webClient.findAllCustomers();
     }
 
+    @Logged(messageBefore = "Request to edit customer...",
+            messageAfter = "Customer edited and saved.",
+            startFromNewLine = true)
     @PutMapping("/customers/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerDTO editCustomerNameAndAge(@PathVariable("id") Long id, @RequestBody CustomerDTO customerDTO) {
         return webClient.editCustomer(id, customerDTO);
     }
 
+    @Logged(messageBefore = "Request to delete customer...",
+            messageAfter = "Customer deleted.",
+            startFromNewLine = true)
     @DeleteMapping("/customers/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCustomer(@PathVariable("id") Long id) {
