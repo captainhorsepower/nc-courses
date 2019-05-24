@@ -2,9 +2,9 @@ package com.netcracker.edu.varabey.service;
 
 import com.netcracker.edu.varabey.dao.CategoryDAO;
 import com.netcracker.edu.varabey.entity.Category;
-import com.netcracker.edu.varabey.service.validation.NameValidator;
-import com.netcracker.edu.varabey.service.validation.ServiceValidator;
-import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCategoryException;
+import com.netcracker.edu.varabey.service.validation.CategoryValidator;
+import com.netcracker.edu.varabey.service.validation.exceptions.CategoryException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,13 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class DefaultCategoryService implements CategoryService {
 
     private final CategoryDAO categoryDAO;
-    private final ServiceValidator<Category, Long> categoryValidator;
-    private final NameValidator categoryNameValidator;
+    private final CategoryValidator categoryValidator;
 
-    public DefaultCategoryService(CategoryDAO categoryDAO, ServiceValidator<Category, Long> categoryValidator, NameValidator categoryNameValidator) {
+    public DefaultCategoryService(CategoryDAO categoryDAO, CategoryValidator categoryValidator) {
         this.categoryDAO = categoryDAO;
         this.categoryValidator = categoryValidator;
-        this.categoryNameValidator = categoryNameValidator;
     }
 
     @Override
@@ -41,7 +39,7 @@ public class DefaultCategoryService implements CategoryService {
 
     @Override
     public Category findByName(String name) {
-        categoryNameValidator.check(name);
+        categoryValidator.checkName(name);
         return categoryDAO.findByName(name);
     }
 
@@ -63,19 +61,24 @@ public class DefaultCategoryService implements CategoryService {
     }
 
     @Override
-    public Category updateName(Category category) throws InvalidCategoryException {
-        categoryValidator.checkForUpdate(category);
+    public Category updateName(Category category) {
+        categoryValidator.checkAllProperties(category);
+        categoryValidator.checkIdIsNotNull(category.getId());
 
-        Category sourceCategory = categoryDAO.findById(category.getId()).orElse(null);
-        categoryValidator.checkFoundById(sourceCategory, category.getId());
+        Category sourceCategory = categoryValidator.checkFoundById(categoryDAO.findById(category.getId()).orElse(null), category.getId());
 
         sourceCategory.setName(category.getName());
+
         return sourceCategory;
     }
 
     @Override
     public void delete(Long id) {
         categoryValidator.checkIdIsNotNull(id);
-        categoryDAO.deleteById(id);
+        try {
+            categoryDAO.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CategoryException("Category with id=" + id + " was not found. Unable to delete.");
+        }
     }
 }

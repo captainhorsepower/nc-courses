@@ -1,4 +1,4 @@
-package com.netcracker.edu.varabey.spring;
+package com.netcracker.edu.varabey.util.custom.beanannotation;
 /*
  * Copyright 2002-2017 the original author or authors.
  *

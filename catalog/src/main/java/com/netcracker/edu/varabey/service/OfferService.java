@@ -3,7 +3,6 @@ package com.netcracker.edu.varabey.service;
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 import com.netcracker.edu.varabey.entity.Tag;
-import com.netcracker.edu.varabey.service.validation.exceptions.InvalidOfferException;
 
 import java.util.List;
 
@@ -13,7 +12,6 @@ public interface OfferService {
      * Saves an offer.
      * @param offer - must be transient and not null
      * @return saved offer
-     * @throws InvalidOfferException if offer is null || is detached || has invalid properties
      */
     Offer create(Offer offer);
 
@@ -28,23 +26,6 @@ public interface OfferService {
      * @return list with all existing offers
      */
     List<Offer> findAll();
-
-    /**
-     * Merge the state of the given offer into the catalog database.
-     * Allows you to update:
-     *  -price (value only)
-     *  -remove tags
-     *  -add tags (you can findById new tags,
-     *          but then it's id should be null when you pass it to this method)
-     *  -change category (you can findById new one, -||-)
-     *
-     * You should NOT change names of existing tags nor categories.
-     *
-     * @param offer  offer instance with updated fields
-     * @return updated offer
-     * @throws InvalidOfferException if offer is null or has any invalid properties
-     */
-    Offer update(Offer offer);
 
     Offer addTags(Long id, List<String> tagNames);
 

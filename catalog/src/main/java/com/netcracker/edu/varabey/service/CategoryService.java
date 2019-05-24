@@ -1,8 +1,6 @@
 package com.netcracker.edu.varabey.service;
 
 import com.netcracker.edu.varabey.entity.Category;
-import com.netcracker.edu.varabey.service.validation.exceptions.CategoryNotFoundException;
-import com.netcracker.edu.varabey.service.validation.exceptions.InvalidCategoryException;
 
 public interface CategoryService {
 
@@ -10,7 +8,6 @@ public interface CategoryService {
      * Saves a given category.
      * @param category new Category
      * @return saved category
-     * @throws InvalidCategoryException if category is null || is detached || has invalid name
      */
     Category save(Category category);
 
@@ -41,8 +38,6 @@ public interface CategoryService {
      * Updates category's name.
      * @param category with updates
      * @return updated category
-     * @throws InvalidCategoryException if category is new or if it has invalid name
-     * @throws CategoryNotFoundException if category wasn't saved before.
      */
     Category updateName(Category category);
 

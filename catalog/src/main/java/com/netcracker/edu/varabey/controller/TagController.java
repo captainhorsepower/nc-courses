@@ -4,6 +4,7 @@ import com.netcracker.edu.varabey.controller.dto.TagDTO;
 import com.netcracker.edu.varabey.controller.dto.transformer.Transformer;
 import com.netcracker.edu.varabey.entity.Tag;
 import com.netcracker.edu.varabey.service.TagService;
+import com.netcracker.edu.varabey.service.validation.TagValidator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,24 +12,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.netcracker.edu.varabey.controller.util.RestPreconditions.checkFound;
-
 @RestController
 @RequestMapping("/tags")
 public class TagController {
     @Qualifier("tagTransformer")
     private final Transformer<Tag, TagDTO> tagTransformer;
     private final TagService tagService;
+    private final TagValidator tagValidator;
 
-    public TagController(Transformer<Tag, TagDTO> tagTransformer, TagService tagService) {
+    public TagController(Transformer<Tag, TagDTO> tagTransformer, TagService tagService, TagValidator tagValidator) {
         this.tagTransformer = tagTransformer;
         this.tagService = tagService;
+        this.tagValidator = tagValidator;
     }
 
     @GetMapping("/{input}")
     @ResponseStatus(HttpStatus.OK)
     public TagDTO findTag(@PathVariable("input") String input) {
-        Tag tag = checkFound(tagService.find(input));
+        Tag tag = tagValidator.checkFoundByName(tagService.find(input), "Tag with identifier \'" + input + "\' was not found.");
         return tagTransformer.toDto(tag);
     }
 

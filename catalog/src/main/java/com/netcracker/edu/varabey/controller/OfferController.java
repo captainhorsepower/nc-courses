@@ -9,13 +9,12 @@ import com.netcracker.edu.varabey.entity.Tag;
 import com.netcracker.edu.varabey.service.CategoryService;
 import com.netcracker.edu.varabey.service.OfferService;
 import com.netcracker.edu.varabey.service.TagService;
+import com.netcracker.edu.varabey.service.validation.OfferValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.netcracker.edu.varabey.controller.util.RestPreconditions.checkFound;
 
 @RestController
 @RequestMapping("/offers")
@@ -25,19 +24,21 @@ public class OfferController {
     private final OfferService offerService;
     private final CategoryService categoryService;
     private final TagService tagService;
+    private final OfferValidator offerValidator;
 
-    public OfferController(Transformer<Offer, OfferDTO> offerTransformer, Transformer<Category, CategoryDTO> categoryTransformer, OfferService offerService, CategoryService categoryService, TagService tagService) {
+    public OfferController(Transformer<Offer, OfferDTO> offerTransformer, Transformer<Category, CategoryDTO> categoryTransformer, OfferService offerService, CategoryService categoryService, TagService tagService, OfferValidator offerValidator) {
         this.offerTransformer = offerTransformer;
         this.categoryTransformer = categoryTransformer;
         this.offerService = offerService;
         this.categoryService = categoryService;
         this.tagService = tagService;
+        this.offerValidator = offerValidator;
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OfferDTO findOffer(@PathVariable("id") Long id) {
-        Offer offer = checkFound(offerService.findById(id));
+        Offer offer = offerValidator.checkFoundById(offerService.findById(id), id);
         return offerTransformer.toDto(offer);
     }
 
