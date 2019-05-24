@@ -2,8 +2,9 @@ package com.netcracker.edu.varabey.service;
 
 import com.netcracker.edu.varabey.dao.TagDAO;
 import com.netcracker.edu.varabey.entity.Tag;
-import com.netcracker.edu.varabey.service.validation.NameValidator;
-import com.netcracker.edu.varabey.service.validation.ServiceValidator;
+import com.netcracker.edu.varabey.service.validation.TagValidator;
+import com.netcracker.edu.varabey.service.validation.exceptions.TagException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,13 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DefaultTagService implements TagService {
     private final TagDAO tagDAO;
-    private final ServiceValidator<Tag, Long> tagValidator;
-    private final NameValidator tagNameValidator;
+    private final TagValidator tagValidator;
 
-    public DefaultTagService(TagDAO tagDAO, ServiceValidator<Tag, Long> tagValidator, NameValidator tagNameValidator) {
+    public DefaultTagService(TagDAO tagDAO, TagValidator tagValidator) {
         this.tagDAO = tagDAO;
         this.tagValidator = tagValidator;
-        this.tagNameValidator = tagNameValidator;
     }
 
     @Override
@@ -38,7 +37,7 @@ public class DefaultTagService implements TagService {
 
     @Override
     public Tag findByName(String name) {
-        tagNameValidator.check(name);
+        tagValidator.checkName(name);
         return tagDAO.findByName(name);
     }
 
@@ -61,9 +60,10 @@ public class DefaultTagService implements TagService {
 
     @Override
     public Tag updateName(Tag tagWithUpdate) {
-        tagValidator.checkForUpdate(tagWithUpdate);
-        Tag sourceTag = tagDAO.findById(tagWithUpdate.getId());
-        tagValidator.checkFoundById(sourceTag, tagWithUpdate.getId());
+        tagValidator.checkAllProperties(tagWithUpdate);
+        tagValidator.checkIdIsNotNull(tagWithUpdate.getId());
+
+        Tag sourceTag = tagValidator.checkFoundById(tagDAO.findById(tagWithUpdate.getId()), tagWithUpdate.getId());
 
         sourceTag.setName(tagWithUpdate.getName());
         return sourceTag;
@@ -72,6 +72,10 @@ public class DefaultTagService implements TagService {
     @Override
     public void deleteTag(Long id) {
         tagValidator.checkIdIsNotNull(id);
-        tagDAO.delete(id);
+        try {
+            tagDAO.delete(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new TagException("Tag with id=" + id + " was not found. Unable to delete.");
+        }
     }
 }

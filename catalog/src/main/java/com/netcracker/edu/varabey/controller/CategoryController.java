@@ -4,29 +4,30 @@ import com.netcracker.edu.varabey.controller.dto.CategoryDTO;
 import com.netcracker.edu.varabey.controller.dto.transformer.Transformer;
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.service.CategoryService;
+import com.netcracker.edu.varabey.service.validation.CategoryValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.netcracker.edu.varabey.controller.util.RestPreconditions.checkFound;
-
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
     private final Transformer<Category, CategoryDTO> categoryTransformer;
     private final CategoryService categoryService;
+    private final CategoryValidator categoryValidator;
 
-    public CategoryController(CategoryService categoryService, Transformer<Category, CategoryDTO> categoryTransformer) {
+    public CategoryController(CategoryService categoryService, Transformer<Category, CategoryDTO> categoryTransformer, CategoryValidator categoryValidator) {
         this.categoryService = categoryService;
         this.categoryTransformer = categoryTransformer;
+        this.categoryValidator = categoryValidator;
     }
 
     @GetMapping("/{input}")
     @ResponseStatus(HttpStatus.OK)
     public CategoryDTO findCategory(@PathVariable("input") String input) {
-        Category category = checkFound(categoryService.find(input));
+        Category category = categoryValidator.checkFound(categoryService.find(input), "Category with identifier " + input + " was not found.");
         return categoryTransformer.toDto(category);
     }
 

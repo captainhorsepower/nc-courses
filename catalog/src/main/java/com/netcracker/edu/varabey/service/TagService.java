@@ -1,16 +1,13 @@
 package com.netcracker.edu.varabey.service;
 
 import com.netcracker.edu.varabey.entity.Tag;
-import com.netcracker.edu.varabey.service.validation.exceptions.InvalidTagException;
-import com.netcracker.edu.varabey.service.validation.exceptions.TagNotFoundException;
 
 public interface TagService {
 
     /**
      * Saves a given tags
      * @param tag - new entity
-     * @return saved entity\
-     * @throws InvalidTagException if tags is null || invalid || detached
+     * @return saved entity
      */
     Tag create(Tag tag);
 
@@ -42,8 +39,6 @@ public interface TagService {
      * Allows to update tags's name
      * @param tag with updated name
      * @return updated tags
-     * @throws InvalidTagException if tags has invalid properties or is null || new
-     * @throws TagNotFoundException if tags was never saved before
      */
     Tag updateName(Tag tag);
 

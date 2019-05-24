@@ -4,10 +4,12 @@ import com.netcracker.edu.varabey.dao.OfferDAO;
 import com.netcracker.edu.varabey.entity.Category;
 import com.netcracker.edu.varabey.entity.Offer;
 import com.netcracker.edu.varabey.entity.Tag;
-import com.netcracker.edu.varabey.service.validation.NameValidator;
-import com.netcracker.edu.varabey.service.validation.PriceRangeValidator;
-import com.netcracker.edu.varabey.service.validation.PriceValidator;
-import com.netcracker.edu.varabey.service.validation.ServiceValidator;
+import com.netcracker.edu.varabey.service.validation.CategoryValidator;
+import com.netcracker.edu.varabey.service.validation.OfferValidator;
+import com.netcracker.edu.varabey.service.validation.TagValidator;
+import com.netcracker.edu.varabey.service.validation.exceptions.OfferException;
+import com.netcracker.edu.varabey.service.validation.util.PriceRangeValidator;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,20 +22,16 @@ public class DefaultOfferService implements OfferService {
     private final OfferDAO offerDAO;
     private final TagService tagService;
     private final CategoryService categoryService;
-    private final ServiceValidator<Offer, Long> offerValidator;
-    private final NameValidator offerNameValidator;
-    private final PriceValidator offerPriceValidator;
-    private final ServiceValidator<Category, Long> categoryValidator;
-    private final ServiceValidator<Tag, Long> tagValidator;
+    private final OfferValidator offerValidator;
+    private final CategoryValidator categoryValidator;
+    private final TagValidator tagValidator;
     private final PriceRangeValidator priceRangeValidator;
 
-    public DefaultOfferService(OfferDAO offerDAO, TagService tagService, CategoryService categoryService, ServiceValidator<Offer, Long> offerValidator, NameValidator offerNameValidator, PriceValidator offerPriceValidator, ServiceValidator<Category, Long> categoryValidator, ServiceValidator<Tag, Long> tagValidator, PriceRangeValidator priceRangeValidator) {
+    public DefaultOfferService(OfferDAO offerDAO, TagService tagService, CategoryService categoryService, OfferValidator offerValidator, CategoryValidator categoryValidator, TagValidator tagValidator, PriceRangeValidator priceRangeValidator) {
         this.offerDAO = offerDAO;
         this.tagService = tagService;
         this.categoryService = categoryService;
         this.offerValidator = offerValidator;
-        this.offerNameValidator = offerNameValidator;
-        this.offerPriceValidator = offerPriceValidator;
         this.categoryValidator = categoryValidator;
         this.tagValidator = tagValidator;
         this.priceRangeValidator = priceRangeValidator;
@@ -62,23 +60,8 @@ public class DefaultOfferService implements OfferService {
     }
 
     @Override
-    public Offer update(Offer offer) {
-        offerValidator.checkForUpdate(offer);
-        Offer source = findById(offer.getId());
-        offerValidator.checkNotNull(offer);
-        offer.setCategory( categoryService.getByName(offer.getCategory().getName()) );
-        offer.setTags( offer.getTags().stream()
-                .map(Tag::getName)
-                .map(tagService::getByName)
-                .collect(Collectors.toSet())
-        );
-        return source;
-    }
-
-    @Override
     public Offer addTags(Long id, List<String> tagNames) {
-        Offer offer = findById(id);
-        offerValidator.checkFoundById(offer, id);
+        Offer offer = offerValidator.checkFoundById(findById(id), id);
         tagNames.stream()
                 .map(tagService::getByName)
                 .forEach(offer::addTag);
@@ -87,8 +70,7 @@ public class DefaultOfferService implements OfferService {
 
     @Override
     public Offer removeTags(Long id, List<String> tagNames) {
-        Offer offer = findById(id);
-        offerValidator.checkFoundById(offer, id);
+        Offer offer = offerValidator.checkFoundById(findById(id), id);
         tagNames.stream()
                 .map(Tag::new)
                 .forEach(offer::removeTag);
@@ -97,9 +79,7 @@ public class DefaultOfferService implements OfferService {
 
     @Override
     public Offer changeCategory(Long id, Category category) {
-        Offer offer = findById(id);
-        offerValidator.checkFoundById(offer, id);
-        categoryValidator.checkNotNull(category);
+        Offer offer = offerValidator.checkFoundById(findById(id), id);
         offer.setCategory(categoryService.save(category));
         return offer;
     }
@@ -107,15 +87,14 @@ public class DefaultOfferService implements OfferService {
     @Override
     public Offer updateNameAndPrice(Offer updateBearer) {
         offerValidator.checkNotNull(updateBearer);
-        Offer existingOffer = findById(updateBearer.getId());
-        offerValidator.checkFoundById(existingOffer, updateBearer.getId());
+        Offer existingOffer = offerValidator.checkFoundById(findById(updateBearer.getId()), updateBearer.getId());
 
         if (updateBearer.getName() != null) {
-            offerNameValidator.check(updateBearer.getName());
+            offerValidator.checkName(updateBearer.getName());
             existingOffer.setName(updateBearer.getName());
         }
         if (updateBearer.getPrice() != null) {
-            offerPriceValidator.check(updateBearer.getPrice());
+            offerValidator.checkPrice(updateBearer.getPrice());
             existingOffer.setPrice(updateBearer.getPrice());
         }
 
@@ -125,18 +104,22 @@ public class DefaultOfferService implements OfferService {
     @Override
     public void delete(Long id) {
         offerValidator.checkIdIsNotNull(id);
-        offerDAO.deleteById(id);
+        try {
+            offerDAO.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new OfferException("Offer with id=" + id + " was not found. Unable to delete.");
+        }
     }
 
     @Override
     public List<Offer> findAllOffersByCategory(Category category) {
-        categoryValidator.checkProperties(category);
+        categoryValidator.checkAllProperties(category);
         return offerDAO.findAllByCategory(category);
     }
 
     @Override
     public List<Offer> findAllOffersWithTags(List<Tag> tags) {
-        tags.forEach(tagValidator::checkProperties);
+        tags.forEach(tagValidator::checkAllProperties);
         return offerDAO.findAllWithTags(tags);
     }
 
