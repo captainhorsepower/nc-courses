@@ -1,16 +1,16 @@
 //package com.netcracker.edu.varabey;
 //
-//import com.netcracker.edu.varabey.entity.Category;
-//import com.netcracker.edu.varabey.entity.Customer;
-//import com.netcracker.edu.varabey.entity.Tag;
-//import com.netcracker.edu.varabey.service.OrderService;
+//import com.netcracker.edu.varabey.inventory.data.entity.Category;
+//import com.netcracker.edu.varabey.inventory.data.entity.Customer;
+//import com.netcracker.edu.varabey.inventory.data.entity.Tag;
+//import com.netcracker.edu.varabey.inventory.data.service.OrderService;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.ComponentScan;
 //import org.springframework.context.annotation.Configuration;
 //
 //@Configuration
-//@ComponentScan(basePackages = {"com.netcracker.edu.varabey.dao"})
+//@ComponentScan(basePackages = {"com.netcracker.edu.varabey.inventory.data.dao"})
 //public class TestConfig {
 //    @Autowired
 //    private OrderService service;
