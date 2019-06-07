@@ -10,9 +10,16 @@ import com.netcracker.edu.varabey.service.CategoryService;
 import com.netcracker.edu.varabey.service.OfferService;
 import com.netcracker.edu.varabey.service.TagService;
 import com.netcracker.edu.varabey.service.validation.OfferValidator;
+import com.netcracker.edu.varabey.service.validation.exceptions.OfferException;
+import com.netcracker.edu.varabey.util.custom.beanannotation.Logged;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +33,8 @@ public class OfferController {
     private final TagService tagService;
     private final OfferValidator offerValidator;
 
+    protected Logger logger = LoggerFactory.getLogger(OfferController.class);
+
     public OfferController(Transformer<Offer, OfferDTO> offerTransformer, Transformer<Category, CategoryDTO> categoryTransformer, OfferService offerService, CategoryService categoryService, TagService tagService, OfferValidator offerValidator) {
         this.offerTransformer = offerTransformer;
         this.categoryTransformer = categoryTransformer;
@@ -35,21 +44,31 @@ public class OfferController {
         this.offerValidator = offerValidator;
     }
 
+    protected String decode(String value) {
+        try {
+            return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            logger.error("decoding problem: ", e);
+            throw new OfferException(e);
+        }
+    }
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to find Offer by id...", messageAfter = "Offer retrieved.", startFromNewLine = true)
     public OfferDTO findOffer(@PathVariable("id") Long id) {
         Offer offer = offerValidator.checkFoundById(offerService.findById(id), id);
         return offerTransformer.toDto(offer);
     }
 
-    private List<OfferDTO> findAllOffers() {
+    protected List<OfferDTO> findAllOffers() {
         return offerService.findAll().stream()
                 .map(offerTransformer::toDto)
                 .collect(Collectors.toList());
     }
 
-    private List<OfferDTO> findAllOffersByCategory(String category) {
-        category = category.replaceAll("%20", " ");
+    protected List<OfferDTO> findAllOffersByCategory(String category) {
+        category = decode(category);
         return offerService.findAllOffersByCategory(
                 categoryService.getByName(category)
         ).stream()
@@ -57,7 +76,7 @@ public class OfferController {
                 .collect(Collectors.toList());
     }
 
-    private List<OfferDTO> findAllOffersByTags(List<String> tagNames) {
+    protected List<OfferDTO> findAllOffersByTags(List<String> tagNames) {
         List<Tag> tags = tagNames.stream()
                 .map(tagService::getByName)
                 .collect(Collectors.toList());
@@ -66,7 +85,7 @@ public class OfferController {
                 .collect(Collectors.toList());
     }
 
-    private List<OfferDTO> findAllByPriceRange(Double minPrice, Double maxPrice) {
+    protected List<OfferDTO> findAllByPriceRange(Double minPrice, Double maxPrice) {
         return offerService.findAllWithPriceInRange(minPrice, maxPrice).stream()
                 .map(offerTransformer::toDto)
                 .collect(Collectors.toList());
@@ -74,12 +93,15 @@ public class OfferController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to retrieve multiple offers...", messageAfter = "Offers retrieved.", startFromNewLine = true)
     public List<OfferDTO> findOffers(
             @RequestParam(name = "category", required = false) String category,
             @RequestParam(name = "tags", required = false) List<String> tags,
             @RequestParam(name = "minPrice", required = false) Double minPrice,
             @RequestParam(name = "maxPrice", required = false) Double maxPrice
             ) {
+        logger.info("Filter: category={}, tags={}, priceRange=[{}, {}]", category, tags, minPrice, maxPrice);
+
         if (category != null && !category.isEmpty()) {
             return findAllOffersByCategory(category);
         } else if (tags != null && !tags.isEmpty()) {
@@ -93,6 +115,7 @@ public class OfferController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Logged(messageBefore = "Received request to create new Offer...", messageAfter = "Offer created.", startFromNewLine = true)
     public OfferDTO saveOffer(@RequestBody OfferDTO dto) {
         Offer offer = offerTransformer.toEntity(dto);
         offer = offerService.create(offer);
