@@ -21,16 +21,12 @@ public class InventoryOrderDTO {
     private Integer itemCount;
     private List<OrderItemDTO> items = new ArrayList<>();
 
-    public void addItem(OrderItemDTO item) {
-        items.add(item);
+    @JsonIgnore
+    public Boolean isPaid() {
+        return this.isPaid;
     }
 
     public void setPaid(Boolean isPaid) {
         this.isPaid = isPaid;
-    }
-
-    @JsonIgnore
-    public Boolean isPaid() {
-        return this.isPaid;
     }
 }
