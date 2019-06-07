@@ -1,7 +1,7 @@
 //package com.netcracker.edu.varabey.dao;
 //
-//import com.netcracker.edu.varabey.entity.Customer;
-//import com.netcracker.edu.varabey.service.CustomerService;
+//import Customer;
+//import CustomerService;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
