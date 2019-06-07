@@ -78,6 +78,7 @@ public class OfferController {
 
     protected List<OfferDTO> findAllOffersByTags(List<String> tagNames) {
         List<Tag> tags = tagNames.stream()
+                .map(this::decode)
                 .map(tagService::getByName)
                 .collect(Collectors.toList());
         return offerService.findAllOffersWithTags(tags).stream()
@@ -115,7 +116,7 @@ public class OfferController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Logged(messageBefore = "Received request to create new Offer...", messageAfter = "Offer created.", startFromNewLine = true)
+    @Logged(messageBefore = "Received request to create a new Offer...", messageAfter = "Offer created.", startFromNewLine = true)
     public OfferDTO saveOffer(@RequestBody OfferDTO dto) {
         Offer offer = offerTransformer.toEntity(dto);
         offer = offerService.create(offer);
