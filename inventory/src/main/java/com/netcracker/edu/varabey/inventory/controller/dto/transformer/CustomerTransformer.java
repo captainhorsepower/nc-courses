@@ -10,7 +10,7 @@ public class CustomerTransformer implements Transformer<Customer, CustomerDTO> {
     public Customer toEntity(CustomerDTO dto) {
         Customer customer = new Customer();
         customer.setId(dto.getId());
-        customer.setEmail(dto.getEmail());
+        customer.setEmail( (dto.getEmail() == null) ? "" : dto.getEmail().trim().toLowerCase() );
         return customer;
     }
 

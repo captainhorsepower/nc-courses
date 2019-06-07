@@ -14,8 +14,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class InventoryWebRequestExceptionHandler extends ResponseEntityExceptionHandler {
-    private final Logger logger = LoggerFactory.getLogger(InventoryWebRequestExceptionHandler.class);
+public class InventoryControllerExceptionHandler extends ResponseEntityExceptionHandler {
+    private final Logger logger = LoggerFactory.getLogger(InventoryControllerExceptionHandler.class);
 
     public String buildLogMessage(Throwable ex) {
         final StringBuilder messageBuilder = new StringBuilder();

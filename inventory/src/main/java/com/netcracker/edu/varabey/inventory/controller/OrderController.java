@@ -8,6 +8,7 @@ import com.netcracker.edu.varabey.inventory.data.service.CategoryService;
 import com.netcracker.edu.varabey.inventory.data.service.CustomerService;
 import com.netcracker.edu.varabey.inventory.data.service.OrderService;
 import com.netcracker.edu.varabey.inventory.data.service.TagService;
+import com.netcracker.edu.varabey.inventory.util.aop.beanannotation.Logged;
 import com.netcracker.edu.varabey.inventory.validation.CategoryValidator;
 import com.netcracker.edu.varabey.inventory.validation.CustomerValidator;
 import com.netcracker.edu.varabey.inventory.validation.OrderValidator;
@@ -48,6 +49,7 @@ public class OrderController {
 
     @PostMapping("/orders")
     @ResponseStatus(HttpStatus.CREATED)
+    @Logged(messageBefore = "Received request to create new Order...", messageAfter = "Order posted.", startFromNewLine = true)
     public OrderDTO saveOrder(@RequestBody OrderDTO dto) {
         Order order = orderTransformer.toEntity(dto);
         order = orderService.save(order);
@@ -56,6 +58,7 @@ public class OrderController {
 
     @GetMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to retrieve order by id...", messageAfter = "Order retrieved.", startFromNewLine = true)
     public OrderDTO findOrder(@PathVariable("id") Long id) {
         Order order = orderValidator.checkFoundById(orderService.findById(id), id);
         return orderTransformer.toDto(order);
