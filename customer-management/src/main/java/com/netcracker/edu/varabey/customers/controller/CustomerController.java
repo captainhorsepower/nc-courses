@@ -59,7 +59,7 @@ public class CustomerController {
     }
 
     protected CustomerDTO findCustomerByEmail(String email) {
-        Customer customer = customerValidator.checkFoundByEmail(customerService.findByEmail(email), email);
+        Customer customer = customerValidator.checkFoundByEmail(customerService.findByEmail(email.toLowerCase()), email);
         return customerTransformer.toDto(customer);
     }
 
