@@ -6,7 +6,8 @@ import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.NewOrd
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.SimplifiedOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.VerboseOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.transformer.Transformer;
-import com.netcracker.edu.varabey.processor.custom.beanannotation.Logged;
+import com.netcracker.edu.varabey.processor.exception.controller.ControllerException;
+import com.netcracker.edu.varabey.processor.springutils.beanannotation.Logged;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -157,6 +157,10 @@ public class WebClient {
                         .toUriString()
         );
     }
+
+
+
+
 
     @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved")
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
@@ -347,14 +351,20 @@ public class WebClient {
         );
     }
 
-    public VerboseOrderDTO createOrder(NewOrderDTO inputOrderInputDTO) {
-        CustomerDTO customer = findCustomer(inputOrderInputDTO.getEmail());
 
-        List<OrderItemDTO> items = new ArrayList<>();
-        inputOrderInputDTO.getOfferIds().stream()
+
+
+
+    public VerboseOrderDTO createOrder(NewOrderDTO inputOrderInputDTO) {
+        if (inputOrderInputDTO.getEmail() == null) {
+            throw new ControllerException("Coupled email must nut be null");
+        }
+        CustomerDTO customer = findCustomer(inputOrderInputDTO.getEmail().toLowerCase());
+
+        List<OrderItemDTO> items = inputOrderInputDTO.getOfferIds().stream()
                 .map(this::findOfferById)
                 .map(offerToOrderItemTransformer::convert)
-                .forEach(items::add);
+                .collect(Collectors.toList());
 
         InventoryOrderDTO orderDTO = new InventoryOrderDTO();
         orderDTO.setPaid(inputOrderInputDTO.getPaid());

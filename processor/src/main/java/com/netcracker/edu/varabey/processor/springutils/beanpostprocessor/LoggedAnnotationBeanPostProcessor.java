@@ -1,6 +1,6 @@
-package com.netcracker.edu.varabey.processor.custom.beanpostprocessor;
+package com.netcracker.edu.varabey.processor.springutils.beanpostprocessor;
 
-import com.netcracker.edu.varabey.processor.custom.beanannotation.Logged;
+import com.netcracker.edu.varabey.processor.springutils.beanannotation.Logged;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;

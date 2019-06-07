@@ -7,7 +7,7 @@ import com.netcracker.edu.varabey.processor.controller.dto.OfferDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.NewOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.SimplifiedOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.VerboseOrderDTO;
-import com.netcracker.edu.varabey.processor.custom.beanannotation.Logged;
+import com.netcracker.edu.varabey.processor.springutils.beanannotation.Logged;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -187,63 +187,73 @@ public class ProcessorController {
 
 
 
-    
-    @PostMapping("/orders")
+
+    @PostMapping("/inventory/orders")
     @ResponseStatus(HttpStatus.CREATED)
+    @Logged(messageBefore = "Received request to create new Order...", messageAfter = "Order posted.", startFromNewLine = true)
     public VerboseOrderDTO packNewOrder(@RequestBody NewOrderDTO newOrderDTO) {
         return webClient.createOrder(newOrderDTO);
     }
 
-    @GetMapping("/orders/{id}")
+    @GetMapping("/inventory/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to retrieve order by id...", messageAfter = "Order retrieved.", startFromNewLine = true)
     public VerboseOrderDTO getOrderDetails(@PathVariable("id") Long id) {
         return webClient.findOrder(id);
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/inventory/orders")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to find all orders by payment status...", messageAfter = "Orders found.", startFromNewLine = true)
     public List<SimplifiedOrderDTO> findAllOrdersByPaymentStatus(@RequestParam("isPaid") Boolean isPaid) {
         return webClient.findAllOrdersByPaymentStatus(isPaid);
     }
 
-    @GetMapping("/customers/{email}/orders")
+    @GetMapping("/inventory/customers/{email}/orders")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to all order coupled to email...", messageAfter = "Orders found.", startFromNewLine = true)
     public List<SimplifiedOrderDTO> getAllOrdersByEmail(@PathVariable("email") String email) {
         return webClient.findAllOrdersByEmail(email);
     }
 
-    @GetMapping("/customers/{email}/orders/totalPrice")
+    @GetMapping("/inventory/customers/{email}/orders/totalPrice")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to get total money spent by Customer...", messageAfter = "Done.", startFromNewLine = true)
     public Double getTotalEmailSpendings(@PathVariable("email") String email) {
         return webClient.getEmailSpendings(email);
     }
 
-    @GetMapping("/customers/{email}/orders/count")
+    @GetMapping("/inventory/customers/{email}/orders/totalCount")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to get count off all bought items by Customer...", messageAfter = "Done.", startFromNewLine = true)
     public Integer getEmailOrderCount(@PathVariable("email") String email) {
         return webClient.getEmailOrderCount(email);
     }
 
-    @PutMapping("/orders/{id}/pay")
+    @PutMapping("/inventory/orders/{id}/pay")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to Order as paid...", messageAfter = "Order payment status updated.", startFromNewLine = true)
     public SimplifiedOrderDTO confirmPaymentForOrder(@PathVariable("id") Long id) {
         return webClient.confirmPaymentForOrder(id);
     }
 
-    @PutMapping("/orders/{id}")
+    @PutMapping("/inventory/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to update Order's status...", messageAfter = "Order status updated.", startFromNewLine = true)
     public SimplifiedOrderDTO changeOrderStatus(@PathVariable("id") Long id, @RequestBody NewOrderDTO orderDTO) {
         return webClient.changeOrderStatus(id, orderDTO.getOrderStatus());
     }
 
-    @PostMapping("/orders/{id}/items")
+    @PostMapping("/inventory/orders/{id}/items")
     @ResponseStatus(HttpStatus.CREATED)
+    @Logged(messageBefore = "Received request to add items to the Order...", messageAfter = "Items were added.", startFromNewLine = true)
     public SimplifiedOrderDTO addItemsToOrder(@PathVariable("id") Long orderId, @RequestParam("id") List<Long> offerIds) {
         return webClient.addItemsToOrder(orderId, offerIds);
     }
 
-    @DeleteMapping("/orders/{id}/items")
+    @DeleteMapping("/inventory/orders/{id}/items")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to remove items from the Order...", messageAfter = "Items were removed.", startFromNewLine = true)
     public SimplifiedOrderDTO removeItemsFromOrder(@PathVariable("id") Long orderId, @RequestParam("id") List<Long> itemIds) {
         return webClient.removeItemsFromOrder(orderId, itemIds);
     }
