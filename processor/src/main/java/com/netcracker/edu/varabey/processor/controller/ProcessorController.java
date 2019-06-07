@@ -4,7 +4,6 @@ import com.netcracker.edu.varabey.processor.controller.client.WebClient;
 import com.netcracker.edu.varabey.processor.controller.dto.CategoryDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.CustomerDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.OfferDTO;
-import com.netcracker.edu.varabey.processor.controller.dto.TagDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.NewOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.SimplifiedOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.VerboseOrderDTO;
@@ -49,99 +48,104 @@ public class ProcessorController {
             @RequestParam(name = "minPrice", required = false) Double minPrice,
             @RequestParam(name = "maxPrice", required = false) Double maxPrice
     ) {
-        logger.info("Filters : category={}, tags={}, price_range=[{}, {}]", category, tags, minPrice, maxPrice);
+        logger.info("Filter: category={}, tags={}, price_range=[{}, {}]", category, tags, minPrice, maxPrice);
         return webClient.findAllOffers(category, tags, minPrice, maxPrice);
     }
 
     @PutMapping("/catalog/offers/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to update offer (name and price)...", messageAfter = "Offer was updated.", startFromNewLine = true)
     public OfferDTO updateOfferNameAndPrice(@PathVariable("id") Long id, @RequestBody OfferDTO offerDTO) {
         return webClient.updateOfferNameAndPrice(id, offerDTO);
     }
 
-    @PutMapping("/offers/{id}/addTags")
+    @PostMapping("/catalog/offers/{id}/tags")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to add tags to offer...", messageAfter = "Offer was updated.", startFromNewLine = true)
     public OfferDTO addTagsToOffer(@PathVariable("id") Long id, @RequestBody List<String> tags) {
         return webClient.addTagsToOffer(id, tags);
     }
 
-    @PutMapping("/offers/{id}/removeTags")
+    @DeleteMapping("/catalog/offers/{id}/tags")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to remove tags from offer...", messageAfter = "Offer was updated.", startFromNewLine = true)
     public OfferDTO removeTagsFromOffer(@PathVariable("id") Long id, @RequestBody List<String> tags) {
         return webClient.removeTagsFromOffer(id, tags);
     }
 
-    @PutMapping("/offers/{id}/changeCategory")
+    @PutMapping("/catalog/offers/{id}/category")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to change offer's category...", messageAfter = "Offer was updated.", startFromNewLine = true)
     public OfferDTO changeOfferCategory(@PathVariable("id") Long id, @RequestBody CategoryDTO categoryDTO) {
         return webClient.changeOfferCategory(id, categoryDTO);
     }
 
-    @DeleteMapping("/offers/{id}")
+    @DeleteMapping("/catalog/offers/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Logged(messageBefore = "Received request to delete offer...", messageAfter = "Offer was deleted.", startFromNewLine = true)
     public void deleteOffer(@PathVariable("id") Long id) {
         webClient.deleteOffer(id);
     }
 
-    @PostMapping("/categories")
-    @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDTO createCategory(@RequestBody CategoryDTO categoryDTO) {
-        return webClient.createCategory(categoryDTO);
-    }
-
-    @PostMapping("/categories/saveAll")
-    @ResponseStatus(HttpStatus.CREATED)
-    public List<CategoryDTO> createAllCategories(@RequestBody List<CategoryDTO> categoryDTOS) {
-        return webClient.createAllCategories(categoryDTOS);
-    }
-
-    @GetMapping("/categories/{input}")
-    @ResponseStatus(HttpStatus.OK)
-    public CategoryDTO findCategoryById(@PathVariable("input") String input) {
-        return webClient.findCategory(input);
-    }
-
-    @PutMapping("/categories/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public CategoryDTO updateCategoryName(@PathVariable("id") Long id, @RequestBody CategoryDTO categoryDTO) {
-        return webClient.updateCategoryName(id, categoryDTO);
-    }
-
-    @DeleteMapping("/categories/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable("id") Long id) {
-        webClient.deleteCategory(id);
-    }
-
-    @PostMapping("/tags")
-    @ResponseStatus(HttpStatus.CREATED)
-    public TagDTO createTag(@RequestBody TagDTO tagDTO) {
-        return webClient.createTag(tagDTO);
-    }
-
-    @PostMapping("/tags/saveAll")
-    @ResponseStatus(HttpStatus.CREATED)
-    public List<TagDTO> createAllTags(@RequestBody List<TagDTO> tagDTOS) {
-        return webClient.createAllTags(tagDTOS);
-    }
-
-    @GetMapping("/tags/{input}")
-    @ResponseStatus(HttpStatus.OK)
-    public TagDTO findTagById(@PathVariable("input") String input) {
-        return webClient.findTag(input);
-    }
-
-    @PutMapping("/tags/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public TagDTO updateTagName(@PathVariable("id") Long id, @RequestBody TagDTO tagDTO) {
-        return webClient.updateTagName(id, tagDTO);
-    }
-
-    @DeleteMapping("/tags/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTag(@PathVariable("id") Long id) {
-        webClient.deleteTag(id);
-    }
+//    @PostMapping("/categories")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public CategoryDTO createCategory(@RequestBody CategoryDTO categoryDTO) {
+//        return webClient.createCategory(categoryDTO);
+//    }
+//
+//    @PostMapping("/categories/saveAll")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public List<CategoryDTO> createAllCategories(@RequestBody List<CategoryDTO> categoryDTOS) {
+//        return webClient.createAllCategories(categoryDTOS);
+//    }
+//
+//    @GetMapping("/categories/{input}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public CategoryDTO findCategoryById(@PathVariable("input") String input) {
+//        return webClient.findCategory(input);
+//    }
+//
+//    @PutMapping("/categories/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public CategoryDTO updateCategoryName(@PathVariable("id") Long id, @RequestBody CategoryDTO categoryDTO) {
+//        return webClient.updateCategoryName(id, categoryDTO);
+//    }
+//
+//    @DeleteMapping("/categories/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void deleteCategory(@PathVariable("id") Long id) {
+//        webClient.deleteCategory(id);
+//    }
+//
+//    @PostMapping("/tags")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public TagDTO createTag(@RequestBody TagDTO tagDTO) {
+//        return webClient.createTag(tagDTO);
+//    }
+//
+//    @PostMapping("/tags/saveAll")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public List<TagDTO> createAllTags(@RequestBody List<TagDTO> tagDTOS) {
+//        return webClient.createAllTags(tagDTOS);
+//    }
+//
+//    @GetMapping("/tags/{input}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public TagDTO findTagById(@PathVariable("input") String input) {
+//        return webClient.findTag(input);
+//    }
+//
+//    @PutMapping("/tags/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public TagDTO updateTagName(@PathVariable("id") Long id, @RequestBody TagDTO tagDTO) {
+//        return webClient.updateTagName(id, tagDTO);
+//    }
+//
+//    @DeleteMapping("/tags/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void deleteTag(@PathVariable("id") Long id) {
+//        webClient.deleteTag(id);
+//    }
 
 
 
