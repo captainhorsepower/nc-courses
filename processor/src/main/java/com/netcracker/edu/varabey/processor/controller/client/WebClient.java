@@ -8,6 +8,8 @@ import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.Verbos
 import com.netcracker.edu.varabey.processor.controller.dto.transformer.Transformer;
 import com.netcracker.edu.varabey.processor.exception.controller.ControllerException;
 import com.netcracker.edu.varabey.processor.springutils.beanannotation.Logged;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -29,6 +31,8 @@ public class WebClient {
     private final Transformer<OfferDTO, OrderItemDTO> offerToOrderItemTransformer;
     private final Transformer<InventoryOrderDTO, VerboseOrderDTO> verboseOrderTransformer;
     private final Transformer<InventoryOrderDTO, SimplifiedOrderDTO> simpleOrderTransformer;
+
+    protected Logger logger = LoggerFactory.getLogger(WebClient.class);
 
     public WebClient(@Value("${inventory.url}") String inventoryUrl,
                      @Value("${catalog.url}") String catalogUrl,
@@ -356,10 +360,7 @@ public class WebClient {
 
 
     public VerboseOrderDTO createOrder(NewOrderDTO inputOrderInputDTO) {
-        if (inputOrderInputDTO.getEmail() == null) {
-            throw new ControllerException("Coupled email must nut be null");
-        }
-        CustomerDTO customer = findCustomer(inputOrderInputDTO.getEmail().toLowerCase());
+        CustomerDTO customer = findCustomer(inputOrderInputDTO.getEmail());
 
         List<OrderItemDTO> items = inputOrderInputDTO.getOfferIds().stream()
                 .map(this::findOfferById)
