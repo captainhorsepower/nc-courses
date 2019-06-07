@@ -1,11 +1,11 @@
 //package com.netcracker.edu.varabey.junit.dao;
 //
-//import com.netcracker.edu.varabey.entity.Category;
-//import com.netcracker.edu.varabey.entity.Offer;
-//import com.netcracker.edu.varabey.entity.Price;
-//import com.netcracker.edu.varabey.entity.Tag;
+//import Category;
+//import Offer;
+//import Price;
+//import Tag;
 //import com.netcracker.edu.varabey.service.CatalogService;
-//import com.netcracker.edu.varabey.service.CategoryService;
+//import CategoryService;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
