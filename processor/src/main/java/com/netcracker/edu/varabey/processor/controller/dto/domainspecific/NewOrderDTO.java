@@ -12,8 +12,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class NewOrderDTO {
     private String email;
-    private String orderStatus;
-    private Boolean isPaid;
+    private String orderStatus = "PENDING_APPROVAL";
+    private Boolean isPaid = false;
     private LocalDateTime createdOnDate = LocalDateTime.now();
     private Set<Long> offerIds = new HashSet<>();
 

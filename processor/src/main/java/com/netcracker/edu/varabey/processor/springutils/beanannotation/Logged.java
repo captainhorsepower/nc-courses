@@ -1,4 +1,4 @@
-package com.netcracker.edu.varabey.processor.custom.beanannotation;
+package com.netcracker.edu.varabey.processor.springutils.beanannotation;
 
 import org.springframework.boot.logging.LogLevel;
 
