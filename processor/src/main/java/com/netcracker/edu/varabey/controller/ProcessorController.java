@@ -9,6 +9,8 @@ import com.netcracker.edu.varabey.controller.dto.domainspecific.NewOrderDTO;
 import com.netcracker.edu.varabey.controller.dto.domainspecific.SimplifiedOrderDTO;
 import com.netcracker.edu.varabey.controller.dto.domainspecific.VerboseOrderDTO;
 import com.netcracker.edu.varabey.util.custom.beanannotation.Logged;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,36 +18,42 @@ import java.util.List;
 
 @RestController
 public class ProcessorController {
+    protected Logger logger = LoggerFactory.getLogger(ProcessorController.class);
+
     private final WebClient webClient;
 
     public ProcessorController(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    @PostMapping("/offers")
+    @PostMapping("/catalog/offers")
     @ResponseStatus(HttpStatus.CREATED)
+    @Logged(messageBefore = "Received request to create new Offer in catalog...", messageAfter = "Offer created.", startFromNewLine = true)
     public OfferDTO createOffer(@RequestBody OfferDTO offerDTO) {
         return webClient.createOffer(offerDTO);
     }
 
-    @GetMapping("/offers/{id}")
+    @GetMapping("/catalog/offers/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to retrieve offer by id...", messageAfter = "Offer retrieved.", startFromNewLine = true)
     public OfferDTO getOfferById(@PathVariable("id") Long id) {
         return webClient.findOfferById(id);
     }
 
-    @GetMapping("/offers")
+    @GetMapping("/catalog/offers")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to retrieve multiple offers...", messageAfter = "Offers retrieved.", startFromNewLine = true)
     public List<OfferDTO> getAllOffers(
             @RequestParam(name = "category", required = false) String category,
             @RequestParam(name = "tags", required = false) List<String> tags,
             @RequestParam(name = "minPrice", required = false) Double minPrice,
             @RequestParam(name = "maxPrice", required = false) Double maxPrice
     ) {
+        logger.info("Filters : category={}, tags={}, price_range=[{}, {}]", category, tags, minPrice, maxPrice);
         return webClient.findAllOffers(category, tags, minPrice, maxPrice);
     }
 
-    @PutMapping("/offers/{id}")
+    @PutMapping("/catalog/offers/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OfferDTO updateOfferNameAndPrice(@PathVariable("id") Long id, @RequestBody OfferDTO offerDTO) {
         return webClient.updateOfferNameAndPrice(id, offerDTO);
