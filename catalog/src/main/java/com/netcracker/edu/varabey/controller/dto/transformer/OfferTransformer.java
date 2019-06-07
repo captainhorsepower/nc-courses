@@ -13,8 +13,8 @@ public class OfferTransformer implements Transformer<Offer, OfferDTO> {
     public Offer toEntity(OfferDTO dto) {
         Offer offer = new Offer();
         offer.setName(dto.getName());
-        offer.setPrice( new Price(dto.getPrice()) );
-        offer.setCategory( new Category(dto.getCategory().trim()) );
+        offer.setPrice( (dto.getPrice() == null) ? null : new Price(dto.getPrice()) );
+        offer.setCategory( new Category((dto.getCategory() == null) ? "" : dto.getCategory().trim()) );
         dto.getTags().forEach(tagName -> offer.addTag( new Tag(tagName.trim())) );
         return offer;
     }

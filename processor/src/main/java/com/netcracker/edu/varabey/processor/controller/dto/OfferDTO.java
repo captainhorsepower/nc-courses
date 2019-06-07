@@ -11,9 +11,9 @@ import java.util.Set;
 @NoArgsConstructor
 public class OfferDTO {
     private Long id = 0L;
-    private String name = "";
-    private Double price = 0.0;
-    private String category = "";
+    private String name;
+    private Double price;
+    private String category;
     private Set<String> tags = new HashSet<>();
 
     @Override

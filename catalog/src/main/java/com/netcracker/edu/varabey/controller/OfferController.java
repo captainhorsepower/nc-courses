@@ -48,7 +48,7 @@ public class OfferController {
         try {
             return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error("decoding problem: ", e);
+//            logger.error("decoding problem: ", e);
             throw new OfferException(e);
         }
     }
@@ -123,22 +123,25 @@ public class OfferController {
         return offerTransformer.toDto(offer);
     }
 
-    @PutMapping("/{id}/addTags")
+    @PostMapping("/{id}/tags")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to add tags to offer...", messageAfter = "Offer updated.", startFromNewLine = true)
     public OfferDTO addTags(@PathVariable("id") Long id, @RequestBody List<String> tagNames) {
         Offer offer = offerService.addTags(id, tagNames);
         return offerTransformer.toDto(offer);
     }
 
-    @PutMapping("/{id}/removeTags")
+    @DeleteMapping("/{id}/tags")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to remove tags from offer...", messageAfter = "Offer updated.", startFromNewLine = true)
     public OfferDTO removeTags(@PathVariable("id") Long id, @RequestBody List<String> tagNames) {
         Offer offer = offerService.removeTags(id, tagNames);
         return offerTransformer.toDto(offer);
     }
 
-    @PutMapping("/{id}/changeCategory")
+    @PutMapping("/{id}/category")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to change offer's category...", messageAfter = "Offer was updated.", startFromNewLine = true)
     public OfferDTO changeCategory(@PathVariable("id") Long id, @RequestBody CategoryDTO categoryDTO) {
         Category category = categoryTransformer.toEntity(categoryDTO);
         Offer offer = offerService.changeCategory(id, category);
@@ -147,6 +150,7 @@ public class OfferController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to update offer's name and price...", messageAfter = "Offer was updated.", startFromNewLine = true)
     public OfferDTO updateOfferNameAndPrice(@PathVariable("id") Long id, @RequestBody OfferDTO dto) {
         Offer offer = offerTransformer.toEntity(dto);
         offer.setId(id);
@@ -156,6 +160,7 @@ public class OfferController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Logged(messageBefore = "Received request to delete offer...", messageAfter = "Offer was deleted.", startFromNewLine = true)
     public void deleteOffer(@PathVariable("id") Long id) {
         offerService.delete(id);
     }

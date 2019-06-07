@@ -108,10 +108,10 @@ public class WebClient {
                 .fromHttpUrl(catalogUrl)
                 .path("/offers")
                 .path("/" + id)
-                .path("/addTags");
+                .path("/tags");
         return restTemplate.exchange(
                 builder.toUriString(),
-                HttpMethod.PUT,
+                HttpMethod.POST,
                 new HttpEntity<>(tags),
                 new ParameterizedTypeReference<OfferDTO>(){}
         ).getBody();
@@ -123,10 +123,10 @@ public class WebClient {
                 .fromHttpUrl(catalogUrl)
                 .path("/offers")
                 .path("/" + id)
-                .path("/removeTags");
+                .path("/tags");
         return restTemplate.exchange(
                 builder.toUriString(),
-                HttpMethod.PUT,
+                HttpMethod.DELETE,
                 new HttpEntity<>(tags),
                 new ParameterizedTypeReference<OfferDTO>(){}
         ).getBody();
@@ -139,7 +139,7 @@ public class WebClient {
                         .fromHttpUrl(catalogUrl)
                         .path("/offers")
                         .path("/" + id)
-                        .path("/changeCategory")
+                        .path("/category")
                         .toUriString(),
                 HttpMethod.PUT,
                 new HttpEntity<>(categoryDTO),
@@ -147,6 +147,7 @@ public class WebClient {
         ).getBody();
     }
 
+    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Done.")
     public void deleteOffer(Long id) {
         restTemplate.delete(
                 UriComponentsBuilder
