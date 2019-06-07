@@ -4,6 +4,10 @@ import com.netcracker.edu.varabey.customers.entity.Customer;
 import com.netcracker.edu.varabey.customers.springutils.beanannotation.Logged;
 import com.netcracker.edu.varabey.customers.springutils.beanannotation.Validator;
 import com.netcracker.edu.varabey.customers.validation.exceptions.CustomerException;
+import com.netcracker.edu.varabey.customers.validation.util.AgeValidator;
+import com.netcracker.edu.varabey.customers.validation.util.CustomerValidator;
+import com.netcracker.edu.varabey.customers.validation.util.EmailValidator;
+import com.netcracker.edu.varabey.customers.validation.util.NameValidator;
 
 @Validator
 public class DefaultCustomerValidator implements CustomerValidator {

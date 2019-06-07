@@ -1,4 +1,4 @@
-package com.netcracker.edu.varabey.customers.validation;
+package com.netcracker.edu.varabey.customers.validation.util;
 
 import com.netcracker.edu.varabey.customers.validation.exceptions.InvalidAgeException;
 
