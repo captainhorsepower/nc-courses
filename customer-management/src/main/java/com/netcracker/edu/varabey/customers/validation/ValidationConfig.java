@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 @Configuration
 public class ValidationConfig {
     public static final Integer DEFAULT_MIN_NAME_LENGTH = 3;
-    public static final String DEFAULT_FORBIDDEN_SYMBOLS = "=<>?\"\';";
+    public static final String DEFAULT_FORBIDDEN_SYMBOLS = "=<>?\";";
     public static final Integer DEFAULT_MIN_ALLOWED_AGE = 14;
     public static final Integer DEFAULT_MAX_ALLOWED_AGE = 150;
 

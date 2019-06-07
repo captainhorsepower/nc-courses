@@ -149,53 +149,45 @@ public class ProcessorController {
 
 
 
-    @Logged(messageBefore = "Request to create new customer...",
-            messageAfter = "Customer created successfully!",
-            startFromNewLine = true)
     @PostMapping("/customers")
     @ResponseStatus(HttpStatus.CREATED)
+    @Logged(messageBefore = "Received request to sign-up new Customer...", messageAfter = "Customer account was created.", startFromNewLine = true)
     public CustomerDTO signUp(@RequestBody CustomerDTO customerDTO) {
         return webClient.signUpUsingEmail(customerDTO);
     }
 
-    @Logged(messageBefore = "Request to find customer by unique identifier...",
-            messageAfter = "Customer found!",
-            startFromNewLine = true)
     @GetMapping("/customers/{emailOrId}")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to find Customer...", messageAfter = "Customer retrieved.", startFromNewLine = true)
     public CustomerDTO findCustomer(@PathVariable("emailOrId") String emailOrId) {
         return webClient.findCustomer(emailOrId);
     }
 
-    @Logged(messageBefore = "Request to get all customers...",
-            messageAfter = "Successfully retrieved all customers!",
-            startFromNewLine = true)
     @GetMapping("/customers")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to find all Customers...", messageAfter = "Customers retrieved.", startFromNewLine = true)
     public List<CustomerDTO> getAllCustomers() {
         return webClient.findAllCustomers();
     }
 
-    @Logged(messageBefore = "Request to edit customer...",
-            messageAfter = "Customer edited and saved.",
-            startFromNewLine = true)
     @PutMapping("/customers/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to update Customer's personal data...", messageAfter = "Customer was updated.", startFromNewLine = true)
     public CustomerDTO editCustomerNameAndAge(@PathVariable("id") Long id, @RequestBody CustomerDTO customerDTO) {
         return webClient.editCustomer(id, customerDTO);
     }
 
-    @Logged(messageBefore = "Request to delete customer...",
-            messageAfter = "Customer deleted.",
-            startFromNewLine = true)
     @DeleteMapping("/customers/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Logged(messageBefore = "Received request to delete Customer...", messageAfter = "Customer account deleted.", startFromNewLine = true)
     public void deleteCustomer(@PathVariable("id") Long id) {
         webClient.deleteCustomer(id);
     }
 
 
 
+
+    
     @PostMapping("/orders")
     @ResponseStatus(HttpStatus.CREATED)
     public VerboseOrderDTO packNewOrder(@RequestBody NewOrderDTO newOrderDTO) {

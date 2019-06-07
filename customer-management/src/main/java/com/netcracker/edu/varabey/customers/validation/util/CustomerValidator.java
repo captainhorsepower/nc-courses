@@ -1,6 +1,7 @@
-package com.netcracker.edu.varabey.customers.validation;
+package com.netcracker.edu.varabey.customers.validation.util;
 
 import com.netcracker.edu.varabey.customers.entity.Customer;
+import com.netcracker.edu.varabey.customers.validation.ServiceValidator;
 
 public interface CustomerValidator extends ServiceValidator<Customer, Long> {
     void checkName(String name);
