@@ -7,9 +7,7 @@ import com.netcracker.edu.varabey.catalog.entity.Tag;
 import com.netcracker.edu.varabey.catalog.validation.CategoryValidator;
 import com.netcracker.edu.varabey.catalog.validation.OfferValidator;
 import com.netcracker.edu.varabey.catalog.validation.TagValidator;
-import com.netcracker.edu.varabey.catalog.validation.exceptions.OfferException;
 import com.netcracker.edu.varabey.catalog.validation.util.PriceRangeValidator;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,11 +102,7 @@ public class DefaultOfferService implements OfferService {
     @Override
     public void delete(Long id) {
         offerValidator.checkIdIsNotNull(id);
-        try {
-            offerDAO.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new OfferException("Offer with id=" + id + " was not found. Unable to delete.");
-        }
+        offerDAO.deleteById(id);
     }
 
     @Override
