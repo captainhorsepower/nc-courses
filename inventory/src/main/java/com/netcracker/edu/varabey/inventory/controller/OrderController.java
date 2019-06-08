@@ -13,6 +13,8 @@ import com.netcracker.edu.varabey.inventory.validation.CategoryValidator;
 import com.netcracker.edu.varabey.inventory.validation.CustomerValidator;
 import com.netcracker.edu.varabey.inventory.validation.OrderValidator;
 import com.netcracker.edu.varabey.inventory.validation.TagValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +35,8 @@ public class OrderController {
     private final CustomerValidator customerValidator;
     private final TagValidator tagValidator;
     private final CategoryValidator categoryValidator;
+
+    protected Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     public OrderController(OrderService orderService, CategoryService categoryService, TagService tagService, CustomerService customerService, Transformer<Order, OrderDTO> orderTransformer, Transformer<OrderItem, OrderItemDTO> itemTransformer, OrderValidator orderValidator, CustomerValidator customerValidator, TagValidator tagValidator, CategoryValidator categoryValidator) {
         this.orderService = orderService;
@@ -66,7 +70,10 @@ public class OrderController {
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to retrieve multiple orders...", messageAfter = "Orders retrieved.", startFromNewLine = true)
     public List<OrderDTO> findAllOrders(@RequestParam(name = "email", required = false) String coupledEmail, @RequestParam(name = "paid", required = false) Boolean isPaid) {
+        logger.info("Filter: email=\'{}\', isPaid={}", coupledEmail, isPaid);
+
         List<Order> orders;
 
         if (coupledEmail != null) {
@@ -84,11 +91,11 @@ public class OrderController {
 
     @GetMapping("/orders/items")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderItemDTO> findItemsByCustomerAndTag(
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "tag", required = false) String tagName,
-            @RequestParam(name = "category", required = false) String categoryName
-            ) {
+    @Logged(messageBefore = "Received request to retrieve OrderItems coupled with email...", messageAfter = "OrderItems retrieved.", startFromNewLine = true)
+    public List<OrderItemDTO> findItemsByCustomerAndTag(@RequestParam(name = "email") String email, @RequestParam(name = "tag", required = false) String tagName, @RequestParam(name = "category", required = false) String categoryName) {
+
+        logger.info("Filter: email=\'{}\', tag=\'{}\', category=\'{}\'", email, tagName, categoryName);
+
         Customer customer = customerValidator.checkFoundByEmail(customerService.findByEmail(email), email);
 
         List<OrderItem> filteredItems;
@@ -109,15 +116,16 @@ public class OrderController {
 
     @PostMapping("/orders/{id}/items")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to add Items to the Order...", messageAfter = "Order updated.", startFromNewLine = true)
     public OrderDTO addItemsToOrder(@PathVariable("id") Long id, @RequestBody List<OrderItemDTO> itemDTOs) {
         List<OrderItem> items = itemDTOs.stream().map(itemTransformer::toEntity).collect(Collectors.toList());
         Order order = orderService.addItems(id, items);
-
         return orderTransformer.toDto(order);
     }
 
     @DeleteMapping("/orders/{id}/items")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to remove Items the Order...", messageAfter = "Order updated.", startFromNewLine = true)
     public OrderDTO removeItemsFromOrder(
             @PathVariable("id") Long id,
             @RequestParam("id") Set<Long> itemIds) {
@@ -127,6 +135,7 @@ public class OrderController {
 
     @PutMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Logged(messageBefore = "Received request to update order statuses...", messageAfter = "Order updated.", startFromNewLine = true)
     public OrderDTO updateOrderStatusAndPaymentStatus(@PathVariable("id") Long id, @RequestBody OrderDTO dto) {
         Order order = orderTransformer.toEntity(dto);
         order = orderService.updatePaymentAndStatus(id, order);
@@ -135,6 +144,7 @@ public class OrderController {
 
     @DeleteMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Logged(messageBefore = "Received request to delete Order by id...", messageAfter = "Order was deleted.", startFromNewLine = true)
     public void deleteOrder(@PathVariable("id") Long id) {
         orderService.deleteOrder(id);
     }
