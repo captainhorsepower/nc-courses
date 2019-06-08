@@ -1,5 +1,7 @@
 server:
   port: 8000
+  servlet:
+    context-path: /order-entry
 
 inventory:
   host: http://localhost

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+
 public class ProcessorController {
     protected Logger logger = LoggerFactory.getLogger(ProcessorController.class);
 
@@ -24,6 +25,11 @@ public class ProcessorController {
     public ProcessorController(WebClient webClient) {
         this.webClient = webClient;
     }
+
+
+    /*****************
+     **** CATALOG ****
+     *****************/
 
     @PostMapping("/catalog/offers")
     @ResponseStatus(HttpStatus.CREATED)
@@ -42,12 +48,7 @@ public class ProcessorController {
     @GetMapping("/catalog/offers")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to retrieve multiple offers...", messageAfter = "Offers retrieved.", startFromNewLine = true)
-    public List<OfferDTO> getAllOffers(
-            @RequestParam(name = "category", required = false) String category,
-            @RequestParam(name = "tags", required = false) List<String> tags,
-            @RequestParam(name = "minPrice", required = false) Double minPrice,
-            @RequestParam(name = "maxPrice", required = false) Double maxPrice
-    ) {
+    public List<OfferDTO> getAllOffers(@RequestParam(name = "category", required = false) String category, @RequestParam(name = "tags", required = false) List<String> tags, @RequestParam(name = "minPrice", required = false) Double minPrice, @RequestParam(name = "maxPrice", required = false) Double maxPrice) {
         logger.info("Filter: category={}, tags={}, price_range=[{}, {}]", category, tags, minPrice, maxPrice);
         return webClient.findAllOffers(category, tags, minPrice, maxPrice);
     }
@@ -148,6 +149,9 @@ public class ProcessorController {
 //    }
 
 
+    /*****************************
+     **** CUSTOMER-MANAGEMENT ****
+     *****************************/
 
     @PostMapping("/customers")
     @ResponseStatus(HttpStatus.CREATED)
@@ -185,13 +189,14 @@ public class ProcessorController {
     }
 
 
-
-
+    /*******************
+     **** INVENTORY ****
+     *******************/
 
     @PostMapping("/inventory/orders")
     @ResponseStatus(HttpStatus.CREATED)
     @Logged(messageBefore = "Received request to create new Order...", messageAfter = "Order packed.", startFromNewLine = true)
-    public VerboseOrderDTO packNewOrder(@RequestBody SimplifiedOrderDTO newOrderDTO) {
+    public VerboseOrderDTO packNewOrder(@RequestBody NewOrderDTO newOrderDTO) {
         return webClient.createOrder(newOrderDTO);
     }
 
@@ -204,30 +209,30 @@ public class ProcessorController {
 
     @GetMapping("/inventory/orders")
     @ResponseStatus(HttpStatus.OK)
-    @Logged(messageBefore = "Received request to find all orders by payment status...", messageAfter = "Orders found.", startFromNewLine = true)
-    public List<SimplifiedOrderDTO> findAllOrdersByPaymentStatus(@RequestParam("isPaid") Boolean isPaid) {
+    @Logged(messageBefore = "Received request to all orders by payment status...", messageAfter = "Orders found.", startFromNewLine = true)
+    public List<SimplifiedOrderDTO> findAllOrdersByPaymentStatus(@RequestParam("isPaid") Boolean isPaid, @RequestParam(value = "email", required = false) String email) {
         return webClient.findAllOrdersByPaymentStatus(isPaid);
     }
 
     @GetMapping("/inventory/customers/{email}/orders")
     @ResponseStatus(HttpStatus.OK)
-    @Logged(messageBefore = "Received request to all order coupled to email...", messageAfter = "Orders found.", startFromNewLine = true)
+    @Logged(messageBefore = "Received request to find all orders coupled with the email...", messageAfter = "Orders found.", startFromNewLine = true)
     public List<SimplifiedOrderDTO> getAllOrdersByEmail(@PathVariable("email") String email) {
         return webClient.findAllOrdersByEmail(email);
     }
 
     @GetMapping("/inventory/customers/{email}/orders/totalPrice")
     @ResponseStatus(HttpStatus.OK)
-    @Logged(messageBefore = "Received request to get total money spent by Customer...", messageAfter = "Done.", startFromNewLine = true)
-    public Double getTotalEmailSpendings(@PathVariable("email") String email) {
-        return webClient.getEmailSpendings(email);
+    @Logged(messageBefore = "Received request to get total money spent by Customer...", messageAfter = "Response retrieved.", startFromNewLine = true)
+    public Double getTotalMoneySpentByCustomer(@PathVariable("email") String email) {
+        return webClient.getTotalMoneySpentByCustomer(email);
     }
 
-    @GetMapping("/inventory/customers/{email}/orders/totalCount")
+    @GetMapping("/inventory/customers/{email}/orders/itemCount")
     @ResponseStatus(HttpStatus.OK)
-    @Logged(messageBefore = "Received request to get count off all bought items by Customer...", messageAfter = "Done.", startFromNewLine = true)
-    public Integer getEmailOrderCount(@PathVariable("email") String email) {
-        return webClient.getEmailOrderCount(email);
+    @Logged(messageBefore = "Received request to get count off all bought items by Customer...", messageAfter = "Response retrieved.", startFromNewLine = true)
+    public Integer getTotalItemCountBoughtByCustomer(@PathVariable("email") String email) {
+        return webClient.getTotalItemCountBoughtByCustomer(email);
     }
 
     @PutMapping("/inventory/orders/{id}/pay")
@@ -247,14 +252,14 @@ public class ProcessorController {
     @PostMapping("/inventory/orders/{id}/items")
     @ResponseStatus(HttpStatus.CREATED)
     @Logged(messageBefore = "Received request to add items to the Order...", messageAfter = "Items were added.", startFromNewLine = true)
-    public SimplifiedOrderDTO addItemsToOrder(@PathVariable("id") Long orderId, @RequestParam("id") List<Long> offerIds) {
+    public VerboseOrderDTO addItemsToOrder(@PathVariable("id") Long orderId, @RequestParam("id") List<Long> offerIds) {
         return webClient.addItemsToOrder(orderId, offerIds);
     }
 
     @DeleteMapping("/inventory/orders/{id}/items")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to remove items from the Order...", messageAfter = "Items were removed.", startFromNewLine = true)
-    public SimplifiedOrderDTO removeItemsFromOrder(@PathVariable("id") Long orderId, @RequestParam("id") List<Long> itemIds) {
+    public VerboseOrderDTO removeItemsFromOrder(@PathVariable("id") Long orderId, @RequestParam("id") List<Long> itemIds) {
         return webClient.removeItemsFromOrder(orderId, itemIds);
     }
 }
