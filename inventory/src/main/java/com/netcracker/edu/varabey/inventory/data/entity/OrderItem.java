@@ -20,6 +20,11 @@ import java.util.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "items")
+@NamedQueries({
+        @NamedQuery(name = "OrderItem.findAllByCustomer", query = "SELECT item FROM OrderItem item WHERE item.owningOrder.customer.id = :customer_id"),
+        @NamedQuery(name = "OrderItem.findAllByCustomerAndCategory", query = "SELECT item FROM OrderItem item  INNER JOIN Category cat ON item MEMBER OF cat.items WHERE item.owningOrder.customer.id=:customer_id  AND cat.id=:category_id"),
+        @NamedQuery(name = "OrderItem.findAllByCustomerAndTags", query = "SELECT item FROM OrderItem item INNER JOIN Tag tag ON item MEMBER OF tag.items WHERE item.owningOrder.customer.id = :customerId AND tag.name IN (:tagNameList)  GROUP BY item.id HAVING COUNT(DISTINCT tag.name) = :tagCount"),
+})
 public class OrderItem {
 
     @Id

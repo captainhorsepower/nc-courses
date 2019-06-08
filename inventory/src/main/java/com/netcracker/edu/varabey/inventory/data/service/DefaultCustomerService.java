@@ -2,7 +2,7 @@ package com.netcracker.edu.varabey.inventory.data.service;
 
 import com.netcracker.edu.varabey.inventory.data.dao.CustomerDAO;
 import com.netcracker.edu.varabey.inventory.data.entity.Customer;
-import com.netcracker.edu.varabey.inventory.validation.CustomerValidator;
+import com.netcracker.edu.varabey.inventory.data.validation.CustomerValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,7 +1,9 @@
 package com.netcracker.edu.varabey.inventory.data.service;
 
-import com.netcracker.edu.varabey.inventory.data.entity.*;
+import com.netcracker.edu.varabey.inventory.data.entity.Order;
+import com.netcracker.edu.varabey.inventory.data.entity.OrderItem;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -49,21 +51,21 @@ public interface OrderService {
 
     /**
      * Retrieves all orderItems of given email having given tags.
-     * @param customer must have valid id
-     * @param tag must have valid id
+     * @param email must have valid id
+     * @param tagNames must have valid id
      * @return List of all found OrderItems
      */
-    List<OrderItem> findAllOrderItemsByCustomerAndTag(Customer customer, Tag tag);
+    List<OrderItem> findAllOrderItemsByEmailAndTags(String email, Collection<String> tagNames);
 
     /**
      * Retrieves all orderItems of given email with given category.
-     * @param customer must have valid id
-     * @param category must have valid id
+     * @param email must have valid id
+     * @param categoryName must have valid id
      * @return List of all found OrderItems
      */
-    List<OrderItem> findAllOrderItemsByCustomerAndCategory(Customer customer, Category category);
+    List<OrderItem> findAllOrderItemsByEmailAndCategory(String email, String categoryName);
 
-    List<OrderItem> findAllOrderItemsByCustomer(Customer customer);
+    List<OrderItem> findAllOrderItemsByEmail(String email);
 
     /**
      * Refreshes tags and categories that are already persisted

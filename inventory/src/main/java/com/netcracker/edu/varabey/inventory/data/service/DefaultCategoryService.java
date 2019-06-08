@@ -2,8 +2,7 @@ package com.netcracker.edu.varabey.inventory.data.service;
 
 import com.netcracker.edu.varabey.inventory.data.dao.CategoryDAO;
 import com.netcracker.edu.varabey.inventory.data.entity.Category;
-import com.netcracker.edu.varabey.inventory.validation.CategoryValidator;
-import com.netcracker.edu.varabey.inventory.validation.fragments.NameValidator;
+import com.netcracker.edu.varabey.inventory.data.validation.CategoryValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,7 @@ public class DefaultCategoryService implements CategoryService {
     private final CategoryDAO categoryDAO;
     private final CategoryValidator categoryValidator;
 
-    public DefaultCategoryService(CategoryDAO categoryDAO, CategoryValidator categoryValidator, NameValidator categoryNameValidator) {
+    public DefaultCategoryService(CategoryDAO categoryDAO, CategoryValidator categoryValidator) {
         this.categoryDAO = categoryDAO;
         this.categoryValidator = categoryValidator;
     }

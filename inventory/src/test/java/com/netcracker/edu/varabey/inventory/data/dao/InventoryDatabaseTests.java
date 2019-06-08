@@ -268,15 +268,15 @@
 //        List<OrderItem> items;
 //
 //        Integer cu1t1ItemCount = 5;
-//        items = service.findAllOrderItemsByCustomerAndTag(cu1, t1);
+//        items = service.findAllOrderItemsByEmailAndTags(cu1, t1);
 //        assertEquals(cu1t1ItemCount, (Integer) items.size());
 //
 //        Integer cu1t2ItemCount = 2;
-//        items = service.findAllOrderItemsByCustomerAndTag(cu1, t2);
+//        items = service.findAllOrderItemsByEmailAndTags(cu1, t2);
 //        assertEquals(cu1t2ItemCount, (Integer) items.size());
 //
 //        Integer cu2t2ItemCount = 1;
-//        items = service.findAllOrderItemsByCustomerAndTag(cu2, t2);
+//        items = service.findAllOrderItemsByEmailAndTags(cu2, t2);
 //        assertEquals(cu2t2ItemCount, (Integer) items.size());
 //
 //        // clean-up
@@ -341,15 +341,15 @@
 //        List<OrderItem> items;
 //
 //        Integer cu1AnimalsItemCount = 2;
-//        items = service.findAllOrderItemsByCustomerAndCategory(cu1, animalsCategory);
+//        items = service.findAllOrderItemsByEmailAndCategory(cu1, animalsCategory);
 //        assertEquals(cu1AnimalsItemCount, (Integer) items.size());
 //
 //        Integer cu1UtilsItemCount = 4;
-//        items = service.findAllOrderItemsByCustomerAndCategory(cu1, utilsCategory);
+//        items = service.findAllOrderItemsByEmailAndCategory(cu1, utilsCategory);
 //        assertEquals(cu1UtilsItemCount, (Integer) items.size());
 //
 //        Integer cu2AnimalsItemCount = 1;
-//        items = service.findAllOrderItemsByCustomerAndCategory(cu2, animalsCategory);
+//        items = service.findAllOrderItemsByEmailAndCategory(cu2, animalsCategory);
 //        assertEquals(cu2AnimalsItemCount, (Integer) items.size());
 //
 //        // clean-up
