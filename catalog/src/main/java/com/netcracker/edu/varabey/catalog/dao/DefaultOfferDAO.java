@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Service class for offer. Operates with transaction-scoped entity manager.
+ * Data-access-object layer for offers.
  */
 @Repository
 public class DefaultOfferDAO implements OfferDAO {
@@ -20,14 +20,12 @@ public class DefaultOfferDAO implements OfferDAO {
     private EntityManager em;
 
     /**
-     * Creates offer into the database.
-     * tags and category inside offer, should be NEW entities (no set id)
-     * or they should NOT introduce any updates, as they will be merged into database
+     * Create an offer in the database.
+     * If tags and category inside offer, have set Ids, it might introduce unexpected
+     * side effects like tag.name update, etc. Be careful.
      *
-     * @param offer NEW (TRANSIENT) offer entity. id should not be set.
-     *              Yes, it will work with set Id, but for such cases you should
-     *              opt for update() instead.
-     * @return offer with everything set.
+     * @param offer NEW (TRANSIENT) offer entity. Offer.id should be null.
+     * @return created offer.
      */
     @Override
     public Offer save(Offer offer) {
@@ -36,14 +34,13 @@ public class DefaultOfferDAO implements OfferDAO {
          * might share tags and categories with other methods,
          * so persist would throw exceptions because of detached
          * category/tags. */
-        offer = em.merge(offer);
-        return offer;
+        return em.merge(offer);
     }
 
     /**
-     * retrieve offer from the underlying database.
-     * @param id of an offer
-     * @return found from the database offer
+     * Retrieve offer from the database.
+     * @param id unique offer id
+     * @return offer with given id
      */
     @Override
     public Offer findById(Long id) {
@@ -51,8 +48,8 @@ public class DefaultOfferDAO implements OfferDAO {
     }
 
     /**
-     * retrieve all offers from the catalog.
-     * @return List of offers in the catalog.
+     * Retrieve all offers from the catalog database.
+     * @return List of all offers in the catalog.
      */
     @Override
     public List<Offer> findAll() {
@@ -75,16 +72,24 @@ public class DefaultOfferDAO implements OfferDAO {
      */
     @Override
     public Offer update(Offer offer) {
-        offer = em.merge(offer);
-        return offer;
+        return em.merge(offer);
     }
 
+    /**
+     * Completely removes offer from the Catalog database.
+     * @param id unique id of target offer.
+     */
     @Override
     public void deleteById(Long id) {
         Offer offer = em.getReference(Offer.class, id);
         em.remove(offer);
     }
 
+    /**
+     * Finds all offers having given category
+     * @param category query param
+     * @return list of all offers with given category.
+     */
     @Override
     public List<Offer> findAllByCategory(Category category) {
         return em.createNamedQuery("Offer.findAllByCategory", Offer.class)
@@ -92,6 +97,11 @@ public class DefaultOfferDAO implements OfferDAO {
                 .getResultList();
     }
 
+    /**
+     * Finds all offers having all tags.
+     * @param tags query list param.
+     * @return list of offers having all given tags.
+     */
     @Override
     public List<Offer> findAllWithTags(Collection<Tag> tags) {
         return em.createNamedQuery("Offer.findAllHavingTags", Offer.class)
@@ -102,6 +112,12 @@ public class DefaultOfferDAO implements OfferDAO {
                 .getResultList();
     }
 
+    /**
+     * Finds all offers with price in range.
+     * @param lowerBound inclusive
+     * @param upperBound inclusive
+     * @return list of all offers with price within given range.
+     */
     @Override
     public List<Offer> findAllWithPriceInRange(Double lowerBound, Double upperBound) {
         return em.createNamedQuery("Offer.findAllWithPriceInRange", Offer.class)
