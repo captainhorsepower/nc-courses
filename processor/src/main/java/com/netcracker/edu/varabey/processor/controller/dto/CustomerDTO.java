@@ -9,5 +9,5 @@ public class CustomerDTO {
     private Long id;
     private String email;
     private String fio;
-    private int age;
+    private Integer age;
 }
