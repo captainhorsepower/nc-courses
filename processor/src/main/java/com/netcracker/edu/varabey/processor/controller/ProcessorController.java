@@ -32,7 +32,7 @@ public class ProcessorController {
      **** CATALOG ****
      *****************/
 
-    @ApiOperation(value = "Create new offer in the Catalog")
+    @ApiOperation(value = "Create new offer in the Catalog", tags = "Catalog")
     @PostMapping("/catalog/offers")
     @ResponseStatus(HttpStatus.CREATED)
     @Logged(messageBefore = "Received request to create new Offer in catalog...", messageAfter = "Offer created.", startFromNewLine = true)
@@ -40,7 +40,7 @@ public class ProcessorController {
         return webClient.createOffer(offerDTO);
     }
 
-    @ApiOperation(value = "Get offer from the Catalog")
+    @ApiOperation(value = "Get offer from the Catalog", tags = "Catalog")
     @GetMapping("/catalog/offers/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to retrieve offer by id...", messageAfter = "Offer retrieved.", startFromNewLine = true)
@@ -48,7 +48,7 @@ public class ProcessorController {
         return webClient.findOfferById(id);
     }
 
-    @ApiOperation(value = "Get all offers (filtered or not) from the Catalog",
+    @ApiOperation(value = "Get all offers (filtered or not) from the Catalog", tags = "Catalog",
             notes = "If all request params are null, all the offers will retrieved (unfiltered). \n" +
                     "Otherwise only one of non-null params will be used as filter. So, for the best performance, specify only one thing that you are most interested in.")
     @GetMapping("/catalog/offers")
@@ -59,7 +59,7 @@ public class ProcessorController {
         return webClient.findAllOffers(category, tags, minPrice, maxPrice);
     }
 
-    @ApiOperation(value = "Update offer's name and price in the Catalog")
+    @ApiOperation(value = "Update offer's name and price in the Catalog", tags = "Catalog")
     @PutMapping("/catalog/offers/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to update offer (name and price)...", messageAfter = "Offer was updated.", startFromNewLine = true)
@@ -67,7 +67,7 @@ public class ProcessorController {
         return webClient.updateOfferNameAndPrice(id, offerDTO);
     }
 
-    @ApiOperation(value = "Add tags to the offer in the Catalog")
+    @ApiOperation(value = "Add tags to the offer in the Catalog", tags = "Catalog")
     @PostMapping("/catalog/offers/{id}/tags")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to add tags to offer...", messageAfter = "Offer was updated.", startFromNewLine = true)
@@ -75,7 +75,7 @@ public class ProcessorController {
         return webClient.addTagsToOffer(id, tags);
     }
 
-    @ApiOperation(value = "Remove tags from the offer in the Catalog")
+    @ApiOperation(value = "Remove tags from the offer in the Catalog", tags = "Catalog")
     @DeleteMapping("/catalog/offers/{id}/tags")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to remove tags from offer...", messageAfter = "Offer was updated.", startFromNewLine = true)
@@ -83,7 +83,7 @@ public class ProcessorController {
         return webClient.removeTagsFromOffer(id, tags);
     }
 
-    @ApiOperation(value = "Change offer's category in the Catalog")
+    @ApiOperation(value = "Change offer's category in the Catalog", tags = "Catalog")
     @PutMapping("/catalog/offers/{id}/category")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to change offer's category...", messageAfter = "Offer was updated.", startFromNewLine = true)
@@ -91,7 +91,7 @@ public class ProcessorController {
         return webClient.changeOfferCategory(id, categoryDTO);
     }
 
-    @ApiOperation(value = "Delete offer from the Catalog")
+    @ApiOperation(value = "Delete offer from the Catalog", tags = "Catalog")
     @DeleteMapping("/catalog/offers/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Logged(messageBefore = "Received request to delete offer...", messageAfter = "Offer was deleted.", startFromNewLine = true)
@@ -164,7 +164,7 @@ public class ProcessorController {
      **** CUSTOMER-MANAGEMENT ****
      *****************************/
 
-    @ApiOperation(value = "Sign-up new customer account")
+    @ApiOperation(value = "Sign-up new customer account", tags = "Customer-Management")
     @PostMapping("/customers")
     @ResponseStatus(HttpStatus.CREATED)
     @Logged(messageBefore = "Received request to sign-up new Customer...", messageAfter = "Customer account was created.", startFromNewLine = true)
@@ -172,7 +172,7 @@ public class ProcessorController {
         return webClient.signUpUsingEmail(customerDTO);
     }
 
-    @ApiOperation(value = "Get customer by email or id")
+    @ApiOperation(value = "Get customer by email or id", tags = "Customer-Management")
     @GetMapping("/customers/{emailOrId}")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to find Customer...", messageAfter = "Customer retrieved.", startFromNewLine = true)
@@ -180,7 +180,7 @@ public class ProcessorController {
         return webClient.findCustomer(emailOrId);
     }
 
-    @ApiOperation(value = "Get all currently signed-up customers")
+    @ApiOperation(value = "Get all currently signed-up customers", tags = "Customer-Management")
     @GetMapping("/customers")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to find all Customers...", messageAfter = "Customers retrieved.", startFromNewLine = true)
@@ -188,7 +188,7 @@ public class ProcessorController {
         return webClient.findAllCustomers();
     }
 
-    @ApiOperation(value = "Get customer account details by id")
+    @ApiOperation(value = "Get customer account details by id", tags = "Customer-Management")
     @PutMapping("/customers/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to update Customer's personal data...", messageAfter = "Customer was updated.", startFromNewLine = true)
@@ -196,7 +196,7 @@ public class ProcessorController {
         return webClient.editCustomer(id, customerDTO);
     }
 
-    @ApiOperation(value = "Delete customer account from the system")
+    @ApiOperation(value = "Delete customer account from the system", tags = "Customer-Management")
     @DeleteMapping("/customers/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Logged(messageBefore = "Received request to delete Customer...", messageAfter = "Customer account deleted.", startFromNewLine = true)
@@ -209,7 +209,7 @@ public class ProcessorController {
      **** INVENTORY ****
      *******************/
 
-    @ApiOperation(value = "Pack new order and save it in the Inventory")
+    @ApiOperation(value = "Pack new order and save it in the Inventory", tags = "Inventory")
     @PostMapping("/inventory/orders")
     @ResponseStatus(HttpStatus.CREATED)
     @Logged(messageBefore = "Received request to create new Order...", messageAfter = "Order packed.", startFromNewLine = true)
@@ -217,7 +217,7 @@ public class ProcessorController {
         return webClient.createOrder(newOrderDTO);
     }
 
-    @ApiOperation(value = "Get order by the id from the Inventory")
+    @ApiOperation(value = "Get order by the id from the Inventory", tags = "Inventory")
     @GetMapping("/inventory/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to retrieve order by id...", messageAfter = "Order retrieved.", startFromNewLine = true)
@@ -225,15 +225,15 @@ public class ProcessorController {
         return webClient.findOrder(id);
     }
 
-    @ApiOperation(value = "Get all orders by the payment status from the Inventory")
+    @ApiOperation(value = "Get all orders by the payment status from the Inventory", tags = "Inventory")
     @GetMapping("/inventory/orders")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to all orders by payment status...", messageAfter = "Orders found.", startFromNewLine = true)
-    public List<SimplifiedOrderDTO> findAllOrdersByPaymentStatus(@RequestParam("isPaid") Boolean isPaid, @RequestParam(value = "email", required = false) String email) {
+    public List<SimplifiedOrderDTO> findAllOrdersByPaymentStatus(@RequestParam("isPaid") Boolean isPaid) {
         return webClient.findAllOrdersByPaymentStatus(isPaid);
     }
 
-    @ApiOperation(value = "Get all orders coupled with email from the Inventory")
+    @ApiOperation(value = "Get all orders coupled with email from the Inventory", tags = "Inventory")
     @GetMapping("/inventory/customers/{email}/orders")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to find all orders coupled with the email...", messageAfter = "Orders found.", startFromNewLine = true)
@@ -241,7 +241,7 @@ public class ProcessorController {
         return webClient.findAllOrdersByEmail(email);
     }
 
-    @ApiOperation(value = "Get total money spent by the customer")
+    @ApiOperation(value = "Get total money spent by the customer", tags = "Inventory")
     @GetMapping("/inventory/customers/{email}/orders/totalPrice")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to get total money spent by Customer...", messageAfter = "Response retrieved.", startFromNewLine = true)
@@ -249,7 +249,7 @@ public class ProcessorController {
         return webClient.getTotalMoneySpentByCustomer(email);
     }
 
-    @ApiOperation(value = "Get total items bought by the customer")
+    @ApiOperation(value = "Get total items bought by the customer", tags = "Inventory")
     @GetMapping("/inventory/customers/{email}/orders/itemCount")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to get count off all bought items by Customer...", messageAfter = "Response retrieved.", startFromNewLine = true)
@@ -257,7 +257,7 @@ public class ProcessorController {
         return webClient.getTotalItemCountBoughtByCustomer(email);
     }
 
-    @ApiOperation(value = "Set order PaymentStatus=\'payed\'")
+    @ApiOperation(value = "Set order PaymentStatus=\'payed\'", tags = "Inventory")
     @PutMapping("/inventory/orders/{id}/pay")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to Order as paid...", messageAfter = "Order payment status updated.", startFromNewLine = true)
@@ -265,7 +265,7 @@ public class ProcessorController {
         return webClient.confirmPaymentForOrder(id);
     }
 
-    @ApiOperation(value = "Update order status")
+    @ApiOperation(value = "Update order status", tags = "Inventory")
     @PutMapping("/inventory/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to update Order's status...", messageAfter = "Order status updated.", startFromNewLine = true)
@@ -273,7 +273,7 @@ public class ProcessorController {
         return webClient.changeOrderStatus(id, orderDTO.getOrderStatus());
     }
 
-    @ApiOperation(value = "Add items from the Catalog to the order in the Inventory")
+    @ApiOperation(value = "Add items from the Catalog to the order in the Inventory", tags = "Inventory")
     @PostMapping("/inventory/orders/{id}/items")
     @ResponseStatus(HttpStatus.CREATED)
     @Logged(messageBefore = "Received request to add items to the Order...", messageAfter = "Items were added.", startFromNewLine = true)
@@ -281,7 +281,7 @@ public class ProcessorController {
         return webClient.addItemsToOrder(orderId, offerIds);
     }
 
-    @ApiOperation(value = "Remove items from the order in the Inventory")
+    @ApiOperation(value = "Remove items from the order in the Inventory", tags = "Inventory")
     @DeleteMapping("/inventory/orders/{id}/items")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to remove items from the Order...", messageAfter = "Items were removed.", startFromNewLine = true)
