@@ -37,13 +37,12 @@ public class DefaultCategoryValidator implements CategoryValidator {
         }
     }
 
-    @Logged(messageBefore = "Verifying category's name...", messageAfter = "done.")
     @Override
     public void checkName(String name) {
         nameValidator.check(name);
     }
 
-    @Logged(messageBefore = "Verifying category is found...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying category is found...")
     @Override
     public Category checkFound(Category category, String notFoundMessage) {
         if (category == null) {
@@ -52,25 +51,25 @@ public class DefaultCategoryValidator implements CategoryValidator {
         return category;
     }
 
-    @Logged(messageBefore = "Making sure category is found by name...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying category is found by name...")
     @Override
     public Category checkFoundByName(Category category, String name) {
         return checkFound(category, "Category with name=\'" + name + "\' was not found");
     }
 
-    @Logged(messageBefore = "Making sure category is found by id...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying category is found by id...")
     @Override
     public Category checkFoundById(Category category, Long id) {
         return checkFound(category, "Category with id=" + id + " was not found");
     }
 
-    @Logged(messageBefore = "Verifying category is correct...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying category is correct...")
     @Override
     public void checkAllProperties(Category category) {
         nameValidator.check(category.getName());
     }
 
-    @Logged(messageBefore = "Verifying category is fine for persist...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying category is fine for persist...")
     @Override
     public void checkForPersist(Category category) {
         checkNotNull(category);

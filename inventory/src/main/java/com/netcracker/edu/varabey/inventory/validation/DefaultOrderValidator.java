@@ -58,7 +58,7 @@ public class DefaultOrderValidator implements OrderValidator {
         orderItemValidator.checkAllProperties(orderItem);
     }
 
-    @Logged(messageBefore = "Verifying order is found...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying order is found...")
     @Override
     public Order checkFound(Order order, String notFoundMessage) {
         if (order == null) {
@@ -91,7 +91,7 @@ public class DefaultOrderValidator implements OrderValidator {
         }
     }
 
-    @Logged(messageBefore = "Verifying order for persist...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying order for persist...")
     @Override
     public void checkForPersist(Order order) {
         checkNotNull(order);

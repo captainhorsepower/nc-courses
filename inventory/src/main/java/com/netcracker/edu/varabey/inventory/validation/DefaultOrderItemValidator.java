@@ -45,19 +45,16 @@ public class DefaultOrderItemValidator implements OrderItemValidator {
         }
     }
 
-    @Logged(messageBefore = "Verifying orderItem's name...", messageAfter = "done.")
     @Override
     public void checkName(String name) {
         nameValidator.check(name);
     }
 
-    @Logged(messageBefore = "Verifying orderItem's price...", messageAfter = "done.")
     @Override
     public void checkPrice(Price price) {
         priceValidator.check(price);
     }
 
-    @Logged(messageBefore = "Verifying orderItem's name...", messageAfter = "done.")
     @Override
     public OrderItem checkFound(OrderItem orderItem, String notFoundMessage) {
         if (orderItem == null) {
@@ -66,13 +63,13 @@ public class DefaultOrderItemValidator implements OrderItemValidator {
         return orderItem;
     }
 
-    @Logged(messageBefore = "Making sure orderItem is found by id...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying orderItem is found by id...")
     @Override
     public OrderItem checkFoundById(OrderItem orderItem, Long id) {
         return checkFound(orderItem, "OrderItem with id=" + id + " was not found");
     }
 
-    @Logged(messageBefore = "Verifying all orderItem properties...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying all orderItem properties...")
     @Override
     public void checkAllProperties(OrderItem orderItem) {
         checkNotNull(orderItem);
@@ -82,7 +79,7 @@ public class DefaultOrderItemValidator implements OrderItemValidator {
         orderItem.getTags().forEach(tagValidator::checkAllProperties);
     }
 
-    @Logged(messageBefore = "Verifying orderItem for persist...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying orderItem for persist...")
     @Override
     public void checkForPersist(OrderItem orderItem) {
         checkNotNull(orderItem);
