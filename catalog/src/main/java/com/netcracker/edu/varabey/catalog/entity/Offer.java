@@ -21,6 +21,12 @@ import java.util.StringJoiner;
 @Data
 @javax.persistence.Entity
 @Table(name = "offers")
+@NamedQueries({
+        @NamedQuery(name = "Offer.findAll", query = "SELECT offer From Offer offer"),
+        @NamedQuery(name = "Offer.findAllByCategory", query = "SELECT o FROM Offer o  WHERE o.category.name = :categoryName"),
+        @NamedQuery(name = "Offer.findAllHavingTags", query = "SELECT o FROM Offer o JOIN Tag t ON o MEMBER OF t.offers WHERE t.name IN (:tagNameList) GROUP BY o.id HAVING COUNT(DISTINCT t.name) = :tagCount"),
+        @NamedQuery(name = "Offer.findAllWithPriceInRange", query = "SELECT o FROM Offer o  WHERE o.price.value BETWEEN :lowerBound AND :upperBound")
+})
 public class Offer {
 
     @Id
