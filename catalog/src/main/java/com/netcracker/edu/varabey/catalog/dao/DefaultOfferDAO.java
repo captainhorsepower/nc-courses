@@ -7,10 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class for offer. Operates with transaction-scoped entity manager.
@@ -57,9 +56,7 @@ public class DefaultOfferDAO implements OfferDAO {
      */
     @Override
     public List<Offer> findAll() {
-        return em
-                .createQuery("SELECT offer From Offer offer", Offer.class)
-                .getResultList();
+        return em.createNamedQuery("Offer.findAll", Offer.class).getResultList();
     }
 
     /**
@@ -82,10 +79,6 @@ public class DefaultOfferDAO implements OfferDAO {
         return offer;
     }
 
-    /**
-     * permanently remove offer from the catalog, category and offers.
-     * @param id of an offer to be removed.
-     */
     @Override
     public void deleteById(Long id) {
         Offer offer = em.getReference(Offer.class, id);
@@ -94,67 +87,26 @@ public class DefaultOfferDAO implements OfferDAO {
 
     @Override
     public List<Offer> findAllByCategory(Category category) {
-        TypedQuery<Offer> q = em.createQuery(
-                "SELECT o FROM Offer o "
-                + " WHERE o.category.name = :category_name"
-                , Offer.class
-        );
-
-        q.setParameter("category_name", category.getName());
-
-        return q.getResultList();
+        return em.createNamedQuery("Offer.findAllByCategory", Offer.class)
+                .setParameter("categoryName", category.getName())
+                .getResultList();
     }
 
-    /**
-     * finds all offers that suit given tags-filter.
-     * Found offers will contain ALL the tags specified,
-     * so the more tags, the less offers
-     *
-     * tags are not checked in database, they are distinguished by name only.
-     * null tags and tags with null names are ignored.
-     *
-     * @param tags filter
-     * @return narrowed down list of offers.
-     */
-    @SuppressWarnings("unchecked")
     @Override
     public List<Offer> findAllWithTags(Collection<Tag> tags) {
-        StringBuilder qlBuilder = new StringBuilder();
-        qlBuilder.append(" SELECT o FROM Offer o ");
-        qlBuilder.append(" JOIN Tag t ON o MEMBER OF t.offers ");
-        qlBuilder.append(" WHERE t.name IN (");
-
-        long tagCount = tags.stream()
-                .filter( t -> t != null && t.getName() != null)
-                .map(Tag::getName)
-                .peek( name -> qlBuilder.append("'").append(name).append("'").append(", "))
-                .count();
-
-        /* remove last ", " */
-        qlBuilder.setLength(qlBuilder.length() - 2);
-        qlBuilder
-                .append(")")
-                .append(" GROUP BY o.id HAVING COUNT(DISTINCT t.name) = ")
-                .append(tagCount);
-
-        Query q = em.createQuery(
-                qlBuilder.toString()
-        );
-
-        return (List<Offer>) q.getResultList();
+        return em.createNamedQuery("Offer.findAllHavingTags", Offer.class)
+                .setParameter("tagNameList", tags.stream()
+                        .map(Tag::getName)
+                        .collect(Collectors.toList()))
+                .setParameter("tagCount", (long) tags.size())
+                .getResultList();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<Offer> findAllWithPriceInRange(Double lowerBound, Double upperBound) {
-        Query q = em.createQuery(
-                "SELECT o FROM Offer o "
-                        + " WHERE o.price.value BETWEEN :lower AND :upper"
-        );
-
-        q.setParameter("lower", lowerBound);
-        q.setParameter("upper", upperBound);
-
-        return (List<Offer>) q.getResultList();
+        return em.createNamedQuery("Offer.findAllWithPriceInRange", Offer.class)
+                .setParameter("lowerBound", lowerBound)
+                .setParameter("upperBound", upperBound)
+                .getResultList();
     }
 }
