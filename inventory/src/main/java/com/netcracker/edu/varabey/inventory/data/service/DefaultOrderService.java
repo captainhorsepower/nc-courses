@@ -75,11 +75,12 @@ public class DefaultOrderService implements OrderService {
     @Override
     public Order updatePaymentAndStatus(Long id, Order order) {
         Order existingOrder = orderValidator.checkFoundById(findById(id), id);
-        orderValidator.checkEligibilityForUpdate(order);
 
         if (order.getStatus() != null) {
             existingOrder.setStatus(order.getStatus());
         }
+
+        orderValidator.checkEligibilityForUpdate(order);
         if (order.isPaid() != null) {
             existingOrder.setPaid(order.isPaid());
         }
