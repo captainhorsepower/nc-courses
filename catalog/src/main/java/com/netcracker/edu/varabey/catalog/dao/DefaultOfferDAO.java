@@ -3,6 +3,8 @@ package com.netcracker.edu.varabey.catalog.dao;
 import com.netcracker.edu.varabey.catalog.entity.Category;
 import com.netcracker.edu.varabey.catalog.entity.Offer;
 import com.netcracker.edu.varabey.catalog.entity.Tag;
+import com.netcracker.edu.varabey.catalog.validation.exceptions.OfferException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -46,8 +48,12 @@ public class DefaultOfferDAO implements OfferDAO {
 
     @Override
     public void deleteById(Long id) {
-        Offer offer = em.getReference(Offer.class, id);
-        em.remove(offer);
+        try {
+            Offer offer = em.getReference(Offer.class, id);
+            em.remove(offer);
+        } catch (EmptyResultDataAccessException e) {
+            throw new OfferException("Offer with id=" + id + " was not found. Unable to delete.");
+        }
     }
 
     @Override
