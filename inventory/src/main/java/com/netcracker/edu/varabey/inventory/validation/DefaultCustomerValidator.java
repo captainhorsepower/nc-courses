@@ -35,7 +35,6 @@ public class DefaultCustomerValidator implements CustomerValidator {
         }
     }
 
-    @Logged(messageBefore = "Verifying customer's email...")
     @Override
     public void checkEmail(String email) {
         emailValidator.check(email);
@@ -61,11 +60,13 @@ public class DefaultCustomerValidator implements CustomerValidator {
         return checkFound(customer, "Customer with id=" + id + " was not found");
     }
 
+    @Logged(messageBefore = "Verifying customer's account is correct...")
     @Override
     public void checkAllProperties(Customer customer) {
         checkEmail(customer.getEmail());
     }
 
+    @Logged(messageBefore = "Verifying customer's account is fine for persist...")
     @Override
     public void checkForPersist(Customer customer) {
         checkNotNull(customer);

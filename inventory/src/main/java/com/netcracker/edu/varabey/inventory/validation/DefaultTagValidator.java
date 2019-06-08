@@ -37,13 +37,12 @@ public class DefaultTagValidator implements TagValidator {
         }
     }
 
-    @Logged(messageBefore = "Verifying tag's name...")
     @Override
     public void checkName(String name) {
         nameValidator.check(name);
     }
 
-    @Logged(messageBefore = "Verifying category is found...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying tag is found...")
     @Override
     public Tag checkFound(Tag tag, String notFoundMessage) {
         if (tag == null) {
@@ -52,25 +51,25 @@ public class DefaultTagValidator implements TagValidator {
         return tag;
     }
 
-    @Logged(messageBefore = "Making sure tag is found by name...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying tag is found by name...")
     @Override
     public Tag checkFoundByName(Tag tag, String name) {
         return checkFound(tag, "Tag with name=\'" + name + "\' was not found");
     }
 
-    @Logged(messageBefore = "Making sure tag is found by id...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying tag is found by id...")
     @Override
     public Tag checkFoundById(Tag tag, Long id) {
         return checkFound(tag, "Tag with id=" + id + " was not found");
     }
 
-    @Logged(messageBefore = "Verifying tag is correct...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying tag is correct...")
     @Override
     public void checkAllProperties(Tag tag) {
         nameValidator.check(tag.getName());
     }
 
-    @Logged(messageBefore = "Verifying tag is fine for persist...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying tag is fine for persist...")
     @Override
     public void checkForPersist(Tag tag) {
         checkNotNull(tag);
