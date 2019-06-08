@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class DefaultOrderDAO implements OrderDAO {
@@ -70,7 +71,7 @@ public class DefaultOrderDAO implements OrderDAO {
     public List<OrderItem> findAllOrderItemsByCustomerAndTags(Customer customer, Collection<Tag> tags) {
         return em.createNamedQuery("OrderItem.findAllByCustomerAndTags", OrderItem.class)
                 .setParameter("customerId", customer.getId())
-                .setParameter("tagNameList", tags)
+                .setParameter("tagNameList", tags.stream().map(Tag::getName).collect(Collectors.toList()))
                 .setParameter("tagCount", (long) tags.size())
                 .getResultList();
     }

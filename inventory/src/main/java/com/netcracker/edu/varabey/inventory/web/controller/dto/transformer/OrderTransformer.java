@@ -19,15 +19,15 @@ public class OrderTransformer implements Transformer<Order, OrderDTO> {
     }
 
     @Override
-    public Order toEntity(OrderDTO dto) {
+    public Order toEntity(OrderDTO orderDTO) {
         CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setEmail(dto.getEmail());
+        customerDTO.setEmail(orderDTO.getEmail());
         Customer customer = customerTransformer.toEntity(customerDTO);
 
-        Order order = new Order(customer, dto.getCreatedOnDate());
-        order.setPaid(dto.isPaid());
-        order.setStatus(dto.getOrderStatus());
-        dto.getItems().stream()
+        Order order = new Order(customer, orderDTO.getCreatedOnDate());
+        order.setPaid((orderDTO.isPaid() == null) ? false : orderDTO.isPaid());
+        order.setStatus(orderDTO.getOrderStatus());
+        orderDTO.getItems().stream()
                 .map(itemTransformer::toEntity)
                 .forEach(order::addItem);
         return order;

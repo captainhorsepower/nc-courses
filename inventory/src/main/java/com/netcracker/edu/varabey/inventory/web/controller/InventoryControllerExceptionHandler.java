@@ -1,7 +1,7 @@
 package com.netcracker.edu.varabey.inventory.web.controller;
 
-import com.netcracker.edu.varabey.inventory.data.validation.exceptions.HttpStatusException;
 import com.netcracker.edu.varabey.inventory.springutils.beanannotation.Logged;
+import com.netcracker.edu.varabey.inventory.web.validation.exceptions.HttpStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.logging.LogLevel;

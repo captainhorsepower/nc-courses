@@ -2,18 +2,12 @@ package com.netcracker.edu.varabey.inventory.web.controller;
 
 import com.netcracker.edu.varabey.inventory.data.entity.Order;
 import com.netcracker.edu.varabey.inventory.data.entity.OrderItem;
-import com.netcracker.edu.varabey.inventory.data.service.CategoryService;
-import com.netcracker.edu.varabey.inventory.data.service.CustomerService;
-import com.netcracker.edu.varabey.inventory.data.service.OrderService;
-import com.netcracker.edu.varabey.inventory.data.service.TagService;
-import com.netcracker.edu.varabey.inventory.data.validation.CategoryValidator;
-import com.netcracker.edu.varabey.inventory.data.validation.CustomerValidator;
-import com.netcracker.edu.varabey.inventory.data.validation.OrderValidator;
-import com.netcracker.edu.varabey.inventory.data.validation.TagValidator;
 import com.netcracker.edu.varabey.inventory.springutils.beanannotation.Logged;
 import com.netcracker.edu.varabey.inventory.web.controller.dto.OrderDTO;
 import com.netcracker.edu.varabey.inventory.web.controller.dto.OrderItemDTO;
 import com.netcracker.edu.varabey.inventory.web.controller.dto.transformer.Transformer;
+import com.netcracker.edu.varabey.inventory.web.service.OrderService;
+import com.netcracker.edu.varabey.inventory.web.validation.OrderValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,29 +21,17 @@ import java.util.stream.Collectors;
 @RequestMapping
 public class OrderController {
     private final OrderService orderService;
-    private final CategoryService categoryService;
-    private final TagService tagService;
-    private final CustomerService customerService;
     private final Transformer<Order, OrderDTO> orderTransformer;
     private final Transformer<OrderItem, OrderItemDTO> itemTransformer;
     private final OrderValidator orderValidator;
-    private final CustomerValidator customerValidator;
-    private final TagValidator tagValidator;
-    private final CategoryValidator categoryValidator;
 
     protected Logger logger = LoggerFactory.getLogger(OrderController.class);
 
-    public OrderController(OrderService orderService, CategoryService categoryService, TagService tagService, CustomerService customerService, Transformer<Order, OrderDTO> orderTransformer, Transformer<OrderItem, OrderItemDTO> itemTransformer, OrderValidator orderValidator, CustomerValidator customerValidator, TagValidator tagValidator, CategoryValidator categoryValidator) {
+    public OrderController(OrderService orderService, Transformer<Order, OrderDTO> orderTransformer, Transformer<OrderItem, OrderItemDTO> itemTransformer, OrderValidator orderValidator) {
         this.orderService = orderService;
-        this.categoryService = categoryService;
-        this.tagService = tagService;
-        this.customerService = customerService;
         this.orderTransformer = orderTransformer;
         this.itemTransformer = itemTransformer;
         this.orderValidator = orderValidator;
-        this.customerValidator = customerValidator;
-        this.tagValidator = tagValidator;
-        this.categoryValidator = categoryValidator;
     }
 
     @PostMapping("/orders")
@@ -98,6 +80,8 @@ public class OrderController {
         logger.info("Filter: email=\'{}\', tags=\'{}\', category=\'{}\'", email, tagNames, categoryName);
 
         List<OrderItem> filteredItems;
+
+        email = email.toLowerCase();
 
         if (categoryName != null && !categoryName.isEmpty()) {
             filteredItems = orderService.findAllOrderItemsByEmailAndCategory(email, categoryName);
