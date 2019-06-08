@@ -154,6 +154,18 @@ public class DefaultOrderService implements OrderService {
     }
 
     @Override
+    public Double getTotalMoneySpendByEmail(String email) {
+        Customer customer = customerValidator.checkFoundByEmail(customerService.findByEmail(email), email);
+        return orderDAO.getTotalMoneySpendByCustomer(customer);
+    }
+
+    @Override
+    public Long getItemCountBoughtByEmail(String email) {
+        Customer customer = customerValidator.checkFoundByEmail(customerService.findByEmail(email), email);
+        return orderDAO.getItemCountBoughtByCustomer(customer);
+    }
+
+    @Override
     public List<OrderItem> getValidOrderItems(List<OrderItem> items) {
         return items.stream()
                 .peek(item -> {

@@ -54,4 +54,8 @@ public interface OrderDAO {
     List<OrderItem> findAllOrderItemsByCustomerAndTags(Customer c, Collection<Tag> tags);
     List<OrderItem> findAllOrderItemsByCustomerAndCategory(Customer cu, Category ca);
     List<OrderItem> findAllOrderItemsByCustomer(Customer customer);
+
+    Double getTotalMoneySpendByCustomer(Customer customer);
+
+    Long getItemCountBoughtByCustomer(Customer customer);
 }

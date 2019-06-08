@@ -90,4 +90,18 @@ public class DefaultOrderDAO implements OrderDAO {
                 .setParameter("customer_id", customer.getId())
                 .getResultList();
     }
+
+    @Override
+    public Double getTotalMoneySpendByCustomer(Customer customer) {
+        return em.createNamedQuery("Order.getTotalMoneySpendByCustomer", Double.class)
+                .setParameter("customerId", customer.getId())
+                .getSingleResult();
+    }
+
+    @Override
+    public Long getItemCountBoughtByCustomer(Customer customer) {
+        return em.createNamedQuery("Order.getItemCountBoughtByCustomer", Long.class)
+                .setParameter("customerId", customer.getId())
+                .getSingleResult();
+    }
 }
