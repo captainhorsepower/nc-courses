@@ -5,8 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -14,7 +13,6 @@ public class DefaultOrderDAO implements OrderDAO {
     @PersistenceContext
     private EntityManager em;
 
-    /** записать оффер и входящие в него айтемы в б.д. */
     @Override
     public Order save(Order order) {
         /* merge(), а не persist(), т.к. айтемы вполне могут содержать
@@ -25,7 +23,7 @@ public class DefaultOrderDAO implements OrderDAO {
     }
 
     @Override
-    public Order find(Long id) {
+    public Order findById(Long id) {
         Order order = em.find(Order.class, id);
         /* without refresh list of items gets polluted with
          * some random items, god only knows why. */
@@ -33,17 +31,30 @@ public class DefaultOrderDAO implements OrderDAO {
         return order;
     }
 
-    @SuppressWarnings(value = "unchecked")
     @Override
     public List<Order> findAll() {
-        List<Order> orders = (List<Order>) em.createQuery("SELECT o"
-                + " FROM Order o").getResultList();
+        List<Order> orders = em.createNamedQuery("Order.findAll", Order.class).getResultList();
         /* without refresh list of items gets polluted with
          * some random items, god only knows why. */
         orders.forEach(em::refresh);
         return orders;
     }
 
+    @Override
+    public List<Order> findAllByCustomer(Customer customer) {
+        return em.createNamedQuery("Order.findAllByCustomer", Order.class)
+                .setParameter("customerId", customer.getId())
+                .getResultList();
+    }
+
+    @Override
+    public List<Order> findAllByPaymentStatus(Boolean isPaid) {
+        return em.createNamedQuery("Order.findAllByPaymentStatus", Order.class)
+                .setParameter("isPaid", isPaid)
+                .getResultList();
+    }
+
+    @Deprecated
     @Override
     public Order update(Order order) {
         return em.merge(order);
@@ -55,50 +66,27 @@ public class DefaultOrderDAO implements OrderDAO {
         em.remove(o);
     }
 
-    @SuppressWarnings(value = "unchecked")
     @Override
-    public List<OrderItem> findAllOrderItemsByCustomerAndTag(Customer c, Tag t) {
-
-        /* I'm sure it's for from the most optimal way, but for now at least it works */
-        Query q = em.createQuery("SELECT i "
-                + " FROM OrderItem i, Tag t "
-                + " WHERE t.id=:tag_id AND "
-                + " i.owningOrder.customer.id=:customer_id AND"
-                + " i MEMBER OF t.items"
-        );
-
-        q.setParameter("tag_id", t.getId());
-        q.setParameter("customer_id", c.getId());
-
-        return (List<OrderItem>) q.getResultList();
+    public List<OrderItem> findAllOrderItemsByCustomerAndTags(Customer customer, Collection<Tag> tags) {
+        return em.createNamedQuery("OrderItem.findAllByCustomerAndTags", OrderItem.class)
+                .setParameter("customerId", customer.getId())
+                .setParameter("tagNameList", tags)
+                .setParameter("tagCount", (long) tags.size())
+                .getResultList();
     }
 
-    @SuppressWarnings(value = "unchecked")
     @Override
     public List<OrderItem> findAllOrderItemsByCustomerAndCategory(Customer cu, Category ca) {
-        Query q = em.createQuery("SELECT i "
-                + " FROM OrderItem i "
-                + " INNER JOIN Category ca ON i MEMBER OF ca.items"
-                + " WHERE i.owningOrder.customer.id=:customer_id "
-                + " AND ca.id=:category_id"
-        );
-
-        q.setParameter("category_id", ca.getId());
-        q.setParameter("customer_id", cu.getId());
-
-        return (List<OrderItem>) q.getResultList();
+        return em.createNamedQuery("OrderItem.findAllByCustomerAndCategory", OrderItem.class)
+                .setParameter("category_id", ca.getId())
+                .setParameter("customer_id", cu.getId())
+                .getResultList();
     }
 
     @Override
     public List<OrderItem> findAllOrderItemsByCustomer(Customer customer) {
-        TypedQuery<OrderItem> q = em.createQuery("SELECT i "
-                + " FROM OrderItem i "
-                + " WHERE i.owningOrder.customer.id = :customer_id",
-                OrderItem.class
-        );
-
-        q.setParameter("customer_id", customer.getId());
-
-        return q.getResultList();
+        return em.createNamedQuery("OrderItem.findAllByCustomer", OrderItem.class)
+                .setParameter("customer_id", customer.getId())
+                .getResultList();
     }
 }

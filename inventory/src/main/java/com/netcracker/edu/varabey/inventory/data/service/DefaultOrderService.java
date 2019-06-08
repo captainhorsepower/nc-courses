@@ -2,16 +2,20 @@ package com.netcracker.edu.varabey.inventory.data.service;
 
 import com.netcracker.edu.varabey.inventory.data.dao.OrderDAO;
 import com.netcracker.edu.varabey.inventory.data.entity.*;
-import com.netcracker.edu.varabey.inventory.exceptions.OrderException;
-import com.netcracker.edu.varabey.inventory.validation.CategoryValidator;
-import com.netcracker.edu.varabey.inventory.validation.CustomerValidator;
-import com.netcracker.edu.varabey.inventory.validation.OrderValidator;
-import com.netcracker.edu.varabey.inventory.validation.TagValidator;
+import com.netcracker.edu.varabey.inventory.data.validation.CategoryValidator;
+import com.netcracker.edu.varabey.inventory.data.validation.CustomerValidator;
+import com.netcracker.edu.varabey.inventory.data.validation.OrderValidator;
+import com.netcracker.edu.varabey.inventory.data.validation.TagValidator;
+import com.netcracker.edu.varabey.inventory.data.validation.exceptions.OrderException;
+import com.netcracker.edu.varabey.inventory.springutils.beanannotation.Logged;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,6 +32,8 @@ public class DefaultOrderService implements OrderService {
     private final TagValidator tagValidator;
     private final CategoryValidator categoryValidator;
 
+    protected Logger logger = LoggerFactory.getLogger(DefaultOrderService.class);
+
     public DefaultOrderService(OrderDAO orderDAO, CustomerService customerService, TagService tagService, CategoryService categoryService, OrderValidator orderValidator, CustomerValidator customerValidator, TagValidator tagValidator, CategoryValidator categoryValidator) {
         this.orderDAO = orderDAO;
         this.customerService = customerService;
@@ -41,35 +47,38 @@ public class DefaultOrderService implements OrderService {
 
     @Override
     public Order save(Order order) {
+        logger.info("Verifying order for persist...");
         orderValidator.checkForPersist(order);
         order.setItems(getValidOrderItems(order.getItems()));
         order.setCustomer(customerService.createCustomer(order.getCustomer()));
+        logger.info("Saving order to the database...");
         return orderDAO.save(order);
     }
 
     @Override
     public Order findById(Long id) {
         orderValidator.checkIdIsNotNull(id);
-        return orderDAO.find(id);
+        logger.info("Looking for order by Id");
+        return orderDAO.findById(id);
     }
 
+    @Logged(messageBefore = "Retrieving all orders from the database...", messageAfter = "All orders retrieved.")
     @Override
     public List<Order> findAll() {
         return orderDAO.findAll();
     }
 
+    @Logged(messageBefore = "Retrieving all orders by email from the database...", messageAfter = "All orders retrieved.")
     @Override
     public List<Order> findAllOrdersByEmail(String coupledEmail) {
-        return findAll().stream()
-                .filter(order -> order.getCustomer().getEmail() == coupledEmail)
-                .collect(Collectors.toList());
+        Customer customer = customerValidator.checkFoundByEmail(customerService.findByEmail(coupledEmail), coupledEmail);
+        return orderDAO.findAllByCustomer(customer);
     }
 
+    @Logged(messageBefore = "Retrieving all orders from the database...", messageAfter = "All orders retrieved.")
     @Override
     public List<Order> findAllOrdersByPaymentStatus(Boolean isPaid) {
-        return findAll().stream()
-                .filter(order -> order.isPaid() == isPaid)
-                .collect(Collectors.toList());
+        return orderDAO.findAllByPaymentStatus(isPaid);
     }
 
     @Override
@@ -123,24 +132,24 @@ public class DefaultOrderService implements OrderService {
     }
 
     @Override
-    public List<OrderItem> findAllOrderItemsByCustomerAndTag(Customer customer, Tag tag) {
-        customer = customerValidator.checkFoundByEmail(customerService.findByEmail(customer.getEmail()), customer.getEmail());
-        tag = tagValidator.checkFoundByName(tagService.findByName(tag.getName()), tag.getName());
-        return orderDAO.findAllOrderItemsByCustomerAndTag(customer, tag);
+    public List<OrderItem> findAllOrderItemsByEmailAndTags(String email, Collection<String> tagNames) {
+        Customer customer = customerValidator.checkFoundByEmail(customerService.findByEmail(email), email);
+        List<Tag> tags = tagNames.stream()
+                .map(tagName -> tagValidator.checkFoundByName(tagService.findByName(tagName), tagName))
+                .collect(Collectors.toList());
+        return orderDAO.findAllOrderItemsByCustomerAndTags(customer, tags);
     }
 
     @Override
-    public List<OrderItem> findAllOrderItemsByCustomerAndCategory(Customer customer, Category category) {
-        customer = customerValidator.checkFoundByEmail(customerService.findByEmail(customer.getEmail()), customer.getEmail());
-        category = categoryValidator.checkFoundByName(categoryService.findCategory(category.getName()), category.getName());
-
+    public List<OrderItem> findAllOrderItemsByEmailAndCategory(String email, String categoryName) {
+        Customer customer = customerValidator.checkFoundByEmail(customerService.findByEmail(email), email);
+        Category category = categoryValidator.checkFoundByName(categoryService.findCategory(categoryName), categoryName);
         return orderDAO.findAllOrderItemsByCustomerAndCategory(customer, category);
     }
 
     @Override
-    public List<OrderItem> findAllOrderItemsByCustomer(Customer customer) {
-        customer = customerService.findByEmail(customer.getEmail());
-        customerValidator.checkFoundByEmail(customer, customer.getEmail());
+    public List<OrderItem> findAllOrderItemsByEmail(String email) {
+        Customer customer = customerValidator.checkFoundByEmail(customerService.findByEmail(email), email);
         return orderDAO.findAllOrderItemsByCustomer(customer);
     }
 

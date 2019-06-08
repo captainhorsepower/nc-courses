@@ -18,6 +18,11 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Entity
 @Table(name = "orders")
+@NamedQueries({
+        @NamedQuery(name = "Order.findAll", query = "SELECT order from Order order"),
+        @NamedQuery(name = "Order.findAllByCustomer", query = "SELECT order FROM Order order WHERE order.customer.id = :customerId"),
+        @NamedQuery(name = "Order.findAllByPaymentStatus", query = "SELECT order FROM Order order WHERE order.isPaid = :isPaid")
+})
 public class Order {
 
     @Id

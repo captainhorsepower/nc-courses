@@ -2,7 +2,7 @@ package com.netcracker.edu.varabey.inventory.data.service;
 
 import com.netcracker.edu.varabey.inventory.data.dao.TagDAO;
 import com.netcracker.edu.varabey.inventory.data.entity.Tag;
-import com.netcracker.edu.varabey.inventory.validation.TagValidator;
+import com.netcracker.edu.varabey.inventory.data.validation.TagValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
