@@ -130,4 +130,16 @@ public class OrderController {
     public void deleteOrder(@PathVariable("id") Long id) {
         orderService.deleteOrder(id);
     }
+
+    @GetMapping("/orders/metadata/totalPrice")
+    @ResponseStatus(HttpStatus.OK)
+    public Double getTotalMoneySpendByCustomer(@RequestParam(name = "email") String email) {
+        return orderService.getTotalMoneySpendByEmail(email);
+    }
+
+    @GetMapping("/orders/metadata/itemCount")
+    @ResponseStatus(HttpStatus.OK)
+    public Long getItemCountBoughtByCustomer(@RequestParam(name = "email") String email) {
+        return orderService.getItemCountBoughtByEmail(email);
+    }
 }

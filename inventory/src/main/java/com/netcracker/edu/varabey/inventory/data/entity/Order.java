@@ -21,7 +21,9 @@ import java.util.stream.Collectors;
 @NamedQueries({
         @NamedQuery(name = "Order.findAll", query = "SELECT order from Order order"),
         @NamedQuery(name = "Order.findAllByCustomer", query = "SELECT order FROM Order order WHERE order.customer.id = :customerId"),
-        @NamedQuery(name = "Order.findAllByPaymentStatus", query = "SELECT order FROM Order order WHERE order.isPaid = :isPaid")
+        @NamedQuery(name = "Order.findAllByPaymentStatus", query = "SELECT order FROM Order order WHERE order.isPaid = :isPaid"),
+        @NamedQuery(name = "Order.getItemCountBoughtByCustomer", query = "SELECT COUNT(item) FROM OrderItem item WHERE item.owningOrder.customer.id = :customerId"),
+        @NamedQuery(name = "Order.getTotalMoneySpendByCustomer", query = "SELECT SUM(item.price.value) FROM OrderItem item WHERE item.owningOrder.customer.id = :customerId")
 })
 public class Order {
 
@@ -48,6 +50,11 @@ public class Order {
 
     @Column(nullable = false, name = "is_paid")
     private Boolean isPaid = false;
+
+    @Transient
+    private Double totalPrice;
+    @Transient
+    private Integer itemCount;
 
     public Order(Customer c, LocalDateTime d) {
         this.customer = c;
@@ -92,17 +99,16 @@ public class Order {
                 .collect(Collectors.toList());
     }
 
-    /** accumulated order price */
-    public Double getTotalPrice() {
-        return this.items.stream()
+    @PostLoad
+    @PostUpdate
+    @PostPersist
+    public void updateMetadata() {
+        totalPrice = this.items.stream()
                 .mapToDouble(i -> i.getPrice().getValue())
                 .reduce( 0., (sum, price) -> sum += price);
+        itemCount = this.items.size();
     }
 
-    /** number of items in order */
-    public Integer getItemCount() {
-        return this.items.size();
-    }
 
     public void setPaid(Boolean isPaid) {
         this.isPaid = isPaid;

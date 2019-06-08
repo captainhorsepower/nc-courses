@@ -67,6 +67,10 @@ public interface OrderService {
 
     List<OrderItem> findAllOrderItemsByEmail(String email);
 
+    Double getTotalMoneySpendByEmail(String email);
+
+    Long getItemCountBoughtByEmail(String email);
+
     /**
      * Refreshes tags and categories that are already persisted
      *
