@@ -67,20 +67,28 @@ public class DefaultOrderValidator implements OrderValidator {
         return order;
     }
 
-    @Logged(messageBefore = "Making sure order is found by id...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying order is found by id...")
     @Override
     public Order checkFoundById(Order order, Long id) {
         return checkFound(order, "Order with id=" + id + " was not found");
     }
 
 
-    @Logged(messageBefore = "Verifying all order properties...", messageAfter = "done.")
+    @Logged(messageBefore = "Verifying all order properties...")
     @Override
     public void checkAllProperties(Order order) {
         checkNotNull(order);
         checkCustomer(order.getCustomer());
         checkCreationDate(order.getCreatedOnDate());
         order.getItems().forEach(this::checkOrderItem);
+    }
+
+    @Logged(messageBefore = "Verifying order is eligible for updates...")
+    @Override
+    public void checkEligibilityForUpdate(Order order) {
+        if (order.isPaid()) {
+            throw new OrderException("Order is already paid. Paid Orders can not be modified.");
+        }
     }
 
     @Logged(messageBefore = "Verifying order for persist...", messageAfter = "done.")
