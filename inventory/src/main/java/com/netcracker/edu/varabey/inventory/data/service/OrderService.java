@@ -72,4 +72,8 @@ public interface OrderService {
      * @return list of OrderItems with tags and categories ready for persist/update
      */
     List<OrderItem> getValidOrderItems(List<OrderItem> items);
+
+    List<Order> findAllOrdersByEmail(String coupledEmail);
+
+    List<Order> findAllOrdersByPaymentStatus(Boolean isPaid);
 }
