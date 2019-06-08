@@ -190,8 +190,8 @@ public class ProcessorController {
 
     @PostMapping("/inventory/orders")
     @ResponseStatus(HttpStatus.CREATED)
-    @Logged(messageBefore = "Received request to create new Order...", messageAfter = "Order posted.", startFromNewLine = true)
-    public VerboseOrderDTO packNewOrder(@RequestBody NewOrderDTO newOrderDTO) {
+    @Logged(messageBefore = "Received request to create new Order...", messageAfter = "Order packed.", startFromNewLine = true)
+    public VerboseOrderDTO packNewOrder(@RequestBody SimplifiedOrderDTO newOrderDTO) {
         return webClient.createOrder(newOrderDTO);
     }
 

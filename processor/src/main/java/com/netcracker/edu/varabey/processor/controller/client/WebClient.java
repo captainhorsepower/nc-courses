@@ -1,12 +1,13 @@
 package com.netcracker.edu.varabey.processor.controller.client;
 
-import com.netcracker.edu.varabey.processor.controller.dto.*;
+import com.netcracker.edu.varabey.processor.controller.dto.CategoryDTO;
+import com.netcracker.edu.varabey.processor.controller.dto.CustomerDTO;
+import com.netcracker.edu.varabey.processor.controller.dto.OfferDTO;
+import com.netcracker.edu.varabey.processor.controller.dto.OrderItemDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.InventoryOrderDTO;
-import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.NewOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.SimplifiedOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.VerboseOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.transformer.Transformer;
-import com.netcracker.edu.varabey.processor.exception.controller.ControllerException;
 import com.netcracker.edu.varabey.processor.springutils.beanannotation.Logged;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,7 @@ public class WebClient {
         this.simpleOrderTransformer = simpleOrderTransformer;
     }
 
-    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved")
+    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
     public OfferDTO createOffer(OfferDTO offerDTO) {
         return restTemplate.exchange(
                 UriComponentsBuilder
@@ -63,7 +64,7 @@ public class WebClient {
         ).getBody();
     }
 
-    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved")
+    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
     public List<OfferDTO> findAllOffers(String category, List<String> tags, Double minPrice, Double maxPrice) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(catalogUrl + "/offers")
                 .queryParam("category", category)
@@ -78,7 +79,7 @@ public class WebClient {
                 .getBody();
     }
 
-    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved")
+    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
     public OfferDTO findOfferById(Long id) {
         return restTemplate.exchange(
                 UriComponentsBuilder
@@ -92,7 +93,7 @@ public class WebClient {
                 .getBody();
     }
 
-    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved")
+    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
     public OfferDTO updateOfferNameAndPrice(Long id, OfferDTO offerDTO) {
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(catalogUrl)
@@ -106,7 +107,7 @@ public class WebClient {
         ).getBody();
     }
 
-    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved")
+    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
     public OfferDTO addTagsToOffer(Long id, List<String> tags) {
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(catalogUrl)
@@ -121,7 +122,7 @@ public class WebClient {
         ).getBody();
     }
 
-    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved")
+    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
     public OfferDTO removeTagsFromOffer(Long id, List<String> tags) {
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(catalogUrl)
@@ -136,7 +137,7 @@ public class WebClient {
         ).getBody();
     }
 
-    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved")
+    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
     public OfferDTO changeOfferCategory(Long id, CategoryDTO categoryDTO) {
         return restTemplate.exchange(
                 UriComponentsBuilder
@@ -166,135 +167,134 @@ public class WebClient {
 
 
 
-    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved")
-    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-        return restTemplate.exchange(
-                UriComponentsBuilder
-                        .fromHttpUrl(catalogUrl)
-                        .path("/categories")
-                        .toUriString(),
-                HttpMethod.POST,
-                new HttpEntity<>(categoryDTO),
-                new ParameterizedTypeReference<CategoryDTO>() {}
-        ).getBody();
-    }
+//    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
+//    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+//        return restTemplate.exchange(
+//                UriComponentsBuilder
+//                        .fromHttpUrl(catalogUrl)
+//                        .path("/categories")
+//                        .toUriString(),
+//                HttpMethod.POST,
+//                new HttpEntity<>(categoryDTO),
+//                new ParameterizedTypeReference<CategoryDTO>() {}
+//        ).getBody();
+//    }
 
-    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved")
-    public List<CategoryDTO> createAllCategories(List<CategoryDTO> categoryDTOS) {
-        return restTemplate.exchange(
-                UriComponentsBuilder
-                        .fromHttpUrl(catalogUrl)
-                        .path("/categories")
-                        .path("/saveAll")
-                        .toUriString(),
-                HttpMethod.POST,
-                new HttpEntity<>(categoryDTOS),
-                new ParameterizedTypeReference<List<CategoryDTO>>() {}
-        ).getBody();
-    }
+//    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
+//    public List<CategoryDTO> createAllCategories(List<CategoryDTO> categoryDTOS) {
+//        return restTemplate.exchange(
+//                UriComponentsBuilder
+//                        .fromHttpUrl(catalogUrl)
+//                        .path("/categories")
+//                        .path("/saveAll")
+//                        .toUriString(),
+//                HttpMethod.POST,
+//                new HttpEntity<>(categoryDTOS),
+//                new ParameterizedTypeReference<List<CategoryDTO>>() {}
+//        ).getBody();
+//    }
+//
+//    public CategoryDTO findCategory(String input) {
+//        return restTemplate.exchange(
+//                UriComponentsBuilder
+//                        .fromHttpUrl(catalogUrl)
+//                        .path("/categories")
+//                        .path("/" + input)
+//                        .toUriString(),
+//                HttpMethod.GET,
+//                HttpEntity.EMPTY,
+//                new ParameterizedTypeReference<CategoryDTO>(){}
+//        ).getBody();
+//    }
+//
+//    public CategoryDTO updateCategoryName(Long id, CategoryDTO categoryDTO) {
+//        return restTemplate.exchange(
+//                UriComponentsBuilder
+//                        .fromHttpUrl(catalogUrl)
+//                        .path("/categories")
+//                        .path("/" + id)
+//                        .toUriString(),
+//                HttpMethod.PUT,
+//                new HttpEntity<>(categoryDTO),
+//                new ParameterizedTypeReference<CategoryDTO>(){}
+//        ).getBody();
+//    }
+//
+//    public void deleteCategory(Long id) {
+//        restTemplate.delete(
+//                UriComponentsBuilder
+//                        .fromHttpUrl(catalogUrl)
+//                        .path("/categories")
+//                        .path("/" + id)
+//                        .toUriString()
+//        );
+//    }
+//
+//    public TagDTO createTag(TagDTO tagDTO) {
+//        return restTemplate.exchange(
+//                UriComponentsBuilder
+//                        .fromHttpUrl(catalogUrl)
+//                        .path("/tags")
+//                        .toUriString(),
+//                HttpMethod.POST,
+//                new HttpEntity<>(tagDTO),
+//                new ParameterizedTypeReference<TagDTO>() {}
+//        ).getBody();
+//    }
+//
+//    public List<TagDTO> createAllTags(List<TagDTO> tagDTOS) {
+//        return restTemplate.exchange(
+//                UriComponentsBuilder
+//                        .fromHttpUrl(catalogUrl)
+//                        .path("/tags")
+//                        .path("/saveAll")
+//                        .toUriString(),
+//                HttpMethod.POST,
+//                new HttpEntity<>(tagDTOS),
+//                new ParameterizedTypeReference<List<TagDTO>>() {}
+//        ).getBody();
+//    }
+//
+//    public TagDTO findTag(String input) {
+//        return restTemplate.exchange(
+//                UriComponentsBuilder
+//                        .fromHttpUrl(catalogUrl)
+//                        .path("/tags")
+//                        .path("/" + input)
+//                        .toUriString(),
+//                HttpMethod.GET,
+//                HttpEntity.EMPTY,
+//                new ParameterizedTypeReference<TagDTO>(){}
+//        ).getBody();
+//    }
+//
+//    public TagDTO updateTagName(Long id, TagDTO tagDTO) {
+//        return restTemplate.exchange(
+//                UriComponentsBuilder
+//                        .fromHttpUrl(catalogUrl)
+//                        .path("/tags")
+//                        .path("/" + id)
+//                        .toUriString(),
+//                HttpMethod.PUT,
+//                new HttpEntity<>(tagDTO),
+//                new ParameterizedTypeReference<TagDTO>(){}
+//        ).getBody();
+//    }
+//
+//    public void deleteTag(Long id) {
+//        restTemplate.delete(
+//                UriComponentsBuilder
+//                        .fromHttpUrl(catalogUrl)
+//                        .path("/tags")
+//                        .path("/" + id)
+//                        .toUriString()
+//        );
+//    }
 
-    public CategoryDTO findCategory(String input) {
-        return restTemplate.exchange(
-                UriComponentsBuilder
-                        .fromHttpUrl(catalogUrl)
-                        .path("/categories")
-                        .path("/" + input)
-                        .toUriString(),
-                HttpMethod.GET,
-                HttpEntity.EMPTY,
-                new ParameterizedTypeReference<CategoryDTO>(){}
-        ).getBody();
-    }
 
-    public CategoryDTO updateCategoryName(Long id, CategoryDTO categoryDTO) {
-        return restTemplate.exchange(
-                UriComponentsBuilder
-                        .fromHttpUrl(catalogUrl)
-                        .path("/categories")
-                        .path("/" + id)
-                        .toUriString(),
-                HttpMethod.PUT,
-                new HttpEntity<>(categoryDTO),
-                new ParameterizedTypeReference<CategoryDTO>(){}
-        ).getBody();
-    }
-
-    public void deleteCategory(Long id) {
-        restTemplate.delete(
-                UriComponentsBuilder
-                        .fromHttpUrl(catalogUrl)
-                        .path("/categories")
-                        .path("/" + id)
-                        .toUriString()
-        );
-    }
-
-    public TagDTO createTag(TagDTO tagDTO) {
-        return restTemplate.exchange(
-                UriComponentsBuilder
-                        .fromHttpUrl(catalogUrl)
-                        .path("/tags")
-                        .toUriString(),
-                HttpMethod.POST,
-                new HttpEntity<>(tagDTO),
-                new ParameterizedTypeReference<TagDTO>() {}
-        ).getBody();
-    }
-
-    public List<TagDTO> createAllTags(List<TagDTO> tagDTOS) {
-        return restTemplate.exchange(
-                UriComponentsBuilder
-                        .fromHttpUrl(catalogUrl)
-                        .path("/tags")
-                        .path("/saveAll")
-                        .toUriString(),
-                HttpMethod.POST,
-                new HttpEntity<>(tagDTOS),
-                new ParameterizedTypeReference<List<TagDTO>>() {}
-        ).getBody();
-    }
-
-    public TagDTO findTag(String input) {
-        return restTemplate.exchange(
-                UriComponentsBuilder
-                        .fromHttpUrl(catalogUrl)
-                        .path("/tags")
-                        .path("/" + input)
-                        .toUriString(),
-                HttpMethod.GET,
-                HttpEntity.EMPTY,
-                new ParameterizedTypeReference<TagDTO>(){}
-        ).getBody();
-    }
-
-    public TagDTO updateTagName(Long id, TagDTO tagDTO) {
-        return restTemplate.exchange(
-                UriComponentsBuilder
-                        .fromHttpUrl(catalogUrl)
-                        .path("/tags")
-                        .path("/" + id)
-                        .toUriString(),
-                HttpMethod.PUT,
-                new HttpEntity<>(tagDTO),
-                new ParameterizedTypeReference<TagDTO>(){}
-        ).getBody();
-    }
-
-    public void deleteTag(Long id) {
-        restTemplate.delete(
-                UriComponentsBuilder
-                        .fromHttpUrl(catalogUrl)
-                        .path("/tags")
-                        .path("/" + id)
-                        .toUriString()
-        );
-    }
-
-
-    @Logged(messageBefore = "Rerouting requst to customer-management server...",
-            messageAfter = "Recieved response from customer-management server.")
+    @Logged(messageBefore = "Rerouting request to the Customer-Management microservice...", messageAfter = "Response retrieved.")
     public CustomerDTO signUpUsingEmail(CustomerDTO customer) {
-        ResponseEntity<CustomerDTO> response = restTemplate.exchange(
+        return restTemplate.exchange(
                 UriComponentsBuilder
                         .fromHttpUrl(customerManagementUrl)
                         .path("/customers")
@@ -302,12 +302,12 @@ public class WebClient {
                 HttpMethod.POST,
                 new HttpEntity<>(customer),
                 new ParameterizedTypeReference<CustomerDTO>(){}
-        );
-        return response.getBody();
+            ).getBody();
     }
 
+    @Logged(messageBefore = "Rerouting request to the Customer-Management microservice...", messageAfter = "Response retrieved.")
     public CustomerDTO findCustomer(String query) {
-        ResponseEntity<CustomerDTO> response = restTemplate.exchange(
+        return restTemplate.exchange(
                 UriComponentsBuilder
                         .fromHttpUrl(customerManagementUrl)
                         .path("/customers")
@@ -315,24 +315,26 @@ public class WebClient {
                         .toUriString(),
                 HttpMethod.GET,
                 HttpEntity.EMPTY,
-                new ParameterizedTypeReference<CustomerDTO>(){});
-        return response.getBody();
+                new ParameterizedTypeReference<CustomerDTO>(){}
+            ).getBody();
     }
 
+    @Logged(messageBefore = "Rerouting request to the Customer-Management microservice...", messageAfter = "Response retrieved.")
     public List<CustomerDTO> findAllCustomers() {
-        ResponseEntity<List<CustomerDTO>> response = restTemplate.exchange(
+        return restTemplate.exchange(
                 UriComponentsBuilder
                         .fromHttpUrl(customerManagementUrl)
                         .path("/customers")
                         .toUriString(),
                 HttpMethod.GET,
                 HttpEntity.EMPTY,
-                new ParameterizedTypeReference<List<CustomerDTO>>(){});
-        return response.getBody();
+                new ParameterizedTypeReference<List<CustomerDTO>>(){}
+            ).getBody();
     }
 
+    @Logged(messageBefore = "Rerouting request to the Customer-Management microservice...", messageAfter = "Response retrieved.")
     public CustomerDTO editCustomer(Long id, CustomerDTO customerDTO) {
-        ResponseEntity<CustomerDTO> response = restTemplate.exchange(
+        return restTemplate.exchange(
                 UriComponentsBuilder
                         .fromHttpUrl(customerManagementUrl)
                         .path("/customers")
@@ -341,10 +343,10 @@ public class WebClient {
                 HttpMethod.PUT,
                 new HttpEntity<>(customerDTO),
                 new ParameterizedTypeReference<CustomerDTO>(){}
-        );
-        return response.getBody();
+        ).getBody();
     }
 
+    @Logged(messageBefore = "Rerouting request to the Customer-Management microservice...", messageAfter = "Response retrieved.")
     public void deleteCustomer(Long id) {
         // all orders coupled with customers email will remain in the database.
         restTemplate.delete(UriComponentsBuilder
@@ -358,22 +360,25 @@ public class WebClient {
 
 
 
-
-    public VerboseOrderDTO createOrder(NewOrderDTO inputOrderInputDTO) {
+    public VerboseOrderDTO createOrder(SimplifiedOrderDTO inputOrderInputDTO) {
+        logger.info("Retrieving customer account from Customer-Management microservice...");
         CustomerDTO customer = findCustomer(inputOrderInputDTO.getEmail());
 
+        logger.info("Parsing Offers to OrderItems...");
         List<OrderItemDTO> items = inputOrderInputDTO.getOfferIds().stream()
                 .map(this::findOfferById)
                 .map(offerToOrderItemTransformer::convert)
                 .collect(Collectors.toList());
 
+        logger.info("Compiling InventoryOrderDTO...");
         InventoryOrderDTO orderDTO = new InventoryOrderDTO();
-        orderDTO.setPaid(inputOrderInputDTO.getPaid());
+        orderDTO.setPaid(inputOrderInputDTO.isPaid());
         orderDTO.setOrderStatus(inputOrderInputDTO.getOrderStatus());
         orderDTO.setCreatedOnDate(inputOrderInputDTO.getCreatedOnDate());
         orderDTO.setEmail(customer.getEmail());
         orderDTO.setItems(items);
 
+        logger.info("Rerouting request to the Inventory microservice...");
         ResponseEntity<VerboseOrderDTO> response = restTemplate.exchange(
                 UriComponentsBuilder
                         .fromHttpUrl(inventoryUrl)
@@ -383,12 +388,15 @@ public class WebClient {
                 new HttpEntity<>(orderDTO),
                 new ParameterizedTypeReference<VerboseOrderDTO>(){}
         );
+        logger.info("Response successfully retrieved.");
+
         response.getBody().setCustomer(customer);
         return response.getBody();
     }
 
     public VerboseOrderDTO findOrder(Long id) {
-        ResponseEntity<InventoryOrderDTO> response = restTemplate.exchange(
+        logger.info("Rerouting request to the Inventory microservice...");
+        InventoryOrderDTO inventoryOrder = restTemplate.exchange(
                 UriComponentsBuilder.fromHttpUrl(inventoryUrl)
                         .path("/orders")
                         .path("/" + id)
@@ -396,15 +404,32 @@ public class WebClient {
                 HttpMethod.GET,
                 HttpEntity.EMPTY,
                 new ParameterizedTypeReference<InventoryOrderDTO>() {}
-        );
-        InventoryOrderDTO inventoryOrder = response.getBody();
+        ).getBody();
+        logger.info("Response successfully retrieved.");
+
         VerboseOrderDTO processorOrder = verboseOrderTransformer.convert(inventoryOrder);
 
-        CustomerDTO customerDTO = findCustomer(inventoryOrder.getEmail());
-        processorOrder.setCustomer(customerDTO);
+        processorOrder.setCustomer(findCustomerForVerboseOrder(inventoryOrder.getEmail()));
         return processorOrder;
     }
 
+    protected CustomerDTO findCustomerForVerboseOrder(String email) {
+        logger.info("Retrieving customer from Customer-Management microservice...");
+        CustomerDTO customerDTO;
+        try {
+            customerDTO = findCustomer(email);
+            logger.info("Customer retrieved.");
+        } catch (RuntimeException e) {
+            logger.info("Customer account with given email was deleted.");
+            customerDTO = new CustomerDTO();
+            customerDTO.setEmail(email);
+            customerDTO.setFio("\'personal data was removed.\'");
+        }
+
+        return customerDTO;
+    }
+
+    @Logged(messageBefore = "Rerouting request to the Inventory microservice...", messageAfter = "Response retrieved.")
     public List<SimplifiedOrderDTO> findAllOrdersByPaymentStatus(Boolean isPaid) {
         ResponseEntity<List<InventoryOrderDTO>> response = restTemplate.exchange(
                 UriComponentsBuilder
@@ -421,6 +446,7 @@ public class WebClient {
                 .collect(Collectors.toList());
     }
 
+    @Logged(messageBefore = "Rerouting request to the Inventory microservice...", messageAfter = "Response retrieved.")
     public List<SimplifiedOrderDTO> findAllOrdersByEmail(String email) {
         ResponseEntity<List<InventoryOrderDTO>> response = restTemplate.exchange(
                 UriComponentsBuilder
@@ -449,6 +475,7 @@ public class WebClient {
         return orders.size();
     }
 
+    @Logged(messageBefore = "Rerouting request to the Inventory microservice...", messageAfter = "Response retrieved.")
     public SimplifiedOrderDTO confirmPaymentForOrder(Long id) {
         SimplifiedOrderDTO orderWithPayment = new SimplifiedOrderDTO();
         orderWithPayment.setPaid(true);
@@ -467,6 +494,8 @@ public class WebClient {
         return simpleOrderTransformer.convert(response.getBody());
     }
 
+
+    @Logged(messageBefore = "Rerouting request to the Inventory microservice...", messageAfter = "Response retrieved.")
     public SimplifiedOrderDTO changeOrderStatus(Long id, String status) {
         SimplifiedOrderDTO orderWithStatus = new SimplifiedOrderDTO();
         orderWithStatus.setOrderStatus(status);
@@ -485,6 +514,7 @@ public class WebClient {
         return simpleOrderTransformer.convert(response.getBody());
     }
 
+    @Logged(messageBefore = "Rerouting request to the Inventory microservice...", messageAfter = "Response retrieved.")
     public SimplifiedOrderDTO addItemsToOrder(Long orderId, List<Long> offerIds) {
         List<OrderItemDTO> items = offerIds.stream()
                 .map(this::findOfferById)
@@ -504,12 +534,8 @@ public class WebClient {
         return simpleOrderTransformer.convert(response.getBody());
     }
 
+    @Logged(messageBefore = "Rerouting request to the Inventory microservice...", messageAfter = "Response retrieved.")
     public SimplifiedOrderDTO removeItemsFromOrder(Long orderId, List<Long> itemIds) {
-        VerboseOrderDTO orderDTO = findOrder(orderId);
-        if (orderDTO.isPaid()) {
-            // TODO use grown up validation
-            throw new RuntimeException("don't delete items form paid order");
-        }
         ResponseEntity<InventoryOrderDTO> response = restTemplate.exchange(
                 UriComponentsBuilder.
                         fromHttpUrl(inventoryUrl)
