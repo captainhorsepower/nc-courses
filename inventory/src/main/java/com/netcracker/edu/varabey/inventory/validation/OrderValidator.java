@@ -12,5 +12,6 @@ public interface OrderValidator extends ServiceValidator<Order, Long> {
     void checkOrderItem(OrderItem orderItem);
     void checkAllProperties(Order order);
     void checkForPersist(Order order);
+    void checkEligibilityForUpdate(Order order);
     Order checkFoundById(Order order, Long id);
 }

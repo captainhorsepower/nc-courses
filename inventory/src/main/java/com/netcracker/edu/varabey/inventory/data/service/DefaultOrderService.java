@@ -75,6 +75,7 @@ public class DefaultOrderService implements OrderService {
     @Override
     public Order updatePaymentAndStatus(Long id, Order order) {
         Order existingOrder = orderValidator.checkFoundById(findById(id), id);
+        orderValidator.checkEligibilityForUpdate(order);
 
         if (order.getStatus() != null) {
             existingOrder.setStatus(order.getStatus());
@@ -89,6 +90,7 @@ public class DefaultOrderService implements OrderService {
     @Override
     public Order addItems(Long id, List<OrderItem> items) {
         Order order = orderValidator.checkFoundById(findById(id), id);
+        orderValidator.checkEligibilityForUpdate(order);
 
         items = getValidOrderItems(items);
         items.forEach(order::addItem);
@@ -99,6 +101,7 @@ public class DefaultOrderService implements OrderService {
     @Override
     public Order removeItems(Long id, Set<Long> itemIds) {
         Order order = orderValidator.checkFoundById(findById(id), id);
+        orderValidator.checkEligibilityForUpdate(order);
 
         List<OrderItem> trashCan = order.getItems().stream()
                 .filter(i -> itemIds.contains(i.getId()))
