@@ -22,6 +22,9 @@ import java.util.StringJoiner;
 @NoArgsConstructor
 @javax.persistence.Entity
 @Table(name = "tags")
+@NamedQueries({
+        @NamedQuery(name = "Tag.findByName", query = "SELECT t FROM Tag t where t.name = :name")
+})
 public class Tag {
 
     @Id
