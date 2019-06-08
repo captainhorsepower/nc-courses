@@ -59,6 +59,20 @@ public class DefaultOrderService implements OrderService {
     }
 
     @Override
+    public List<Order> findAllOrdersByEmail(String coupledEmail) {
+        return findAll().stream()
+                .filter(order -> order.getCustomer().getEmail() == coupledEmail)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Order> findAllOrdersByPaymentStatus(Boolean isPaid) {
+        return findAll().stream()
+                .filter(order -> order.isPaid() == isPaid)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Order updatePaymentAndStatus(Long id, Order order) {
         Order existingOrder = orderValidator.checkFoundById(findById(id), id);
 

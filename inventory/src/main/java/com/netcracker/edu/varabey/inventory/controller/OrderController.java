@@ -66,16 +66,26 @@ public class OrderController {
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderDTO> findAllOrders() {
-        return orderService.findAll().stream()
+    public List<OrderDTO> findAllOrders(@RequestParam(name = "email", required = false) String coupledEmail, @RequestParam(name = "paid", required = false) Boolean isPaid) {
+        List<Order> orders;
+
+        if (coupledEmail != null) {
+            orders = orderService.findAllOrdersByEmail(coupledEmail);
+        } else if (isPaid != null) {
+            orders = orderService.findAllOrdersByPaymentStatus(isPaid);
+        } else {
+            orders = orderService.findAll();
+        }
+
+        return orders.stream()
                 .map(orderTransformer::toDto)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/customers/{email}/orders/items")
+    @GetMapping("/orders/items")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderItemDTO> findItemsByCustomerAndTag(
-            @PathVariable(name = "email") String email,
+            @RequestParam(name = "email") String email,
             @RequestParam(name = "tag", required = false) String tagName,
             @RequestParam(name = "category", required = false) String categoryName
             ) {
@@ -102,6 +112,7 @@ public class OrderController {
     public OrderDTO addItemsToOrder(@PathVariable("id") Long id, @RequestBody List<OrderItemDTO> itemDTOs) {
         List<OrderItem> items = itemDTOs.stream().map(itemTransformer::toEntity).collect(Collectors.toList());
         Order order = orderService.addItems(id, items);
+
         return orderTransformer.toDto(order);
     }
 
