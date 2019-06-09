@@ -253,7 +253,7 @@ public class ProcessorController {
     @GetMapping("/inventory/customers/{email}/orders/itemCount")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to get count off all bought items by Customer...", messageAfter = "Response retrieved.", startFromNewLine = true)
-    public Integer getTotalItemCountBoughtByCustomer(@PathVariable("email") String email) {
+    public Long getTotalItemCountBoughtByCustomer(@PathVariable("email") String email) {
         return webClient.getTotalItemCountBoughtByCustomer(email);
     }
 
