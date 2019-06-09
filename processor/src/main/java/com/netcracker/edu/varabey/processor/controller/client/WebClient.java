@@ -473,15 +473,29 @@ public class WebClient {
     }
 
     public Double getTotalMoneySpentByCustomer(String email) {
-        List<SimplifiedOrderDTO> orders = findAllOrdersByEmail(email);
-        return orders.stream()
-                .mapToDouble(SimplifiedOrderDTO::getTotalPrice)
-                .reduce(0, Double::sum);
+        return restTemplate.exchange(
+                UriComponentsBuilder
+                        .fromHttpUrl(inventoryUrl)
+                        .path("/orders/metadata/totalPrice")
+                        .queryParam("email", email)
+                        .toUriString(),
+                HttpMethod.GET,
+                HttpEntity.EMPTY,
+                new ParameterizedTypeReference<Double>() {}
+        ).getBody();
     }
 
-    public Integer getTotalItemCountBoughtByCustomer(String email) {
-        List<SimplifiedOrderDTO> orders = findAllOrdersByEmail(email);
-        return orders.size();
+    public Long getTotalItemCountBoughtByCustomer(String email) {
+        return restTemplate.exchange(
+                UriComponentsBuilder
+                        .fromHttpUrl(inventoryUrl)
+                        .path("/orders/metadata/itemCount")
+                        .queryParam("email", email)
+                        .toUriString(),
+                HttpMethod.GET,
+                HttpEntity.EMPTY,
+                new ParameterizedTypeReference<Long>() {}
+        ).getBody();
     }
 
     @Logged(messageBefore = "Rerouting request to the Inventory microservice...", messageAfter = "Response retrieved.")
