@@ -2,7 +2,6 @@ package com.netcracker.edu.varabey.catalog.data.service;
 
 import com.netcracker.edu.varabey.catalog.data.entity.Category;
 import com.netcracker.edu.varabey.catalog.data.entity.Offer;
-import com.netcracker.edu.varabey.catalog.data.entity.Tag;
 
 import java.util.List;
 
@@ -44,19 +43,19 @@ public interface OfferService {
 
     /**
      * Finds all offers with given category
-     * @param category - must not be null
+     * @param categoryName - must not be null
      * @return all found offers as List
      * @throws IllegalArgumentException if category is null
      */
-    List<Offer> findAllOffersByCategory(Category category);
+    List<Offer> findAllOffersByCategory(String categoryName);
 
     /**
      * Finds all offers, that have all given tags
-     * @param tags as filter
+     * @param tagNames as filter
      * @return found offers
      * @throws IllegalArgumentException if tags is null or empty
      */
-    List<Offer> findAllOffersWithTags(List<Tag>  tags);
+    List<Offer> findAllOffersWithTags(List<String> tagNames);
 
     /**
      * Finds all offers with price in range given range

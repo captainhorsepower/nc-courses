@@ -1,17 +1,16 @@
 package com.netcracker.edu.varabey.catalog.web.controller;
 
-import com.netcracker.edu.varabey.catalog.web.controller.dto.CategoryDTO;
-import com.netcracker.edu.varabey.catalog.web.controller.dto.OfferDTO;
-import com.netcracker.edu.varabey.catalog.web.controller.dto.transformer.Transformer;
 import com.netcracker.edu.varabey.catalog.data.entity.Category;
 import com.netcracker.edu.varabey.catalog.data.entity.Offer;
-import com.netcracker.edu.varabey.catalog.data.entity.Tag;
 import com.netcracker.edu.varabey.catalog.data.service.CategoryService;
 import com.netcracker.edu.varabey.catalog.data.service.OfferService;
 import com.netcracker.edu.varabey.catalog.data.service.TagService;
-import com.netcracker.edu.varabey.catalog.springutils.beanannotation.Logged;
 import com.netcracker.edu.varabey.catalog.data.validation.OfferValidator;
 import com.netcracker.edu.varabey.catalog.data.validation.exceptions.OfferException;
+import com.netcracker.edu.varabey.catalog.springutils.beanannotation.Logged;
+import com.netcracker.edu.varabey.catalog.web.controller.dto.CategoryDTO;
+import com.netcracker.edu.varabey.catalog.web.controller.dto.OfferDTO;
+import com.netcracker.edu.varabey.catalog.web.controller.dto.transformer.Transformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -69,19 +68,16 @@ public class OfferController {
 
     protected List<OfferDTO> findAllOffersByCategory(String category) {
         category = decode(category);
-        return offerService.findAllOffersByCategory(
-                categoryService.getByName(category)
-        ).stream()
+        return offerService.findAllOffersByCategory(category).stream()
                 .map(offerTransformer::toDto)
                 .collect(Collectors.toList());
     }
 
     protected List<OfferDTO> findAllOffersByTags(List<String> tagNames) {
-        List<Tag> tags = tagNames.stream()
+        tagNames = tagNames.stream()
                 .map(this::decode)
-                .map(tagService::getByName)
                 .collect(Collectors.toList());
-        return offerService.findAllOffersWithTags(tags).stream()
+        return offerService.findAllOffersWithTags(tagNames).stream()
                 .map(offerTransformer::toDto)
                 .collect(Collectors.toList());
     }

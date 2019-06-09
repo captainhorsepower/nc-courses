@@ -106,14 +106,16 @@ public class DefaultOfferService implements OfferService {
     }
 
     @Override
-    public List<Offer> findAllOffersByCategory(Category category) {
-        categoryValidator.checkAllProperties(category);
+    public List<Offer> findAllOffersByCategory(String categoryName) {
+        Category category = categoryValidator.checkFoundByName(categoryService.findByName(categoryName), categoryName);
         return offerDAO.findAllByCategory(category);
     }
 
     @Override
-    public List<Offer> findAllOffersWithTags(List<Tag> tags) {
-        tags.forEach(tagValidator::checkAllProperties);
+    public List<Offer> findAllOffersWithTags(List<String> tagNames) {
+        List<Tag> tags = tagNames.stream()
+                .map(tagName -> tagValidator.checkFoundByName( tagService.findByName(tagName), tagName))
+                .collect(Collectors.toList());
         return offerDAO.findAllWithTags(tags);
     }
 
