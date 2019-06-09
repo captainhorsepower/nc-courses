@@ -1,7 +1,6 @@
 package com.netcracker.edu.varabey.inventory.web.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.netcracker.edu.varabey.inventory.data.entity.utils.OrderStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +14,7 @@ public class OrderDTO {
     private Long id;
     private String email;
     private Boolean isPaid;
-    private OrderStatus orderStatus;
+    private String orderStatus;
     private LocalDateTime createdOnDate;
     private Double totalPrice;
     private Integer itemCount;
