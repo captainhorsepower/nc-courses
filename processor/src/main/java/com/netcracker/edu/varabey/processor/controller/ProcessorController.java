@@ -10,17 +10,84 @@ import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.Verbos
 import com.netcracker.edu.varabey.processor.springutils.beanannotation.Logged;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.netcracker.edu.varabey.processor.controller.ProcessorController.LinkDelegate.*;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @Api(tags = {"Syr-Indastriz API"}, value = "none", description = "All API operations combined")
 public class ProcessorController {
-    protected Logger logger = LoggerFactory.getLogger(ProcessorController.class);
+    static class LinkDelegate {
+
+        /*****************
+         **** CATALOG ****
+         *****************/
+
+        static Resource<OfferDTO> getCreatedOfferResource(OfferDTO offerDTO) {
+            Resource<OfferDTO> resource = new Resource<>(offerDTO);
+
+            resource.add(getSelfLink(offerDTO));
+            resource.add(getSameCategoryLink(offerDTO));
+            resource.add(getSimilarOffersLink(offerDTO));
+
+            return resource;
+        }
+
+        static Resource<OfferDTO> getFoundOfferResource(OfferDTO offerDTO) {
+            return getCreatedOfferResource(offerDTO);
+        }
+
+        static Resources<Resource<OfferDTO>> getFoundOffersResourceList(List<OfferDTO> offers) {
+            List<Resource<OfferDTO>> offerResources = offers.stream()
+                    .map(Resource<OfferDTO>::new)
+                    .peek(r -> r.add(getSelfLink(r.getContent())))
+                    .collect(Collectors.toList());
+            return new Resources<>(offerResources);
+        }
+
+        static Resource<OfferDTO> getSelfLinkedOfferResource(OfferDTO offerDTO) {
+            Resource<OfferDTO> r = new Resource<>(offerDTO);
+            r.add(getSelfLink(offerDTO));
+            return r;
+        }
+
+        static Link getSelfLink(OfferDTO offerDTO) {
+            return linkTo(methodOn(ProcessorController.class).getOfferById(offerDTO.getId())).withSelfRel();
+        }
+
+        static Link getSameCategoryLink(OfferDTO offerDTO) {
+            return linkTo(methodOn(ProcessorController.class).getAllOffers(offerDTO.getCategory(), null, null, null)).withRel("same category").expand();
+        }
+
+        static Link getSimilarOffersLink(OfferDTO offerDTO) {
+            List<String> tags = new ArrayList<>(offerDTO.getTags());
+            Collections.shuffle(tags);
+            tags = tags.stream().limit(2).collect(Collectors.toList());
+            return linkTo(methodOn(ProcessorController.class)
+                    .getAllOffers(null, null, null, null))
+                    .withRel("similar offers")
+                    .expand(null, String.join(",", tags), null, null);
+        }
+
+
+    }
+
+    private Logger logger = LoggerFactory.getLogger(ProcessorController.class);
 
     private final WebClient webClient;
 
@@ -32,20 +99,23 @@ public class ProcessorController {
      **** CATALOG ****
      *****************/
 
-    @ApiOperation(value = "Create new offer in the Catalog", tags = "Catalog")
+    @ApiOperation(value = "Add a new offer to the Catalog", tags = "Catalog")
+    @ApiResponses({
+            @ApiResponse(code = 405, message = "Invalid input"),
+    })
     @PostMapping("/catalog/offers")
     @ResponseStatus(HttpStatus.CREATED)
     @Logged(messageBefore = "Received request to create new Offer in catalog...", messageAfter = "Offer created.", startFromNewLine = true)
-    public OfferDTO createOffer(@RequestBody OfferDTO offerDTO) {
-        return webClient.createOffer(offerDTO);
+    public Resource<OfferDTO> createOffer(@RequestBody OfferDTO offerDTO) {
+        return getCreatedOfferResource(webClient.createOffer(offerDTO));
     }
 
     @ApiOperation(value = "Get offer from the Catalog", tags = "Catalog")
     @GetMapping("/catalog/offers/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to retrieve offer by id...", messageAfter = "Offer retrieved.", startFromNewLine = true)
-    public OfferDTO getOfferById(@PathVariable("id") Long id) {
-        return webClient.findOfferById(id);
+    public Resource<OfferDTO> getOfferById(@PathVariable("id") Long id) {
+        return getFoundOfferResource(webClient.findOfferById(id));
     }
 
     @ApiOperation(value = "Get all offers (filtered or not) from the Catalog", tags = "Catalog",
@@ -54,41 +124,41 @@ public class ProcessorController {
     @GetMapping("/catalog/offers")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to retrieve multiple offers...", messageAfter = "Offers retrieved.", startFromNewLine = true)
-    public List<OfferDTO> getAllOffers(@RequestParam(name = "category", required = false) String category, @RequestParam(name = "tags", required = false) List<String> tags, @RequestParam(name = "minPrice", required = false) Double minPrice, @RequestParam(name = "maxPrice", required = false) Double maxPrice) {
+    public Resources<Resource<OfferDTO>> getAllOffers(@RequestParam(name = "category", required = false) String category, @RequestParam(name = "tags", required = false) List<String> tags, @RequestParam(name = "minPrice", required = false) Double minPrice, @RequestParam(name = "maxPrice", required = false) Double maxPrice) {
         logger.info("Filter: category={}, tags={}, price_range=[{}, {}]", category, tags, minPrice, maxPrice);
-        return webClient.findAllOffers(category, tags, minPrice, maxPrice);
+        return getFoundOffersResourceList(webClient.findAllOffers(category, tags, minPrice, maxPrice));
     }
 
     @ApiOperation(value = "Update offer's name and price in the Catalog", tags = "Catalog")
     @PutMapping("/catalog/offers/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to update offer (name and price)...", messageAfter = "Offer was updated.", startFromNewLine = true)
-    public OfferDTO updateOfferNameAndPrice(@PathVariable("id") Long id, @RequestBody OfferDTO offerDTO) {
-        return webClient.updateOfferNameAndPrice(id, offerDTO);
+    public Resource<OfferDTO> updateOfferNameAndPrice(@PathVariable("id") Long id, @RequestBody OfferDTO offerDTO) {
+        return getSelfLinkedOfferResource(webClient.updateOfferNameAndPrice(id, offerDTO));
     }
 
     @ApiOperation(value = "Add tags to the offer in the Catalog", tags = "Catalog")
     @PostMapping("/catalog/offers/{id}/tags")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to add tags to offer...", messageAfter = "Offer was updated.", startFromNewLine = true)
-    public OfferDTO addTagsToOffer(@PathVariable("id") Long id, @RequestBody List<String> tags) {
-        return webClient.addTagsToOffer(id, tags);
+    public Resource<OfferDTO> addTagsToOffer(@PathVariable("id") Long id, @RequestBody List<String> tags) {
+        return getSelfLinkedOfferResource(webClient.addTagsToOffer(id, tags));
     }
 
     @ApiOperation(value = "Remove tags from the offer in the Catalog", tags = "Catalog")
     @DeleteMapping("/catalog/offers/{id}/tags")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to remove tags from offer...", messageAfter = "Offer was updated.", startFromNewLine = true)
-    public OfferDTO removeTagsFromOffer(@PathVariable("id") Long id, @RequestBody List<String> tags) {
-        return webClient.removeTagsFromOffer(id, tags);
+    public Resource<OfferDTO> removeTagsFromOffer(@PathVariable("id") Long id, @RequestBody List<String> tags) {
+        return getSelfLinkedOfferResource(webClient.removeTagsFromOffer(id, tags));
     }
 
     @ApiOperation(value = "Change offer's category in the Catalog", tags = "Catalog")
     @PutMapping("/catalog/offers/{id}/category")
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to change offer's category...", messageAfter = "Offer was updated.", startFromNewLine = true)
-    public OfferDTO changeOfferCategory(@PathVariable("id") Long id, @RequestBody CategoryDTO categoryDTO) {
-        return webClient.changeOfferCategory(id, categoryDTO);
+    public Resource<OfferDTO> changeOfferCategory(@PathVariable("id") Long id, @RequestBody CategoryDTO categoryDTO) {
+        return getSelfLinkedOfferResource(webClient.changeOfferCategory(id, categoryDTO));
     }
 
     @ApiOperation(value = "Delete offer from the Catalog", tags = "Catalog")
@@ -98,67 +168,6 @@ public class ProcessorController {
     public void deleteOffer(@PathVariable("id") Long id) {
         webClient.deleteOffer(id);
     }
-
-//    @PostMapping("/categories")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public CategoryDTO createCategory(@RequestBody CategoryDTO categoryDTO) {
-//        return webClient.createCategory(categoryDTO);
-//    }
-//
-//    @PostMapping("/categories/saveAll")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public List<CategoryDTO> createAllCategories(@RequestBody List<CategoryDTO> categoryDTOS) {
-//        return webClient.createAllCategories(categoryDTOS);
-//    }
-//
-//    @GetMapping("/categories/{input}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public CategoryDTO findCategoryById(@PathVariable("input") String input) {
-//        return webClient.findCategory(input);
-//    }
-//
-//    @PutMapping("/categories/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public CategoryDTO updateCategoryName(@PathVariable("id") Long id, @RequestBody CategoryDTO categoryDTO) {
-//        return webClient.updateCategoryName(id, categoryDTO);
-//    }
-//
-//    @DeleteMapping("/categories/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void deleteCategory(@PathVariable("id") Long id) {
-//        webClient.deleteCategory(id);
-//    }
-//
-//    @PostMapping("/tags")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public TagDTO createTag(@RequestBody TagDTO tagDTO) {
-//        return webClient.createTag(tagDTO);
-//    }
-//
-//    @PostMapping("/tags/saveAll")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public List<TagDTO> createAllTags(@RequestBody List<TagDTO> tagDTOS) {
-//        return webClient.createAllTags(tagDTOS);
-//    }
-//
-//    @GetMapping("/tags/{input}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public TagDTO findTagById(@PathVariable("input") String input) {
-//        return webClient.findTag(input);
-//    }
-//
-//    @PutMapping("/tags/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public TagDTO updateTagName(@PathVariable("id") Long id, @RequestBody TagDTO tagDTO) {
-//        return webClient.updateTagName(id, tagDTO);
-//    }
-//
-//    @DeleteMapping("/tags/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void deleteTag(@PathVariable("id") Long id) {
-//        webClient.deleteTag(id);
-//    }
-
 
     /*****************************
      **** CUSTOMER-MANAGEMENT ****
