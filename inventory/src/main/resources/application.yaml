@@ -17,5 +17,19 @@ spring:
   mvc:
     servlet:
       path: /inventory
+
+  application:
+    name: inventory
+
 server:
   port: 8800
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+    initial-instance-info-replication-interval-seconds: 1
+  instance:
+    lease-renewal-interval-in-seconds: 1
+    lease-expiration-duration-in-seconds: 5
+    prefer-ip-address: true

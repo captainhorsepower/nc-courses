@@ -35,9 +35,9 @@ public class WebClient {
 
     protected Logger logger = LoggerFactory.getLogger(WebClient.class);
 
-    public WebClient(@Value("${inventory.url}") String inventoryUrl,
-                     @Value("${catalog.url}") String catalogUrl,
-                     @Value("${customer-management.url}") String customerManagementUrl,
+    public WebClient(@Value("${microservices.inventory.base-url}") String inventoryUrl,
+                     @Value("${microservices.catalog.base-url}") String catalogUrl,
+                     @Value("${microservices.customer-management.base-url}") String customerManagementUrl,
                      RestTemplate restTemplate,
                      Transformer<OfferDTO, OrderItemDTO> offerToOrderItemTransformer,
                      Transformer<InventoryOrderDTO, VerboseOrderDTO> verboseOrderTransformer,
