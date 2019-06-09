@@ -3,18 +3,36 @@ server:
   servlet:
     context-path: /order-entry
 
-inventory:
-  host: http://localhost
-  port: 8800
-  path: /inventory
-  url: ${inventory.host}:${inventory.port}/${inventory.path}
-customer-management:
-  host: http://localhost
-  port: 8088
-  path: /customer-management
-  url: ${customer-management.host}:${customer-management.port}/${customer-management.path}
-catalog:
-  host: http://localhost
-  port: 8045
-  path: /catalog
-  url: ${catalog.host}:${catalog.port}/${catalog.path}
+microservices:
+  url:
+    prefix: http://
+  inventory:
+    applicatoin:           ######################################################
+      name: inventory      #used instead of host for load balancing restTemplate#
+                           ######################################################
+    context-path: /inventory
+    base-url: ${microservices.url.prefix}${microservices.inventory.applicatoin.name}${microservices.inventory.context-path}
+  customer-management:
+    application:
+      name: customer-management
+    context-path: /customer-management
+    base-url: ${microservices.url.prefix}${microservices.customer-management.application.name}${microservices.customer-management.context-path}
+  catalog:
+    application:
+      name: catalog
+    context-path: /catalog
+    base-url: ${microservices.url.prefix}${microservices.catalog.application.name}${microservices.catalog.context-path}
+
+spring:
+  application:
+    name: processor
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+    initial-instance-info-replication-interval-seconds: 1
+  instance:
+    lease-renewal-interval-in-seconds: 1
+    lease-expiration-duration-in-seconds: 5
+    prefer-ip-address: true
