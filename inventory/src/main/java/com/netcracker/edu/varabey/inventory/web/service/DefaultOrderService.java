@@ -2,6 +2,7 @@ package com.netcracker.edu.varabey.inventory.web.service;
 
 import com.netcracker.edu.varabey.inventory.data.dao.OrderDAO;
 import com.netcracker.edu.varabey.inventory.data.entity.*;
+import com.netcracker.edu.varabey.inventory.data.entity.utils.OrderStatus;
 import com.netcracker.edu.varabey.inventory.springutils.beanannotation.Logged;
 import com.netcracker.edu.varabey.inventory.web.validation.CategoryValidator;
 import com.netcracker.edu.varabey.inventory.web.validation.CustomerValidator;
@@ -95,6 +96,23 @@ public class DefaultOrderService implements OrderService {
         }
 
         return existingOrder;
+    }
+
+    @Override
+    public Order setNextOrderStatus(Long id) {
+        Order order = orderValidator.checkFoundById(findById(id), id);
+
+        if (order.getStatus().ordinal() < OrderStatus.DELIVERED.ordinal()) {
+            OrderStatus[] statuses = OrderStatus.values();
+            for (int i = 0; i < statuses.length; i++) {
+                if (statuses[i].equals(order.getStatus())) {
+                    order.setStatus(statuses[Math.max(i + 1, (i + 1) % statuses.length)]);
+                    break;
+                }
+            }
+        }
+
+        return order;
     }
 
     @Override
