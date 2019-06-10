@@ -90,8 +90,8 @@ public class DefaultOrderService implements OrderService {
             existingOrder.setStatus(order.getStatus());
         }
 
-        orderValidator.checkEligibilityForUpdate(order);
-        if (order.isPaid() != null) {
+        if (order.isPaid() != null && order.isPaid()) {
+            orderValidator.checkEligibilityForUpdate(existingOrder);
             existingOrder.setPaid(order.isPaid());
         }
 

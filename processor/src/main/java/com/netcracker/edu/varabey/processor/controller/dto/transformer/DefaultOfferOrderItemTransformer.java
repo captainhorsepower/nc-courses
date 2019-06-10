@@ -9,7 +9,7 @@ public class DefaultOfferOrderItemTransformer implements Transformer<OfferDTO, O
     public OrderItemDTO convert(OfferDTO offerDTO) {
         OrderItemDTO orderItemDTO = new OrderItemDTO();
 
-        orderItemDTO.setPrice(offerDTO.getPrice());
+        orderItemDTO.setPrice(Double.valueOf(String.format("%.2f", offerDTO.getPrice())));
         orderItemDTO.setName(offerDTO.getName());
         orderItemDTO.setCategory(offerDTO.getCategory());
         orderItemDTO.setTags(offerDTO.getTags());
