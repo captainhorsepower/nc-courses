@@ -167,135 +167,6 @@ public class WebClient {
         );
     }
 
-
-
-
-
-//    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
-//    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-//        return restTemplate.exchange(
-//                UriComponentsBuilder
-//                        .fromHttpUrl(catalogUrl)
-//                        .path("/categories")
-//                        .toUriString(),
-//                HttpMethod.POST,
-//                new HttpEntity<>(categoryDTO),
-//                new ParameterizedTypeReference<CategoryDTO>() {}
-//        ).getBody();
-//    }
-
-//    @Logged(messageBefore = "Rerouting request to the Catalog microservice...", messageAfter = "Response retrieved.")
-//    public List<CategoryDTO> createAllCategories(List<CategoryDTO> categoryDTOS) {
-//        return restTemplate.exchange(
-//                UriComponentsBuilder
-//                        .fromHttpUrl(catalogUrl)
-//                        .path("/categories")
-//                        .path("/saveAll")
-//                        .toUriString(),
-//                HttpMethod.POST,
-//                new HttpEntity<>(categoryDTOS),
-//                new ParameterizedTypeReference<List<CategoryDTO>>() {}
-//        ).getBody();
-//    }
-//
-//    public CategoryDTO findCategory(String input) {
-//        return restTemplate.exchange(
-//                UriComponentsBuilder
-//                        .fromHttpUrl(catalogUrl)
-//                        .path("/categories")
-//                        .path("/" + input)
-//                        .toUriString(),
-//                HttpMethod.GET,
-//                HttpEntity.EMPTY,
-//                new ParameterizedTypeReference<CategoryDTO>(){}
-//        ).getBody();
-//    }
-//
-//    public CategoryDTO updateCategoryName(Long id, CategoryDTO categoryDTO) {
-//        return restTemplate.exchange(
-//                UriComponentsBuilder
-//                        .fromHttpUrl(catalogUrl)
-//                        .path("/categories")
-//                        .path("/" + id)
-//                        .toUriString(),
-//                HttpMethod.PUT,
-//                new HttpEntity<>(categoryDTO),
-//                new ParameterizedTypeReference<CategoryDTO>(){}
-//        ).getBody();
-//    }
-//
-//    public void deleteCategory(Long id) {
-//        restTemplate.delete(
-//                UriComponentsBuilder
-//                        .fromHttpUrl(catalogUrl)
-//                        .path("/categories")
-//                        .path("/" + id)
-//                        .toUriString()
-//        );
-//    }
-//
-//    public TagDTO createTag(TagDTO tagDTO) {
-//        return restTemplate.exchange(
-//                UriComponentsBuilder
-//                        .fromHttpUrl(catalogUrl)
-//                        .path("/tags")
-//                        .toUriString(),
-//                HttpMethod.POST,
-//                new HttpEntity<>(tagDTO),
-//                new ParameterizedTypeReference<TagDTO>() {}
-//        ).getBody();
-//    }
-//
-//    public List<TagDTO> createAllTags(List<TagDTO> tagDTOS) {
-//        return restTemplate.exchange(
-//                UriComponentsBuilder
-//                        .fromHttpUrl(catalogUrl)
-//                        .path("/tags")
-//                        .path("/saveAll")
-//                        .toUriString(),
-//                HttpMethod.POST,
-//                new HttpEntity<>(tagDTOS),
-//                new ParameterizedTypeReference<List<TagDTO>>() {}
-//        ).getBody();
-//    }
-//
-//    public TagDTO findTag(String input) {
-//        return restTemplate.exchange(
-//                UriComponentsBuilder
-//                        .fromHttpUrl(catalogUrl)
-//                        .path("/tags")
-//                        .path("/" + input)
-//                        .toUriString(),
-//                HttpMethod.GET,
-//                HttpEntity.EMPTY,
-//                new ParameterizedTypeReference<TagDTO>(){}
-//        ).getBody();
-//    }
-//
-//    public TagDTO updateTagName(Long id, TagDTO tagDTO) {
-//        return restTemplate.exchange(
-//                UriComponentsBuilder
-//                        .fromHttpUrl(catalogUrl)
-//                        .path("/tags")
-//                        .path("/" + id)
-//                        .toUriString(),
-//                HttpMethod.PUT,
-//                new HttpEntity<>(tagDTO),
-//                new ParameterizedTypeReference<TagDTO>(){}
-//        ).getBody();
-//    }
-//
-//    public void deleteTag(Long id) {
-//        restTemplate.delete(
-//                UriComponentsBuilder
-//                        .fromHttpUrl(catalogUrl)
-//                        .path("/tags")
-//                        .path("/" + id)
-//                        .toUriString()
-//        );
-//    }
-
-
     /*****************************
      **** CUSTOMER-MANAGEMENT ****
      *****************************/
@@ -575,6 +446,21 @@ public class WebClient {
                 HttpEntity.EMPTY,
                 new ParameterizedTypeReference<InventoryOrderDTO>() {}
             ).getBody()
+        );
+    }
+
+    public SimplifiedOrderDTO setNextOrderStatus(Long id) {
+        return simpleOrderTransformer.convert(restTemplate.exchange(
+                UriComponentsBuilder.
+                        fromHttpUrl(inventoryUrl)
+                        .path("/orders")
+                        .path("/" + id)
+                        .path("/nextStatus")
+                        .toUriString(),
+                HttpMethod.PUT,
+                HttpEntity.EMPTY,
+                new ParameterizedTypeReference<InventoryOrderDTO>() {}
+                ).getBody()
         );
     }
 }
