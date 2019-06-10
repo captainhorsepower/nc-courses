@@ -19,14 +19,15 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.netcracker.edu.varabey.processor.controller"))
-                .paths(PathSelectors.regex(".*/.*"))
+                .paths(PathSelectors.any())
                 .build()
+                .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo());
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Spring Boot REST API")
+                .title("Syr-Indastriz Online Store REST API")
                 .description("Syr-Indastriz online store management system REST API")
                 .contact(new Contact("Artem Varabei", "https://github.com/captainhorsepower/", "captianhorsepower228@gmail.com"))
                 .license("Apache 2.0")
