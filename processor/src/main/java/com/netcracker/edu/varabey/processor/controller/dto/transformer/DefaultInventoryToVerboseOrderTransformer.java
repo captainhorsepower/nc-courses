@@ -20,7 +20,7 @@ public class DefaultInventoryToVerboseOrderTransformer implements Transformer<In
         orderDTO.setOrderStatus(input.getOrderStatus());
         orderDTO.setCreatedOnDate(input.getCreatedOnDate());
         orderDTO.setItemCount(input.getItemCount());
-        orderDTO.setTotalPrice(input.getTotalPrice());
+        orderDTO.setTotalPrice(Double.valueOf(String.format("%.2f", input.getTotalPrice())));
         orderDTO.setItems(input.getItems());
         return orderDTO;
     }

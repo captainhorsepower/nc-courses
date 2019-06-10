@@ -259,15 +259,18 @@ public class WebClient {
         orderDTO.setItems(items);
 
         logger.info("Rerouting request to the Inventory microservice...");
-        VerboseOrderDTO verboseOrderDTO = restTemplate.exchange(
-                UriComponentsBuilder
-                        .fromHttpUrl(inventoryUrl)
-                        .path("/orders")
-                        .toUriString(),
-                HttpMethod.POST,
-                new HttpEntity<>(orderDTO),
-                new ParameterizedTypeReference<VerboseOrderDTO>(){}
-        ).getBody();
+        VerboseOrderDTO verboseOrderDTO = verboseOrderTransformer.convert(
+                restTemplate.exchange(
+                        UriComponentsBuilder
+                                .fromHttpUrl(inventoryUrl)
+                                .path("/orders")
+                                .toUriString(),
+                        HttpMethod.POST,
+                        new HttpEntity<>(orderDTO),
+                        new ParameterizedTypeReference<InventoryOrderDTO>() {
+                        }
+                ).getBody()
+        );
         logger.info("Response successfully retrieved.");
 
         verboseOrderDTO.setCustomer(customer);
