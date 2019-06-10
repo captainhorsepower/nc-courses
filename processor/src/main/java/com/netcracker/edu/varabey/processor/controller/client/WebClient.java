@@ -5,7 +5,6 @@ import com.netcracker.edu.varabey.processor.controller.dto.CustomerDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.OfferDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.OrderItemDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.InventoryOrderDTO;
-import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.NewOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.SimplifiedOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.VerboseOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.transformer.Transformer;
@@ -242,20 +241,20 @@ public class WebClient {
      *******************/
 
 
-    public VerboseOrderDTO createOrder(NewOrderDTO newOrderDTO) {
+    public VerboseOrderDTO createOrder(SimplifiedOrderDTO simplifiedOrderDTO) {
         logger.info("Retrieving customer account from Customer-Management microservice...");
-        CustomerDTO customer = findCustomer(newOrderDTO.getEmail());
+        CustomerDTO customer = findCustomer(simplifiedOrderDTO.getEmail());
 
         logger.info("Parsing Offers to OrderItems...");
-        List<OrderItemDTO> items = newOrderDTO.getOfferIds().stream()
+        List<OrderItemDTO> items = simplifiedOrderDTO.getOfferIds().stream()
                 .map(this::findOfferById)
                 .map(offerToOrderItemTransformer::convert)
                 .collect(Collectors.toList());
 
         InventoryOrderDTO orderDTO = new InventoryOrderDTO();
-        orderDTO.setPaid(newOrderDTO.getPaid());
-        orderDTO.setOrderStatus(newOrderDTO.getOrderStatus());
-        orderDTO.setCreatedOnDate(newOrderDTO.getCreatedOnDate());
+        orderDTO.setPaid(simplifiedOrderDTO.isPaid());
+        orderDTO.setOrderStatus(simplifiedOrderDTO.getOrderStatus());
+        orderDTO.setCreatedOnDate(simplifiedOrderDTO.getCreatedOnDate());
         orderDTO.setEmail(customer.getEmail());
         orderDTO.setItems(items);
 

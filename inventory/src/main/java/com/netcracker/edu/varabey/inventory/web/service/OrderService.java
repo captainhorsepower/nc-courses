@@ -38,6 +38,8 @@ public interface OrderService {
 
     Order updatePaymentAndStatus(Long id, Order order);
 
+    Order setNextOrderStatus(Long id);
+
     Order addItems(Long id, List<OrderItem> items);
 
     Order removeItems(Long id, Set<Long> itemIds);

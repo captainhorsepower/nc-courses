@@ -4,7 +4,6 @@ import com.netcracker.edu.varabey.processor.controller.client.WebClient;
 import com.netcracker.edu.varabey.processor.controller.dto.CategoryDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.CustomerDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.OfferDTO;
-import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.NewOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.SimplifiedOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.VerboseOrderDTO;
 import com.netcracker.edu.varabey.processor.springutils.beanannotation.Logged;
@@ -201,7 +200,7 @@ public class ProcessorController {
         }
 
         static Link getLinkToUpdateOrderStatus(VerboseOrderDTO orderDTO) {
-            return linkTo(methodOn(ProcessorController.class).changeOrderStatus(orderDTO.getId(), new NewOrderDTO())).withRel("change status");
+            return linkTo(methodOn(ProcessorController.class).changeOrderStatus(orderDTO.getId(), new SimplifiedOrderDTO())).withRel("change status");
         }
 
         static Link getCustomerLink(VerboseOrderDTO orderDTO) {
@@ -400,8 +399,8 @@ public class ProcessorController {
     @PostMapping(value = "/inventory/orders", consumes = "application/json", produces = "application/json")
     @Logged(messageBefore = "Received request to create new Order...", messageAfter = "Order packed.", startFromNewLine = true)
     public Resource<VerboseOrderDTO> packNewOrder(
-            @ApiParam(value = "Order metadata object, that must contain customer's email and ids of offers from the Catalog", required = true) @RequestBody NewOrderDTO newOrderDTO) {
-        return getSelfLinkedVerboseOrderResource(webClient.createOrder(newOrderDTO));
+            @ApiParam(value = "Order metadata object, that must contain customer's email and ids of offers from the Catalog", required = true) @RequestBody SimplifiedOrderDTO simplifiedOrderDTO) {
+        return getSelfLinkedVerboseOrderResource(webClient.createOrder(simplifiedOrderDTO));
     }
 
     @ApiOperation(value = "Get order by the ID", tags = "Inventory")
@@ -484,7 +483,7 @@ public class ProcessorController {
     @Logged(messageBefore = "Received request to update Order's status...", messageAfter = "Order status updated.", startFromNewLine = true)
     public Resource<SimplifiedOrderDTO> changeOrderStatus(
             @ApiParam(value = "ID of the order that needs an update", required = true) @PathVariable("id") Long id,
-            @ApiParam(value = "Order object that may contain only OrderStatus, as other fields will be ignored. To see what values are valid for OrderStatus consult Model section") @RequestBody NewOrderDTO orderDTO) {
+            @ApiParam(value = "Order object that may contain only OrderStatus, as other fields will be ignored. To see what values are valid for OrderStatus consult Model section") @RequestBody SimplifiedOrderDTO orderDTO) {
         return getSelfLinkedSimpleOrderResource(webClient.changeOrderStatus(id, orderDTO.getOrderStatus()));
     }
 
@@ -492,7 +491,7 @@ public class ProcessorController {
     @ApiResponses({
     })
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping(value = "/inventory/orders/{id}", produces = "application/json")
+    @PutMapping(value = "/inventory/orders/{id}/nextStatus", produces = "application/json")
     @Logged(messageBefore = "Received request to update Order's status...", messageAfter = "Order status updated.", startFromNewLine = true)
     public Resource<SimplifiedOrderDTO> setNextOrderStatus(
             @ApiParam(value = "ID of the order that needs next status", required = true) @PathVariable("id") Long id) {

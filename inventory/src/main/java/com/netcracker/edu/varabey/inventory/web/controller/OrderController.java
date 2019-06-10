@@ -2,7 +2,6 @@ package com.netcracker.edu.varabey.inventory.web.controller;
 
 import com.netcracker.edu.varabey.inventory.data.entity.Order;
 import com.netcracker.edu.varabey.inventory.data.entity.OrderItem;
-import com.netcracker.edu.varabey.inventory.data.entity.utils.OrderStatus;
 import com.netcracker.edu.varabey.inventory.springutils.beanannotation.Logged;
 import com.netcracker.edu.varabey.inventory.web.controller.dto.OrderDTO;
 import com.netcracker.edu.varabey.inventory.web.controller.dto.OrderItemDTO;
@@ -129,20 +128,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @Logged(messageBefore = "Received request to update order statuses...", messageAfter = "Order updated.", startFromNewLine = true)
     public OrderDTO setNextOrderStatus(@PathVariable("id") Long id) {
-        Order order = orderValidator.checkFoundById(orderService.findById(id), id);
-
-        if (order.getStatus().ordinal() < OrderStatus.DELIVERED.ordinal()) {
-            OrderStatus[] statuses = OrderStatus.values();
-            for (int i = 0; i < statuses.length; i++) {
-                if (statuses[i].equals(order.getStatus())) {
-                    order.setStatus(statuses[Math.max(i, (i + 1) % statuses.length)]);
-                    break;
-                }
-            }
-            order = orderService.updatePaymentAndStatus(id, order);
-        }
-
-        return orderTransformer.toDto(order);
+        return orderTransformer.toDto(orderService.setNextOrderStatus(id));
     }
 
     @DeleteMapping("/orders/{id}")
