@@ -32,7 +32,7 @@ public class WebClient {
     private final Transformer<InventoryOrderDTO, VerboseOrderDTO> verboseOrderTransformer;
     private final Transformer<InventoryOrderDTO, SimplifiedOrderDTO> simpleOrderTransformer;
 
-    protected Logger logger = LoggerFactory.getLogger(WebClient.class);
+    protected Logger log = LoggerFactory.getLogger(WebClient.class);
 
     public WebClient(@Value("${microservices.inventory.base-url}") String inventoryUrl,
                      @Value("${microservices.catalog.base-url}") String catalogUrl,
@@ -242,10 +242,10 @@ public class WebClient {
 
 
     public VerboseOrderDTO createOrder(SimplifiedOrderDTO simplifiedOrderDTO) {
-        logger.info("Retrieving customer account from Customer-Management microservice...");
+        log.info("Retrieving customer account from Customer-Management microservice...");
         CustomerDTO customer = findCustomer(simplifiedOrderDTO.getEmail());
 
-        logger.info("Parsing Offers to OrderItems...");
+        log.info("Parsing Offers to OrderItems...");
         List<OrderItemDTO> items = simplifiedOrderDTO.getOfferIds().stream()
                 .map(this::findOfferById)
                 .map(offerToOrderItemTransformer::convert)
@@ -258,7 +258,7 @@ public class WebClient {
         orderDTO.setEmail(customer.getEmail());
         orderDTO.setItems(items);
 
-        logger.info("Rerouting request to the Inventory microservice...");
+        log.info("Rerouting request to the Inventory microservice...");
         VerboseOrderDTO verboseOrderDTO = verboseOrderTransformer.convert(
                 restTemplate.exchange(
                         UriComponentsBuilder
@@ -271,14 +271,14 @@ public class WebClient {
                         }
                 ).getBody()
         );
-        logger.info("Response successfully retrieved.");
+        log.info("Response successfully retrieved.");
 
         verboseOrderDTO.setCustomer(customer);
         return verboseOrderDTO;
     }
 
     public VerboseOrderDTO findOrder(Long id) {
-        logger.info("Rerouting request to the Inventory microservice...");
+        log.info("Rerouting request to the Inventory microservice...");
         InventoryOrderDTO inventoryOrder = restTemplate.exchange(
                 UriComponentsBuilder.fromHttpUrl(inventoryUrl)
                         .path("/orders")
@@ -288,7 +288,7 @@ public class WebClient {
                 HttpEntity.EMPTY,
                 new ParameterizedTypeReference<InventoryOrderDTO>() {}
         ).getBody();
-        logger.info("Response successfully retrieved.");
+        log.info("Response successfully retrieved.");
 
         VerboseOrderDTO processorOrder = verboseOrderTransformer.convert(inventoryOrder);
 
@@ -297,13 +297,13 @@ public class WebClient {
     }
 
     protected CustomerDTO findCustomerForVerboseOrder(String email) {
-        logger.info("Retrieving customer from Customer-Management microservice...");
+        log.info("Retrieving customer from Customer-Management microservice...");
         CustomerDTO customerDTO;
         try {
             customerDTO = findCustomer(email);
-            logger.info("Customer retrieved.");
+            log.info("Customer retrieved.");
         } catch (RuntimeException e) {
-            logger.info("Customer account with given email was deleted.");
+            log.info("Customer account with given email was deleted.");
             customerDTO = new CustomerDTO();
             customerDTO.setEmail(email);
             customerDTO.setFio("\'personal data was removed.\'");
@@ -411,13 +411,13 @@ public class WebClient {
     @Logged(messageAfter = "Response retrieved.")
     public VerboseOrderDTO addItemsToOrder(Long orderId, List<Long> offerIds) {
 
-        logger.info("Parsing offers to OrderItems...");
+        log.info("Parsing offers to OrderItems...");
         List<OrderItemDTO> items = offerIds.stream()
                 .map(this::findOfferById)
                 .map(offerToOrderItemTransformer::convert)
                 .collect(Collectors.toList());
 
-        logger.info("Rerouting request to the Inventory microservice...");
+        log.info("Rerouting request to the Inventory microservice...");
         return verboseOrderTransformer.convert(restTemplate.exchange(
                 UriComponentsBuilder.
                         fromHttpUrl(inventoryUrl)
