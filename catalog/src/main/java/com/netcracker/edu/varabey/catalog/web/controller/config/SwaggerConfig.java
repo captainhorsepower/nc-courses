@@ -26,7 +26,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Spring Boot REST API")
+                .title("Catalog Service REST API")
                 .description("Syr-Indastriz online store management system REST API")
                 .contact(new Contact("Artem Varabei", "https://github.com/captainhorsepower/", "captianhorsepower228@gmail.com"))
                 .license("Apache 2.0")

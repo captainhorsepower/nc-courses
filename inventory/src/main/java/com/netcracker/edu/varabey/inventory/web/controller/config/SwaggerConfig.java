@@ -1,4 +1,4 @@
-package com.netcracker.edu.varabey.customers.controller.config;
+package com.netcracker.edu.varabey.inventory.web.controller.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.netcracker.edu.varabey.customers.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.netcracker.edu.varabey.inventory.web.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
@@ -26,7 +26,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Customer-Management REST API")
+                .title("Inventory Service REST API")
                 .description("Syr-Indastriz online store management system REST API")
                 .contact(new Contact("Artem Varabei", "https://github.com/captainhorsepower/", "captianhorsepower228@gmail.com"))
                 .license("Apache 2.0")
