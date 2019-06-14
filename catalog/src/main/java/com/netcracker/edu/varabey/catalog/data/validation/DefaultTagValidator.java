@@ -6,6 +6,7 @@ import com.netcracker.edu.varabey.catalog.springutils.beanannotation.Validator;
 import com.netcracker.edu.varabey.catalog.data.validation.exceptions.TagException;
 import com.netcracker.edu.varabey.catalog.data.validation.util.NameValidator;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Validator
@@ -47,7 +48,7 @@ public class DefaultTagValidator implements TagValidator {
     @Override
     public Tag checkFound(Tag tag, String notFoundMessage) {
         if (tag == null) {
-            throw new TagException(notFoundMessage);
+            throw new TagException(notFoundMessage, HttpStatus.NOT_FOUND);
         }
         return tag;
     }

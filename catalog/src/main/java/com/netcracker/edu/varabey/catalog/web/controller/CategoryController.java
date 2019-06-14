@@ -5,6 +5,7 @@ import com.netcracker.edu.varabey.catalog.web.controller.dto.transformer.Transfo
 import com.netcracker.edu.varabey.catalog.data.entity.Category;
 import com.netcracker.edu.varabey.catalog.data.service.CategoryService;
 import com.netcracker.edu.varabey.catalog.data.validation.CategoryValidator;
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/categories")
+@Api
 public class CategoryController {
     private final Transformer<Category, CategoryDTO> categoryTransformer;
     private final CategoryService categoryService;

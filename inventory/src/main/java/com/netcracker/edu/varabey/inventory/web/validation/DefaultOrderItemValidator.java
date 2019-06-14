@@ -8,6 +8,7 @@ import com.netcracker.edu.varabey.inventory.web.validation.exceptions.OrderItemE
 import com.netcracker.edu.varabey.inventory.web.validation.fragments.NameValidator;
 import com.netcracker.edu.varabey.inventory.web.validation.fragments.PriceValidator;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Validator
@@ -58,7 +59,7 @@ public class DefaultOrderItemValidator implements OrderItemValidator {
     @Override
     public OrderItem checkFound(OrderItem orderItem, String notFoundMessage) {
         if (orderItem == null) {
-            throw new OrderItemException(notFoundMessage);
+            throw new OrderItemException(notFoundMessage, HttpStatus.NOT_FOUND);
         }
         return orderItem;
     }

@@ -5,6 +5,7 @@ import com.netcracker.edu.varabey.catalog.web.controller.dto.transformer.Transfo
 import com.netcracker.edu.varabey.catalog.data.entity.Tag;
 import com.netcracker.edu.varabey.catalog.data.service.TagService;
 import com.netcracker.edu.varabey.catalog.data.validation.TagValidator;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tags")
+@Api
 public class TagController {
     @Qualifier("tagTransformer")
     private final Transformer<Tag, TagDTO> tagTransformer;

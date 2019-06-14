@@ -18,7 +18,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.netcracker.edu.varabey.catalog.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.netcracker.edu.varabey.catalog.web.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
@@ -27,7 +27,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Catalog Service REST API")
-                .description("Syr-Indastriz online store management system REST API")
+                .description("Order-Entry online store management system REST API")
                 .contact(new Contact("Artem Varabei", "https://github.com/captainhorsepower/", "captianhorsepower228@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")

@@ -8,6 +8,7 @@ import com.netcracker.edu.varabey.customers.validation.util.AgeValidator;
 import com.netcracker.edu.varabey.customers.validation.util.CustomerValidator;
 import com.netcracker.edu.varabey.customers.validation.util.EmailValidator;
 import com.netcracker.edu.varabey.customers.validation.util.NameValidator;
+import org.springframework.http.HttpStatus;
 
 @Validator
 public class DefaultCustomerValidator implements CustomerValidator {
@@ -63,7 +64,7 @@ public class DefaultCustomerValidator implements CustomerValidator {
     @Override
     public Customer checkFound(Customer customer, String notFoundMessage) {
         if (customer == null) {
-            throw new CustomerException(notFoundMessage);
+            throw new CustomerException(notFoundMessage, HttpStatus.NOT_FOUND);
         }
         return customer;
     }

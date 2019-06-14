@@ -7,6 +7,7 @@ import com.netcracker.edu.varabey.inventory.springutils.beanannotation.Logged;
 import com.netcracker.edu.varabey.inventory.springutils.beanannotation.Validator;
 import com.netcracker.edu.varabey.inventory.web.validation.exceptions.OrderException;
 import com.netcracker.edu.varabey.inventory.web.validation.fragments.DateTimeValidator;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
@@ -62,7 +63,7 @@ public class DefaultOrderValidator implements OrderValidator {
     @Override
     public Order checkFound(Order order, String notFoundMessage) {
         if (order == null) {
-            throw new OrderException(notFoundMessage);
+            throw new OrderException(notFoundMessage, HttpStatus.NOT_FOUND);
         }
         return order;
     }
