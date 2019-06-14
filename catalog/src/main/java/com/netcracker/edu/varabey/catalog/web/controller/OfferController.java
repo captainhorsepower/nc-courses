@@ -11,6 +11,7 @@ import com.netcracker.edu.varabey.catalog.springutils.beanannotation.Logged;
 import com.netcracker.edu.varabey.catalog.web.controller.dto.CategoryDTO;
 import com.netcracker.edu.varabey.catalog.web.controller.dto.OfferDTO;
 import com.netcracker.edu.varabey.catalog.web.controller.dto.transformer.Transformer;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/offers")
+@Api
 public class OfferController {
     private final Transformer<Offer, OfferDTO> offerTransformer;
     private final Transformer<Category, CategoryDTO> categoryTransformer;

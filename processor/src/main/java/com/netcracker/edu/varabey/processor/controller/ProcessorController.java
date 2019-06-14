@@ -7,12 +7,14 @@ import com.netcracker.edu.varabey.processor.controller.dto.OfferDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.SimplifiedOrderDTO;
 import com.netcracker.edu.varabey.processor.controller.dto.domainspecific.VerboseOrderDTO;
 import com.netcracker.edu.varabey.processor.springutils.beanannotation.Logged;
+import com.netflix.discovery.converters.Auto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -30,7 +32,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@Api(tags = {"Syr-Indastriz API"}, value = "none", description = "All API operations combined")
+@Api(tags = {"Order-Entry API"}, value = "none", description = "All API operations combined")
 public class ProcessorController {
     static class LinkDelegate {
 
@@ -221,6 +223,7 @@ public class ProcessorController {
 
     private final WebClient webClient;
 
+    @Autowired
     public ProcessorController(WebClient webClient) {
         this.webClient = webClient;
     }

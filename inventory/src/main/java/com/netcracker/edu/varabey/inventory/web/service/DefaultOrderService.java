@@ -11,6 +11,7 @@ import com.netcracker.edu.varabey.inventory.web.validation.TagValidator;
 import com.netcracker.edu.varabey.inventory.web.validation.exceptions.OrderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,7 +107,11 @@ public class DefaultOrderService implements OrderService {
             OrderStatus[] statuses = OrderStatus.values();
             for (int i = 0; i < statuses.length; i++) {
                 if (statuses[i].equals(order.getStatus())) {
-                    order.setStatus(statuses[Math.max(i + 1, (i + 1) % statuses.length)]);
+                    OrderStatus nextStatus = statuses[Math.max(i + 1, (i + 1) % statuses.length)];
+                    if ((OrderStatus.DELIVERED.equals(nextStatus) || OrderStatus.IN_DELIVERY.equals(nextStatus) && !order.isPaid())) {
+                        throw new OrderException("Please, pay for the order to initiate delivery process.", HttpStatus.METHOD_NOT_ALLOWED);
+                    }
+                    order.setStatus(nextStatus);
                     break;
                 }
             }

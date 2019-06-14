@@ -5,6 +5,7 @@ import com.netcracker.edu.varabey.inventory.springutils.beanannotation.Logged;
 import com.netcracker.edu.varabey.inventory.springutils.beanannotation.Validator;
 import com.netcracker.edu.varabey.inventory.web.validation.exceptions.CustomerException;
 import com.netcracker.edu.varabey.inventory.web.validation.fragments.EmailValidator;
+import org.springframework.http.HttpStatus;
 
 @Validator
 public class DefaultCustomerValidator implements CustomerValidator {
@@ -43,7 +44,7 @@ public class DefaultCustomerValidator implements CustomerValidator {
     @Override
     public Customer checkFound(Customer customer, String notFoundMessage) {
         if (customer == null) {
-            throw new CustomerException(notFoundMessage);
+            throw new CustomerException(notFoundMessage, HttpStatus.NOT_FOUND);
         }
         return customer;
     }

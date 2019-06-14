@@ -21,14 +21,14 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.netcracker.edu.varabey.processor.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .useDefaultResponseMessages(false)
+//                .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo());
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Syr-Indastriz Online Store REST API")
-                .description("Syr-Indastriz online store management system REST API")
+                .title("Order-Entry Online Store REST API")
+                .description("Order-Entry online store management system REST API")
                 .contact(new Contact("Artem Varabei", "https://github.com/captainhorsepower/", "captianhorsepower228@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")

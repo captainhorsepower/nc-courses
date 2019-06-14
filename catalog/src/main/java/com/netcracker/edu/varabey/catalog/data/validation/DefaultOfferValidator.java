@@ -10,6 +10,7 @@ import com.netcracker.edu.varabey.catalog.data.validation.exceptions.OfferExcept
 import com.netcracker.edu.varabey.catalog.data.validation.util.NameValidator;
 import com.netcracker.edu.varabey.catalog.data.validation.util.PriceValidator;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Validator
@@ -63,7 +64,7 @@ public class DefaultOfferValidator implements OfferValidator {
     @Override
     public Offer checkFound(Offer offer, String notFoundMessage) {
         if (offer == null) {
-            throw new OfferException(notFoundMessage);
+            throw new OfferException(notFoundMessage, HttpStatus.NOT_FOUND);
         }
         return offer;
     }

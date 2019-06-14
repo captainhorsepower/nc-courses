@@ -6,6 +6,7 @@ import com.netcracker.edu.varabey.catalog.springutils.beanannotation.Validator;
 import com.netcracker.edu.varabey.catalog.data.validation.exceptions.CategoryException;
 import com.netcracker.edu.varabey.catalog.data.validation.util.NameValidator;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Validator
@@ -47,7 +48,7 @@ public class DefaultCategoryValidator implements CategoryValidator {
     @Override
     public Category checkFound(Category category, String notFoundMessage) {
         if (category == null) {
-            throw new CategoryException(notFoundMessage);
+            throw new CategoryException(notFoundMessage, HttpStatus.NOT_FOUND);
         }
         return category;
     }
