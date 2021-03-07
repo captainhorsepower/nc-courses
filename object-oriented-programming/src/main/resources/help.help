@@ -1,0 +1,44 @@
+usage:  <command> <option> [<args>]
+
+some commonly used commands:
+
+flow control:
+    exit                exit program
+
+get help:
+    help                print this info
+
+select stuff:
+    select song         select song from list of all songs
+    select cd           select CD from list of CDs
+
+print stuff:
+    print song          print selected song info
+    print cd            print selected cd info
+
+    print song --all    print all songs in memory
+    print cd   --all    print all created CDs
+
+    print cmpl   print current compilation
+
+create stuff:
+    create compilation  creates temporary compilation that can be burned to CD
+
+    create cd <totalFreeSpace> <CD name>
+                        create CD with given name of given space
+                        if no compilation is selected, will ask for it first.
+
+sort songs on CD:
+    sort <arg>          sort according to an (optional) argument
+                        default sort is by artist, then by year
+                        possible ars :
+                        default
+                        byName
+                        byArtist
+                        bySize
+                        byDur
+                        byGenre
+
+find a song:
+    find  song          find the song in given size and
+                        release year ranges on selected cd.

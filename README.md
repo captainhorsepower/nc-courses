@@ -1,6 +1,6 @@
 # 2. OOP Task
 
-### Deadline: Monday, March 01, 2019 23:59
+### Deadline: Monday, March 20, 2019 23:59
 
 ## Теория
 
